@@ -30,6 +30,13 @@ class ModeSelectScene:SKScene {
     }
     
     override func didMove(to view: SKView) {
+        if appDelegate == nil {
+            appDelegate = UIApplication.shared.delegate as! AppDelegate
+        }
+        
+        if MP_TRAFFIC_HANDLER == nil {
+            MP_TRAFFIC_HANDLER = MPTrafficHandler()
+        }
         self.backButton = self.childNode(withName: "//backButton") as? SKSpriteNode
         self.agreeButton = self.childNode(withName: "//agreeButton") as? SKSpriteNode
         self.createPartyButton = self.childNode(withName: "//createPartyButton") as? SKSpriteNode
@@ -41,6 +48,7 @@ class ModeSelectScene:SKScene {
         self.gemRushModeButton = self.childNode(withName: "//gemRushButton") as? SKSpriteNode
         self.doomHolesModeButton = self.childNode(withName: "//doomHolesButton") as? SKSpriteNode
         self.masterModeButton = self.childNode(withName: "//masterModeButton") as? SKSpriteNode
+        updateUI()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -58,18 +66,29 @@ class ModeSelectScene:SKScene {
                     view.showsFPS = false
                     view.showsNodeCount = false
                 }
+            } else if self.atPoint(pos) == self.createPartyButton {
+                MP_TRAFFIC_HANDLER.startMPC()
             } else if self.regularModeButton!.contains(pos) {
                 chosenMode = "Regular"
             } else if self.gemRushModeButton!.contains(pos) {
-                chosenMode = "GemRush"
+                //chosenMode = "GemRush"
             } else if self.doomHolesModeButton!.contains(pos) {
-                chosenMode = "DoomHoles"
+                //chosenMode = "DoomHoles"
             } else if self.masterModeButton!.contains(pos) {
-                chosenMode = "Master"
+                //chosenMode = "Master"
             } else {
                 chosenMode = ""
             }
+            updateUI()
             //print(chosenMode)
+        }
+    }
+    
+    func updateUI() {
+        if chosenMode == "" {
+            self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
+        } else {
+            self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
         }
     }
 
@@ -103,11 +122,6 @@ class ModeSelectScene:SKScene {
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
-        if chosenMode == "" {
-            self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
-        } else {
-            self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
-        }
         
         // Initialize _lastUpdateTime if it has not already been
         if (self.lastUpdateTime == 0) {

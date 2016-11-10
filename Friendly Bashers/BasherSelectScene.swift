@@ -79,6 +79,7 @@ class BasherSelectScene:SKScene {
         self.silvaButton?.addChild(silvaView)
         self.cogButton?.addChild(cogView)
         self.sarahButton?.addChild(sarahView)
+        updateUI()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -126,6 +127,103 @@ class BasherSelectScene:SKScene {
             } else {
                 chosenBasher = ""
             }
+            
+            if appDelegate.mpcHandler.session != nil {
+                MP_TRAFFIC_HANDLER.sendPlayerCharacter()
+            }
+            
+            updateUI()
+        }
+    }
+    
+    func updateUI() {
+        if appDelegate.mpcHandler.session == nil {
+            if chosenBasher == "" {
+                self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
+            } else {
+                self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
+            }
+        } else {
+            if appDelegate.mpcHandler.session.connectedPeers.count == 1 {
+                
+            } else if appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+                
+            } else if appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+                
+            }
+        }
+        
+        if lastChosenBasher != chosenBasher {
+            lastChosenBasher = chosenBasher
+            if chosenBasher == "" {
+                p1ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                p1ChosenView!.xScale = 1
+                p1ChosenView!.yScale = 1
+                p1ChosenView!.size = CGSize(width: 100, height: 100)
+            } else {
+                p1ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: chosenBasher + "_Idle_1")))
+                p1ChosenView!.xScale = 1
+                p1ChosenView!.yScale = 1
+                p1ChosenView!.size = SKTexture(imageNamed: chosenBasher + "_Idle_1").size()
+                
+                if chosenBasher == "Jack-O" || chosenBasher == "Silva" {
+                    p1ChosenView!.xScale = 0.75
+                    p1ChosenView!.yScale = 0.75
+                }
+            }
+        }
+        
+        if appDelegate.mpcHandler.session != nil {
+            if chosenBasher2 == "" {
+                p2ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                p2ChosenView!.xScale = 1
+                p2ChosenView!.yScale = 1
+                p2ChosenView!.size = CGSize(width: 100, height: 100)
+            } else {
+                p2ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: chosenBasher2 + "_Idle_1")))
+                p2ChosenView!.xScale = 1
+                p2ChosenView!.yScale = 1
+                p2ChosenView!.size = SKTexture(imageNamed: chosenBasher2 + "_Idle_1").size()
+                
+                if chosenBasher2 == "Jack-O" || chosenBasher2 == "Silva" {
+                    p2ChosenView!.xScale = 0.75
+                    p2ChosenView!.yScale = 0.75
+                }
+            }
+            
+            if chosenBasher3 == "" {
+                p3ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                p3ChosenView!.xScale = 1
+                p3ChosenView!.yScale = 1
+                p3ChosenView!.size = CGSize(width: 100, height: 100)
+            } else {
+                p3ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: chosenBasher3 + "_Idle_1")))
+                p3ChosenView!.xScale = 1
+                p3ChosenView!.yScale = 1
+                p3ChosenView!.size = SKTexture(imageNamed: chosenBasher3 + "_Idle_1").size()
+                
+                if chosenBasher3 == "Jack-O" || chosenBasher3 == "Silva" {
+                    p3ChosenView!.xScale = 0.75
+                    p3ChosenView!.yScale = 0.75
+                }
+            }
+            
+            if chosenBasher4 == "" {
+                p4ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                p4ChosenView!.xScale = 1
+                p4ChosenView!.yScale = 1
+                p4ChosenView!.size = CGSize(width: 100, height: 100)
+            } else {
+                p4ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: chosenBasher4 + "_Idle_1")))
+                p4ChosenView!.xScale = 1
+                p4ChosenView!.yScale = 1
+                p4ChosenView!.size = SKTexture(imageNamed: chosenBasher4 + "_Idle_1").size()
+                
+                if chosenBasher4 == "Jack-O" || chosenBasher4 == "Silva" {
+                    p4ChosenView!.xScale = 0.75
+                    p4ChosenView!.yScale = 0.75
+                }
+            }
         }
     }
     
@@ -154,41 +252,5 @@ class BasherSelectScene:SKScene {
                 }
             }
         }
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        if chosenBasher == "" {
-            self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
-        } else {
-            self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
-        }
-        
-        if lastChosenBasher != chosenBasher {
-            lastChosenBasher = chosenBasher
-            if chosenBasher == "" {
-                p1ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
-                p1ChosenView!.xScale = 1
-                p1ChosenView!.yScale = 1
-                p1ChosenView!.size = CGSize(width: 100, height: 100)
-            } else {
-                p1ChosenView!.run(SKAction.setTexture(SKTexture(imageNamed: chosenBasher + "_Idle_1")))
-                p1ChosenView!.xScale = 1
-                p1ChosenView!.yScale = 1
-                p1ChosenView!.size = SKTexture(imageNamed: chosenBasher + "_Idle_1").size()
-                
-                if chosenBasher == "Jack-O" || chosenBasher == "Silva" {
-                    p1ChosenView!.xScale = 0.75
-                    p1ChosenView!.yScale = 0.75
-                }
-            }
-        }
-        
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
-        }
-        
-        self.lastUpdateTime = currentTime
     }
 }

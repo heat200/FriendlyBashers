@@ -11,11 +11,9 @@ import SpriteKit
 class Projectile:SKSpriteNode {
     var damage:CGFloat = 0
     var owner:String = ""
-    var gameScene:GameScene?
     var direction:CGFloat?
     
     func setUp(_ damage:CGFloat, direction:CGFloat, owner:String) {
-        gameScene = self.parent as! GameScene?
         self.damage = damage
         self.owner = owner
         self.direction = direction
@@ -23,10 +21,9 @@ class Projectile:SKSpriteNode {
         self.physicsBody!.allowsRotation = false
         self.physicsBody!.friction = 5.0
         self.physicsBody!.restitution = 0
-        self.physicsBody!.contactTestBitMask = 1
         self.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
         self.physicsBody!.categoryBitMask = ProjectileCategory
-        self.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
+        self.physicsBody!.collisionBitMask = 0
         
         if direction == 1 {
             self.zRotation = 80

@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-var APP_VERSION = "0.05"
+var APP_VERSION = "0.2"
 
 var playerName = "heat200"
 var chosenMode = ""
@@ -33,6 +33,8 @@ var mainMenu:MainMenuScene?
 var modeSelect:ModeSelectScene?
 var basherSelect:BasherSelectScene?
 var gameScene:GameScene?
+
+var MP_TRAFFIC_HANDLER:MPTrafficHandler!
 
 var TEXT_COLOR:SKColor = SKColor(white: 0.35, alpha: 1)
 var TEXT_FONT = "Chalkboard SE"
@@ -62,7 +64,6 @@ class MainMenuScene:SKScene {
     }
     
     override func didMove(to view: SKView) {
-        appDelegate = UIApplication.shared.delegate as! AppDelegate
         titleLabel = SKLabelNode(text: "Friendly Bashers")
         titleLabel?.fontName = TEXT_FONT
         titleLabel?.position = CGPoint(x: 0, y: self.size.height/2 - ((titleLabel?.frame.height)! * 2.5))

@@ -263,9 +263,9 @@ class Character:SKSpriteNode {
             }
         } else if name == "Plum" {
             characterName = name
-            BASE_MAX_HP = 250
+            BASE_MAX_HP = 200
             BASE_POWER = 50
-            BASE_RESISTANCE = 10
+            BASE_RESISTANCE = 15
             BASE_MOVESPEED = 400
             BASE_MAX_JUMPS = 2
             
@@ -401,7 +401,7 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 100
             BASE_POWER = 75
-            BASE_RESISTANCE = 10
+            BASE_RESISTANCE = 15
             BASE_MOVESPEED = 525
             BASE_MAX_JUMPS = 2
             
@@ -538,8 +538,8 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 1000
             BASE_POWER = 10
-            BASE_RESISTANCE = 40
-            BASE_MOVESPEED = 300
+            BASE_RESISTANCE = 35
+            BASE_MOVESPEED = 350
             BASE_MAX_JUMPS = 2
             
             BASE_SKILL_COOLDOWN_1 = 0.9
@@ -1022,7 +1022,7 @@ class Character:SKSpriteNode {
     }
     
     func applyDamage(_ damage:CGFloat) {
-        let gameWorld = self.parent as! GameScene
+        let gameWorld = (self.parent?.parent as! GameScene)
         if abs(self.position.x - gameWorld.playerNode.position.x) <= gameWorld.playerNode.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameWorld.playerNode.position.y) <= gameWorld.playerNode.halfHeight! + 5 + self.halfHeight! && gameWorld.playerNode != self {
             if self.position.x > gameWorld.playerNode.position.x && self.xScale == -1 {
                 gameWorld.playerNode.takeDamage(damage, direction: self.xScale)
@@ -1178,6 +1178,10 @@ class Character:SKSpriteNode {
             
             animateSkill_3 = SKAction.animate(with: [SKTexture(imageNamed:characterForm + "_Slide_1"),SKTexture(imageNamed:characterForm + "_Slide_2"),SKTexture(imageNamed:characterForm + "_Slide_3"),SKTexture(imageNamed:characterForm + "_Slide_4"),SKTexture(imageNamed:characterForm + "_Slide_5"),SKTexture(imageNamed:characterForm + "_Slide_6"),SKTexture(imageNamed:characterForm + "_Slide_7"),SKTexture(imageNamed:characterForm + "_Slide_8"),SKTexture(imageNamed:characterForm + "_Slide_9"),SKTexture(imageNamed:characterForm + "_Slide_10")], timePerFrame: 0.065,resize:true,restore:true)
         }
+        
+        self.parent?.run(SKAction.wait(forDuration: 1.5),completion:{
+            self.returnToIdle()
+        })
     }
     
     func doSkill_2() {
@@ -1194,7 +1198,7 @@ class Character:SKSpriteNode {
             let damage:CGFloat = 10 + ((maxHP - currentHP) * 0.5)
             self.power += damage
             skillMaxCharges_1 = BASE_SKILL_MAX_CHARGES_1 + Int(power/25)
-            self.parent!.run(SKAction.wait(forDuration: 5),completion:{
+            self.parent!.run(SKAction.wait(forDuration: 7),completion:{
                 self.power = self.BASE_POWER
                 self.skillMaxCharges_1 = self.BASE_SKILL_MAX_CHARGES_1 + Int(self.power/25)
             })
@@ -1207,6 +1211,10 @@ class Character:SKSpriteNode {
             applyDamage(damage)
             summon(damage)
         }
+        
+        self.parent?.run(SKAction.wait(forDuration: 1.5),completion:{
+            self.returnToIdle()
+        })
     }
     
     func doSkill_3() {
@@ -1222,7 +1230,7 @@ class Character:SKSpriteNode {
         } else if characterName == "Silva" {
             let damage:CGFloat = 10 + (currentHP * 0.25)
             self.movespeed += damage
-            self.parent!.run(SKAction.wait(forDuration: 10),completion:{
+            self.parent!.run(SKAction.wait(forDuration: 5),completion:{
                 self.movespeed = self.BASE_MOVESPEED
             })
         } else if characterName == "Sarah" {
@@ -1232,6 +1240,10 @@ class Character:SKSpriteNode {
             let damage:CGFloat = 15 + (power * 0.5)
             applyDamage(damage)
         }
+        
+        self.parent?.run(SKAction.wait(forDuration: 2),completion:{
+            self.returnToIdle()
+        })
     }
     
     func summon(_ damage:CGFloat) {
@@ -1247,9 +1259,9 @@ class Character:SKSpriteNode {
                 zombie_boy.position.y = self.position.y
                 zombie_boy.physicsBody = SKPhysicsBody(texture: zombie_boy.texture!, size: zombie_boy.texture!.size())
                 zombie_boy.physicsBody?.allowsRotation = false
-                zombie_boy.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
+                zombie_boy.physicsBody!.contactTestBitMask = 0
                 zombie_boy.physicsBody!.categoryBitMask = ProjectileCategory
-                zombie_boy.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
+                zombie_boy.physicsBody!.collisionBitMask = WorldCategory
                 self.parent!.addChild(zombie_boy)
                 
                 let zombie_girl = AI(imageNamed: characterName + "_Zombie_Girl_Idle_1")
@@ -1262,9 +1274,9 @@ class Character:SKSpriteNode {
                 zombie_girl.position.y = self.position.y
                 zombie_girl.physicsBody = SKPhysicsBody(texture: zombie_girl.texture!, size: zombie_girl.texture!.size())
                 zombie_girl.physicsBody?.allowsRotation = false
-                zombie_girl.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
+                zombie_girl.physicsBody!.contactTestBitMask = 0
                 zombie_girl.physicsBody!.categoryBitMask = ProjectileCategory
-                zombie_girl.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
+                zombie_girl.physicsBody!.collisionBitMask = WorldCategory
                 self.parent!.addChild(zombie_girl)
             } else if characterName == "Plum" {
                 let kunai = Projectile(imageNamed: "Kunai")
@@ -1272,21 +1284,21 @@ class Character:SKSpriteNode {
                 kunai.position.y = self.position.y
                 kunai.position.x = self.position.x + (35 * self.xScale)
                 self.parent!.addChild(kunai)
-                kunai.physicsBody!.applyImpulse(CGVector(dx: (kunai.damage * self.xScale) * 2.5, dy: 0))
+                kunai.physicsBody!.applyImpulse(CGVector(dx: (15 * self.xScale), dy: 0))
             } else if characterName == "Rosetta" {
                 let kunai = Projectile(imageNamed: "Kunai")
                 kunai.setUp(damage, direction: self.xScale, owner: self.player)
                 kunai.position.y = self.position.y
                 kunai.position.x = self.position.x + (35 * self.xScale)
                 self.parent!.addChild(kunai)
-                kunai.physicsBody!.applyImpulse(CGVector(dx: (kunai.damage * self.xScale) * 2.5, dy: 0))
+                kunai.physicsBody!.applyImpulse(CGVector(dx: (15 * self.xScale), dy: 0))
             } else if characterName == "Sarah" {
                 let bullet = Projectile(imageNamed: "Bullet")
                 bullet.setUp(damage, direction: self.xScale, owner: self.player)
                 bullet.position.y = self.position.y
                 bullet.position.x = self.position.x + (35 * self.xScale)
                 self.parent!.addChild(bullet)
-                bullet.physicsBody!.applyImpulse(CGVector(dx: (bullet.damage * self.xScale) * 2.5, dy: 0))
+                bullet.physicsBody!.applyImpulse(CGVector(dx: (35 * self.xScale), dy: 0))
             } else if characterName == "Cog" {
                 if characterForm == "Cat" {
                     let dog = AI(imageNamed: "Dog_Idle_1")
@@ -1299,11 +1311,10 @@ class Character:SKSpriteNode {
                     dog.position.y = self.position.y
                     dog.physicsBody = SKPhysicsBody(texture: dog.texture!, size: dog.texture!.size())
                     dog.physicsBody?.allowsRotation = false
-                    dog.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
-                    dog.physicsBody!.categoryBitMask = ProjectileCategory
+                    dog.physicsBody!.categoryBitMask = SummonedCategory
                     dog.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
                     self.parent!.addChild(dog)
-                    self.parent!.run(SKAction.wait(forDuration: 2.5),completion:{
+                    self.parent!.run(SKAction.wait(forDuration: 2),completion:{
                         dog.brain.invalidate()
                         dog.removeFromParent()
                         dog.removeAllActions()
@@ -1319,11 +1330,10 @@ class Character:SKSpriteNode {
                     cat.position.y = self.position.y
                     cat.physicsBody = SKPhysicsBody(texture: cat.texture!, size: cat.texture!.size())
                     cat.physicsBody?.allowsRotation = false
-                    cat.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
-                    cat.physicsBody!.categoryBitMask = ProjectileCategory
+                    cat.physicsBody!.categoryBitMask = SummonedCategory
                     cat.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
                     self.parent!.addChild(cat)
-                    self.parent!.run(SKAction.wait(forDuration: 2.5),completion:{
+                    self.parent!.run(SKAction.wait(forDuration: 2),completion:{
                         cat.brain.invalidate()
                         cat.removeFromParent()
                         cat.removeAllActions()
@@ -1371,6 +1381,13 @@ class Character:SKSpriteNode {
             self.physicsBody?.applyImpulse(CGVector(dx: (damageToTake * direction) * (maxHP/10), dy: damageToTake * (maxHP/10)))
         } else {
             self.physicsBody?.applyImpulse(CGVector(dx: (damageToTake * direction) * (maxHP/currentHP), dy: damageToTake * (maxHP/currentHP)))
+        }
+    }
+    
+    func returnToIdle() {
+        if self.physicsBody?.velocity.dx == 0 {
+            self.removeAllActions()
+            self.run(animateIdle!)
         }
     }
     

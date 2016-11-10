@@ -12,6 +12,7 @@ import GameplayKit
 var CharacterCategory:UInt32 = 0x1 << 1
 var ProjectileCategory:UInt32 = 0x1 << 2
 var WorldCategory:UInt32 = 0x1 << 3
+var SummonedCategory:UInt32 = 0x1 << 4
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var entities = [GKEntity]()
@@ -83,6 +84,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func didMove(to view: SKView) {
+        gameScene = self
         self.physicsWorld.contactDelegate = self
         self.CAMERA_NODE = self.childNode(withName: "//CAMERA_NODE") as? SKCameraNode
         self.tileMapNode = self.childNode(withName: "//TILE_MAP") as? SKTileMapNode
@@ -94,6 +96,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         self.playerNode = Character(texture: playerTexture)
+        if self.playerCharacter == "Cog" {
+            playerNode.characterForm = "Cat"
+        }
         self.playerNode.player = playerName
         self.playerNode.setUp(name: self.playerCharacter)
         self.playerNode.position = CGPoint(x: -80, y: (self.playerNode?.size.height)!/2 + 33)
@@ -139,7 +144,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode2.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode2.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode2.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.addChild(playerNode2!)
+            self.tileMapNode!.addChild(playerNode2!)
         } else {
             playerCharacter2 = characterRoulette()
             var playerTexture2 = SKTexture(imageNamed: self.playerCharacter2 + "_Idle_1")
@@ -157,7 +162,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode2.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode2.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode2.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.addChild(playerNode2!)
+            self.tileMapNode!.addChild(playerNode2!)
+            self.playerNode2.world = self
             self.playerNode2.startCPU()
         }
         
@@ -176,7 +182,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode3.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode3.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode3.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.addChild(playerNode3!)
+            self.tileMapNode!.addChild(playerNode3!)
         } else {
             playerCharacter3 = characterRoulette()
             var playerTexture3 = SKTexture(imageNamed: self.playerCharacter3 + "_Idle_1")
@@ -194,7 +200,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode3.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode3.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode3.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.addChild(playerNode3!)
+            self.tileMapNode!.addChild(playerNode3!)
+            self.playerNode3.world = self
             self.playerNode3.startCPU()
         }
         
@@ -213,7 +220,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode4.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode4.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode4.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.addChild(playerNode4!)
+            self.tileMapNode!.addChild(playerNode4!)
         } else {
             playerCharacter4 = characterRoulette()
             var playerTexture4 = SKTexture(imageNamed: self.playerCharacter4 + "_Idle_1")
@@ -231,7 +238,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode4.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode4.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode4.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.addChild(playerNode4!)
+            self.tileMapNode!.addChild(playerNode4!)
+            self.playerNode4.world = self
             self.playerNode4.startCPU()
         }
         
@@ -329,7 +337,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.CAMERA_NODE?.zPosition = playerNode!.zPosition + 10
         
         self.CAMERA_NODE?.addChild(pauseUI!)
-        self.addChild(playerNode)
+        self.tileMapNode!.addChild(playerNode)
         self.CAMERA_NODE?.addChild(sfxButton!)
         self.CAMERA_NODE?.addChild(musicButton!)
         self.CAMERA_NODE?.addChild(homeButton!)
@@ -349,6 +357,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.playerNode2.addChild(playerLabelNode2!)
         self.playerNode3.addChild(playerLabelNode3!)
         self.playerNode4.addChild(playerLabelNode4!)
+        
+        self.pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Pause")))
+        self.leftButton?.isHidden = false
+        self.rightButton?.isHidden = false
+        self.skillButton_1?.isHidden = false
+        self.skillButton_2?.isHidden = false
+        self.runeButton?.isHidden = false
+        self.jumpButton?.isHidden = false
+        
+        self.pauseUI?.isHidden = true
+        self.sfxButton?.isHidden = true
+        self.musicButton?.isHidden = true
+        self.homeButton?.isHidden = true
+        self.exitButton?.isHidden = true
+        
+        if timeLimit != 0 {
+            self.run(SKAction.wait(forDuration: Double(timeLimit * 60)),completion:{
+                self.endScreen("Out of Time")
+            })
+        }
     }
     
     func characterRoulette() -> String {
@@ -435,6 +463,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         playerAction = "Skill_3"
                     }
                 }
+                
+                if !(self.atPoint(pos) == self.leftButton) && !(self.atPoint(pos) == self.rightButton) && !(self.atPoint(pos) == self.jumpButton) && !(self.atPoint(pos) == self.skillButton_1) && !(self.atPoint(pos) == self.skillButton_2) {
+                    playerAction = ""
+                    playerMovement = ""
+                }
             } else {
                 if self.atPoint(pos) == self.exitButton {
                     // Present the scene
@@ -504,8 +537,116 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if self.atPoint(pos) == self.pauseButton {
                 if gamePaused {
                     gamePaused = false
+                    togglePause()
                 } else {
                     gamePaused = true
+                    togglePause()
+                }
+            }
+        }
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        for t in touches {
+            let pos = t.location(in: self)
+            if !gamePaused {
+                if self.atPoint(pos) == self.leftButton && !self.playerNode!.isResting {
+                    playerMovement = "Move_Left"
+                    self.playerNode.xScale = -1
+                } else if self.atPoint(pos) == self.rightButton && !self.playerNode!.isResting {
+                    playerMovement = "Move_Right"
+                    self.playerNode.xScale = 1
+                }
+                
+                if playerAction == "" {
+                    if self.atPoint(pos) == self.jumpButton && !self.playerNode!.isResting {
+                        playerAction = "Jump"
+                    } else if self.atPoint(pos) == self.skillButton_1 && !self.playerNode!.isResting {
+                        playerAction = "Skill_1"
+                    } else if self.atPoint(pos) == self.skillButton_2 && playerMovement == "" && !self.playerNode!.isResting {
+                        playerAction = "Skill_2"
+                    } else if self.atPoint(pos) == self.skillButton_2 && playerMovement != "" && !self.playerNode!.isResting {
+                        playerAction = "Skill_3"
+                    }
+                }
+                
+                if !(self.atPoint(pos) == self.leftButton) && !(self.atPoint(pos) == self.rightButton) && !(self.atPoint(pos) == self.jumpButton) && !(self.atPoint(pos) == self.skillButton_1) && !(self.atPoint(pos) == self.skillButton_2) {
+                    playerAction = ""
+                    playerMovement = ""
+                }
+            } else {
+                if self.atPoint(pos) == self.exitButton {
+                    // Present the scene
+                    if let view = self.view {
+                        view.presentScene(basherSelect)
+                        view.ignoresSiblingOrder = false
+                        
+                        view.showsFPS = true
+                        view.showsNodeCount = false
+                        
+                        if self.playerNode2.brain != nil {
+                            self.playerNode2.brain.invalidate()
+                        }
+                        
+                        if self.playerNode3.brain != nil {
+                            self.playerNode3.brain.invalidate()
+                        }
+                        
+                        if self.playerNode4.brain != nil {
+                            self.playerNode4.brain.invalidate()
+                        }
+                        
+                        self.removeAllActions()
+                        self.removeAllChildren()
+                        self.removeFromParent()
+                    }
+                } else if self.atPoint(pos) == self.sfxButton {
+                    if sfxEnabled {
+                        sfxEnabled = false
+                    } else {
+                        sfxEnabled = true
+                    }
+                } else if self.atPoint(pos) == self.musicButton {
+                    if musicEnabled {
+                        musicEnabled = false
+                    } else {
+                        musicEnabled = true
+                    }
+                } else if self.atPoint(pos) == self.homeButton {
+                    // Present the scene
+                    if let view = self.view {
+                        view.presentScene(mainMenu)
+                        view.ignoresSiblingOrder = false
+                        
+                        view.showsFPS = true
+                        view.showsNodeCount = false
+                        
+                        if self.playerNode2.brain != nil {
+                            self.playerNode2.brain.invalidate()
+                        }
+                        
+                        if self.playerNode3.brain != nil {
+                            self.playerNode3.brain.invalidate()
+                        }
+                        
+                        if self.playerNode4.brain != nil {
+                            self.playerNode4.brain.invalidate()
+                        }
+                        
+                        self.removeAllActions()
+                        self.removeAllChildren()
+                        self.removeFromParent()
+                    }
+                }
+            }
+            
+            if self.atPoint(pos) == self.pauseButton {
+                if gamePaused {
+                    gamePaused = false
+                    togglePause()
+                } else {
+                    gamePaused = true
+                    togglePause()
                 }
             }
         }
@@ -590,55 +731,66 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func playerAnimations(_ currentTime: TimeInterval) {
         if !playerNode!.isResting {
-            if playerMovement != playerLastMovement {
+            if playerAction != playerLastAction || playerMovement != playerLastMovement {
                 if playerMovement == "Move_Right" || playerMovement == "Move_Left" {
                     self.playerNode!.removeAllActions()
                     self.playerNode?.run((self.playerNode?.animateRun)!)
                 } else if playerMovement == "" && playerAction == "" {
                     self.playerNode!.removeAllActions()
                     self.playerNode?.run((self.playerNode?.animateIdle)!)
+                } else if playerMovement == "" {
+                    self.removeAllActions()
+                    self.run((self.playerNode?.animateIdle!)!)
                 }
-            }
-            
-            if playerAction != playerLastAction {
+                
                 if playerAction == "" && playerMovement == "" {
                     self.playerNode!.removeAllActions()
                     self.playerNode?.run((self.playerNode?.animateIdle)!)
-                } else if playerAction == "Jump" && self.playerNode!.currentJumps < self.playerNode!.maxJumps{
+                } else if playerAction == "Jump" && self.playerNode!.currentJumps < self.playerNode!.maxJumps {
                     self.playerNode?.run((self.playerNode?.animateJump)!)
                 } else if playerAction == "Skill_1" && isSkillReady_1(currentTime) {
                     self.playerNode?.run((self.playerNode?.animateSkill_1)!)
-                    self.run(SKAction.wait(forDuration: 0.4),completion:{
+                    self.run(SKAction.wait(forDuration: 0.75),completion:{
                         if self.playerLastAction == "Skill_1" && self.playerAction == "Skill_1" {
                             self.playerAction = ""
                             self.playerLastAction = ""
                         } else if self.playerLastAction == "Skill_1" {
                             self.playerLastAction = ""
                         }
+                        
+                        if self.playerMovement == ""  {
+                            self.playerNode!.removeAllActions()
+                            self.playerNode?.run((self.playerNode?.animateIdle)!)
+                        }
                     })
                 } else if playerAction == "Skill_2" && isSkillReady_2(currentTime) {
                     self.playerNode?.run((self.playerNode?.animateSkill_2)!)
-                    self.run(SKAction.wait(forDuration: 0.4),completion:{
+                    self.run(SKAction.wait(forDuration: 0.75),completion:{
                         if self.playerLastAction == "Skill_2" && self.playerAction == "Skill_2" {
                             self.playerAction = ""
                             self.playerLastAction = ""
                         } else if self.playerLastAction == "Skill_2" {
                             self.playerLastAction = ""
                         }
+                        
+                        if self.playerMovement == ""  {
+                            self.playerNode!.removeAllActions()
+                            self.playerNode?.run((self.playerNode?.animateIdle)!)
+                        }
                     })
                 } else if playerAction == "Skill_3" && isSkillReady_3(currentTime) {
                     self.playerNode?.run((self.playerNode?.animateSkill_3)!)
-                    self.run(SKAction.wait(forDuration: 0.4),completion:{
+                    self.run(SKAction.wait(forDuration: 0.75),completion:{
                         if self.playerLastAction == "Skill_3" && self.playerAction == "Skill_3" {
                             self.playerAction = ""
                             self.playerLastAction = ""
-                            
-                            if self.playerAction == self.playerMovement {
-                                self.playerNode!.removeAllActions()
-                                self.playerNode?.run((self.playerNode?.animateIdle)!)
-                            }
                         } else if self.playerLastAction == "Skill_3" {
                             self.playerLastAction = ""
+                        }
+                        
+                        if self.playerMovement == ""  {
+                            self.playerNode!.removeAllActions()
+                            self.playerNode?.run((self.playerNode?.animateIdle)!)
                         }
                     })
                 }
@@ -695,6 +847,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             //print("Invulnerable")
         }
         
+        if musicEnabled {
+            musicButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_On")))
+        } else {
+            musicButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_Off")))
+        }
+        
+        if sfxEnabled {
+            sfxButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_On")))
+        } else {
+            sfxButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_Off")))
+        }
+    }
+    
+    func togglePause() {
         if gamePaused {
             pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Right")))
             leftButton?.isHidden = true
@@ -709,32 +875,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             musicButton?.isHidden = false
             homeButton?.isHidden = false
             exitButton?.isHidden = false
+            self.run(SKAction.wait(forDuration: 0.2),completion:{
+                self.view!.isPaused = true
+            })
         } else {
-            pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Pause")))
-            leftButton?.isHidden = false
-            rightButton?.isHidden = false
-            skillButton_1?.isHidden = false
-            skillButton_2?.isHidden = false
-            runeButton?.isHidden = false
-            jumpButton?.isHidden = false
-            
-            pauseUI?.isHidden = true
-            sfxButton?.isHidden = true
-            musicButton?.isHidden = true
-            homeButton?.isHidden = true
-            exitButton?.isHidden = true
-        }
-        
-        if musicEnabled {
-            musicButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_On")))
-        } else {
-            musicButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_Off")))
-        }
-        
-        if sfxEnabled {
-            sfxButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_On")))
-        } else {
-            sfxButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_Off")))
+            self.view!.isPaused = false
+            self.run(SKAction.wait(forDuration: 0.2),completion:{
+                self.pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Pause")))
+                self.leftButton?.isHidden = false
+                self.rightButton?.isHidden = false
+                self.skillButton_1?.isHidden = false
+                self.skillButton_2?.isHidden = false
+                self.runeButton?.isHidden = false
+                self.jumpButton?.isHidden = false
+                
+                self.pauseUI?.isHidden = true
+                self.sfxButton?.isHidden = true
+                self.musicButton?.isHidden = true
+                self.homeButton?.isHidden = true
+                self.exitButton?.isHidden = true
+            })
         }
     }
     
@@ -879,7 +1039,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if currentTime - lastRegenTime >= 1 {
             if playerNode.currentHP < playerNode.maxHP {
                 if playerNode.isResting {
-                    playerNode.currentHP += (playerNode.hpRegen * 100)
+                    playerNode.currentHP += (playerNode.maxHP/3)
                 } else {
                     playerNode.currentHP += playerNode.hpRegen
                 }
@@ -891,7 +1051,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if playerNode2.currentHP < playerNode2.maxHP {
                 if playerNode2.isResting {
-                    playerNode2.currentHP += (playerNode2.hpRegen * 100)
+                    playerNode2.currentHP += (playerNode2.maxHP/3)
                 } else {
                     playerNode2.currentHP += playerNode2.hpRegen
                 }
@@ -903,7 +1063,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if playerNode3.currentHP < playerNode3.maxHP {
                 if playerNode3.isResting {
-                    playerNode3.currentHP += (playerNode3.hpRegen * 100)
+                    playerNode3.currentHP += (playerNode3.maxHP/3)
                 } else {
                     playerNode3.currentHP += playerNode3.hpRegen
                 }
@@ -915,7 +1075,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
             if playerNode4.currentHP < playerNode4.maxHP {
                 if playerNode4.isResting {
-                    playerNode4.currentHP += (playerNode4.hpRegen * 100)
+                    playerNode4.currentHP += (playerNode4.maxHP/3)
                 } else {
                     playerNode4.currentHP += playerNode4.hpRegen
                 }
@@ -953,6 +1113,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if let view = self.view {
                 sceneNode.outcome = stance
                 view.presentScene(sceneNode)
+                
+                self.run(SKAction.wait(forDuration: 3),completion:{
+                    self.playerNode2.brain.invalidate()
+                    self.playerNode3.brain.invalidate()
+                    self.playerNode4.brain.invalidate()
+                    self.removeAllActions()
+                    self.removeAllChildren()
+                    self.removeFromParent()
+                })
                 
                 view.ignoresSiblingOrder = false
                 

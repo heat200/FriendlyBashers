@@ -183,6 +183,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
         textField.delegate = self
         textField.keyboardType = UIKeyboardType.alphabet
         self.view?.addSubview(textField)
+        updateUI()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -323,7 +324,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
             }
             
             
-            
+            updateUI()
             print(String(currentBlessings[0]) + "/" + String(currentBlessings[1]) + "/" + String(currentBlessings[2]) + "/" + String(currentBlessings[3]) + "/" + String(currentBlessings[4]))
         }
     }
@@ -337,12 +338,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
         return returnVal
     }
     
-    override func update(_ currentTime: TimeInterval) {
-        
-        pageName1!.text = blessingNames[0]
-        pageName2!.text = blessingNames[1]
-        pageName3!.text = blessingNames[2]
-        pageName4!.text = blessingNames[3]
+    func updateUI() {
         
         if currentBlessings[0] > 3 {
             blessingMobilityPoints1?.text = "3/3"
@@ -762,5 +758,10 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
         editing2 = false
         editing3 = false
         editing4 = false
+        
+        pageName1!.text = blessingNames[0]
+        pageName2!.text = blessingNames[1]
+        pageName3!.text = blessingNames[2]
+        pageName4!.text = blessingNames[3]
     }
 }

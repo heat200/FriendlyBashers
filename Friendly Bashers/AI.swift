@@ -37,7 +37,7 @@ class AI:Character {
                 })
             } else {
                 thoughtCount += 1
-                if thoughtCount >= 300 {
+                if thoughtCount >= 160 {
                     self.brain.invalidate()
                     self.removeAllActions()
                     self.removeFromParent()
@@ -66,18 +66,6 @@ class AI:Character {
             self.xScale *= -1
         } else if self.parent!.atPoint(CGPoint(x: self.position.x + (65 * self.xScale), y: self.position.y)) as? Character != nil && (self.parent!.atPoint(CGPoint(x: self.position.x + (65 * self.xScale), y: self.position.y)) as? Character)?.player != self.player {
             self.facingCharacter = self.parent!.atPoint(CGPoint(x: self.position.x + (65 * self.xScale), y: self.position.y)) as? Character
-            /*
-            if skillCurrentCharges_1 > 0 {
-                self.doSkill_1()
-            } else {
-                if skillCooldown_1 > 0 {
-                    skillCooldown_1 -= 1
-                } else if skillCooldown_1 == 0 {
-                    self.skillCurrentCharges_1 += 1
-                    skillCooldown_1 = 10
-                }
-            }
-            */
         }
         return able
     }

@@ -29,7 +29,6 @@ class CPU:Character {
     var player3:Character?
     
     func startCPU() {
-        world = self.parent as! GameScene?
         self.run(SKAction.wait(forDuration: 3),completion:{
             self.player1 = self.returnPlayer(self.world!,num: 1)
             self.player2 = self.returnPlayer(self.world!,num: 2)
@@ -42,7 +41,7 @@ class CPU:Character {
     func isSkillReady_1() -> Bool {
         var skillReady = false
         
-        if self.skillCurrentCharges_1 > 0 {
+        if self.skillCurrentCharges_1 > 0 && !self.isResting {
             skillReady = true
         }
         
@@ -52,7 +51,7 @@ class CPU:Character {
     func isSkillReady_2() -> Bool {
         var skillReady = false
         
-        if self.skillCurrentCharges_2 > 0 {
+        if self.skillCurrentCharges_2 > 0 && !self.isResting {
             skillReady = true
         }
         
@@ -62,7 +61,7 @@ class CPU:Character {
     func isSkillReady_3() -> Bool {
         var skillReady = false
         
-        if self.skillCurrentCharges_3 > 0 {
+        if self.skillCurrentCharges_3 > 0 && !self.isResting {
             skillReady = true
         }
         
@@ -438,9 +437,9 @@ class CPU:Character {
     func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         let position = CGPoint(x: (self.position.x), y: self.position.y - self.size.height/2)
-        let column = (self.parent as! GameScene).tileMapNode?.tileColumnIndex(fromPosition: position)
-        let row = (self.parent as! GameScene).tileMapNode?.tileRowIndex(fromPosition: position)
-        let tile = (self.parent as! GameScene).tileMapNode?.tileGroup(atColumn: column!, row: row!)
+        let column = world!.tileMapNode?.tileColumnIndex(fromPosition: position)
+        let row = world!.tileMapNode?.tileRowIndex(fromPosition: position)
+        let tile = world!.tileMapNode?.tileGroup(atColumn: column!, row: row!)
         
         if playerAction == "" {
             timeSinceNoAction = currentTime

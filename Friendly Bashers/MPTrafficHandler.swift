@@ -10,15 +10,20 @@ import MultipeerConnectivity
 
 class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
     var outMoveCount = 0
+    var started = false
     
     func startMPC() {
-        appDelegate.mpcHandler.setupPeerWithDisplayName(NSUserName())
-        appDelegate.mpcHandler.setupSession()
-        appDelegate.mpcHandler.advertiseSelf(true)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(MPTrafficHandler.peerChangedStateWithNotification), name: NSNotification.Name(rawValue: "MPC_DidChangeStateNotification"), object: nil)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(MPTrafficHandler.handleReceivedDataWithNotification), name: NSNotification.Name(rawValue: "MPC_DidReceiveDataNotification"), object: nil)
+        if !started {
+            print("Started MPTH")
+            appDelegate.mpcHandler.setupPeerWithDisplayName(UIDevice.current.name)
+            appDelegate.mpcHandler.setupSession()
+            appDelegate.mpcHandler.advertiseSelf(true)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(MPTrafficHandler.peerChangedStateWithNotification), name: NSNotification.Name(rawValue: "MPC_DidChangeStateNotification"), object: nil)
+            
+            NotificationCenter.default.addObserver(self, selector: #selector(MPTrafficHandler.handleReceivedDataWithNotification), name: NSNotification.Name(rawValue: "MPC_DidReceiveDataNotification"), object: nil)
+            started = true
+        }
         
         connectWithPlayer()
     }
@@ -27,8 +32,15 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         if appDelegate.mpcHandler.session != nil {
             appDelegate.mpcHandler.setupBrowser()
             appDelegate.mpcHandler.browser.delegate = self
-            modeSelect?.view?.window?.rootViewController!.present(appDelegate.mpcHandler.browser,animated:true,completion:{})
-            connected = true
+            modeSelect?.view?.window?.rootViewController!.present(appDelegate.mpcHandler.browser,animated:true,completion:{
+                if appDelegate.mpcHandler.session != nil {
+                    connected = true
+                    print("Connected with someone!")
+                } else {
+                    connected = false
+                    print("No one was found.")
+                }
+            })
         }
     }
     
@@ -45,6 +57,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         
         if state == MCSessionState.connected.rawValue {
             print(connected)
+            
             sendPlayerSetupInfo()
         }
     }
@@ -56,7 +69,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         
         do {
             try appDelegate.mpcHandler.session.send(messageData, toPeers: appDelegate.mpcHandler.session.connectedPeers, with: MCSessionSendDataMode.unreliable)
-            //print("Sent PlayerInfo")
+            print("Sent PlayerInfo")
         } catch {
             print("Error: Couldn't send PlayerInfo")
         }
@@ -67,20 +80,33 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         let receivedData:Data = userInfo["data"] as! Data
         let message = try! JSONSerialization.jsonObject(with: receivedData, options: JSONSerialization.ReadingOptions.allowFragments) as! NSDictionary
         let senderPeerId:MCPeerID = userInfo["peerID"] as! MCPeerID
-        //let senderDisplayName = senderPeerId.displayName
+        let senderDisplayName = senderPeerId.displayName
         
-        if message.object(forKey: "player") != nil {
+        if message.object(forKey: "playerName") != nil {
             let playerName:String? = message.object(forKey: "playerName") as? String
             let chosenBasher:String? = message.object(forKey: "chosenBasher") as? String
             if chosenBasher != nil && !inPlay {
-                
+                if playerName == otherPlayers[0] {
+                    print(playerName! + " picked " + chosenBasher!)
+                    chosenBasher2 = chosenBasher!
+                } else if playerName == otherPlayers[1] {
+                    print(playerName! + " picked " + chosenBasher!)
+                    chosenBasher3 = chosenBasher!
+                } else if playerName == otherPlayers[2] {
+                    print(playerName! + " picked " + chosenBasher!)
+                    chosenBasher4 = chosenBasher!
+                }
+                basherSelect?.updateUI()
             } else if playerName != nil && !inPlay {
                 if otherPlayers[0] == "" && otherPlayers[0] != playerName {
                     otherPlayers[0] = playerName!
+                    print("Player 2 is " + playerName!)
                 } else if otherPlayers[1] == "" && otherPlayers[1] != playerName {
                     otherPlayers[1] = playerName!
+                    print("Player 3 is " + playerName!)
                 } else if otherPlayers[2] == "" && otherPlayers[2] != playerName {
                     otherPlayers[2] = playerName!
+                    print("Player 4 is " + playerName!)
                 }
             }
         }
@@ -95,7 +121,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
     }
     
     func sendPlayerCharacter() {
-        let messageDict = ["chosenBasher":chosenBasher]
+        let messageDict = ["playerName":playerName,"chosenBasher":chosenBasher]
         
         let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.prettyPrinted)
         

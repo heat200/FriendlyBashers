@@ -49,20 +49,22 @@ class OptionsScene:SKScene {
                     musicEnabled = true
                 }
             }
+            
+            if sfxEnabled {
+                sfxButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_On")))
+            } else {
+                sfxButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_Off")))
+            }
+            
+            if musicEnabled {
+                musicButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_On")))
+            } else {
+                musicButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_Off")))
+            }
         }
     }
     
     override func update(_ currentTime: TimeInterval) {
-        if sfxEnabled {
-            sfxButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_On")))
-        } else {
-            sfxButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_Off")))
-        }
         
-        if musicEnabled {
-            musicButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_On")))
-        } else {
-            musicButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Music_Off")))
-        }
     }
 }

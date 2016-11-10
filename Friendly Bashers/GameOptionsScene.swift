@@ -56,7 +56,11 @@ class GameOptionsScene:SKScene {
     }
     
     override func didMove(to view: SKView) {
-        
+        blessingPageName1!.text = blessingNames[0]
+        blessingPageName2!.text = blessingNames[1]
+        blessingPageName3!.text = blessingNames[2]
+        blessingPageName4!.text = blessingNames[3]
+        updateUI()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -105,10 +109,11 @@ class GameOptionsScene:SKScene {
             } else if (self.chooseBlessingPage4?.contains(pos))! {
                 chosenBlessing = 3
             }
+            updateUI()
         }
     }
     
-    override func update(_ currentTime: TimeInterval) {
+    func updateUI() {
         if sfxEnabled {
             sfxButton!.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_On")))
         } else {
@@ -168,10 +173,9 @@ class GameOptionsScene:SKScene {
             deathMode1Button?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Enabled")))
             deathMode2Button?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Disabled")))
         }
+    }
+    
+    override func update(_ currentTime: TimeInterval) {
         
-        blessingPageName1!.text = blessingNames[0]
-        blessingPageName2!.text = blessingNames[1]
-        blessingPageName3!.text = blessingNames[2]
-        blessingPageName4!.text = blessingNames[3]
     }
 }
