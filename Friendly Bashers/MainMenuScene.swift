@@ -26,6 +26,8 @@ var chosenBlessing:Int = 0
 var blessingNames = ["Page 1", "Page 2", "Page 3", "Page 4"]
 var blessingList = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
 
+var otherPlayerBlessings = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
+
 var musicEnabled = false
 var sfxEnabled = false
 

@@ -11,10 +11,6 @@ import SpriteKit
 class CPU:Character {
     var brain:Timer!
     var inAction = false
-    var playerMovement = ""
-    var playerLastMovement = ""
-    var playerAction = ""
-    var playerLastAction = ""
     var currentTime:TimeInterval = 0
     var timeSinceNoAction: TimeInterval = 0
     
@@ -68,6 +64,7 @@ class CPU:Character {
         return skillReady
     }
     
+    /*
     func playerAnimations() {
         if playerMovement != playerLastMovement {
             if playerMovement == "Move_Right" || playerMovement == "Move_Left" {
@@ -115,6 +112,7 @@ class CPU:Character {
             }
         }
     }
+    */
     
     func attackTypeAvailable(_ type:String) -> Bool {
         var available = false
@@ -266,8 +264,10 @@ class CPU:Character {
                 }
             } else if self.position.x > player1!.position.x {
                 playerMovement = "Move_Left"
+                self.xScale = -1
             } else {
                 playerMovement = "Move_Right"
+                self.xScale = 1
             }
             
             if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
@@ -281,6 +281,7 @@ class CPU:Character {
             } else if self.position.y > player1!.position.y {
                 playerAction = ""
                 playerMovement = "Move_Left"
+                self.xScale = -1
             } else {
                 playerAction = "Jump"
             }
@@ -310,8 +311,10 @@ class CPU:Character {
                 }
             } else if self.position.x > player2!.position.x {
                 playerMovement = "Move_Left"
+                self.xScale = -1
             } else {
                 playerMovement = "Move_Right"
+                self.xScale = 1
             }
             
             if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
@@ -325,6 +328,7 @@ class CPU:Character {
             } else if self.position.y > player2!.position.y {
                 playerAction = ""
                 playerMovement = "Move_Left"
+                self.xScale = -1
             } else {
                 playerAction = "Jump"
             }
@@ -354,8 +358,10 @@ class CPU:Character {
                 }
             } else if self.position.x > player3!.position.x {
                 playerMovement = "Move_Left"
+                self.xScale = -1
             } else if self.position.x < player3!.position.x {
                 playerMovement = "Move_Right"
+                self.xScale = 1
             }
             
             if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
@@ -369,6 +375,7 @@ class CPU:Character {
             } else if self.position.y > player3!.position.y {
                 playerAction = ""
                 playerMovement = "Move_Left"
+                self.xScale = -1
             } else {
                 playerAction = "Jump"
             }
@@ -422,16 +429,6 @@ class CPU:Character {
         //print("P4 Taken:" + String(returnedP4))
         //print(otherPlayer!)
         return otherPlayer!
-    }
-    
-    func playerMovement(mod:CGFloat) {
-        if playerMovement == "Move_Left" {
-            self.xScale = -1
-            self.physicsBody?.velocity = CGVector(dx: -self.movespeed * mod, dy: (self.physicsBody?.velocity.dy)!)
-        } else if playerMovement == "Move_Right" {
-            self.physicsBody?.velocity = CGVector(dx: self.movespeed * mod, dy: (self.physicsBody?.velocity.dy)!)
-            self.xScale = 1
-        }
     }
     
     func update(_ currentTime: TimeInterval) {
@@ -507,7 +504,7 @@ class CPU:Character {
             }
         }
         
-        playerAnimations()
+        playerAnimations(currentTime)
         
         if playerAction != playerLastAction {
             if playerAction == "Jump" && self.currentJumps < self.maxJumps {

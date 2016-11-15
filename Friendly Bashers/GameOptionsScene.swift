@@ -68,6 +68,10 @@ class GameOptionsScene:SKScene {
             let pos = t.location(in: self)
             
             if (self.backButton?.contains(pos))! {
+                if appDelegate.mpcHandler.session != nil {
+                    MP_TRAFFIC_HANDLER.syncGameSettings()
+                }
+                
                 if let view = self.view {
                     view.presentScene(basherSelect)
                     view.ignoresSiblingOrder = false

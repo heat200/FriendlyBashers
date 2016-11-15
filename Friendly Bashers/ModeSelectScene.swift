@@ -56,7 +56,7 @@ class ModeSelectScene:SKScene {
             let pos = t.location(in: self)
             
             if self.atPoint(pos) == self.agreeButton && chosenMode != "" {
-                headToBasherSelect()
+                headToBasherSelect(false)
             } else if self.atPoint(pos) == self.backButton {
                 // Present the scene
                 if let view = self.view {
@@ -80,6 +80,10 @@ class ModeSelectScene:SKScene {
                 chosenMode = ""
             }
             updateUI()
+            
+            if appDelegate.mpcHandler.session != nil {
+                MP_TRAFFIC_HANDLER.syncGameMode()
+            }
             //print(chosenMode)
         }
     }
@@ -92,7 +96,11 @@ class ModeSelectScene:SKScene {
         }
     }
 
-    func headToBasherSelect() {
+    func headToBasherSelect(_ receiving:Bool) {
+        if !receiving && appDelegate.mpcHandler.session != nil {
+            MP_TRAFFIC_HANDLER.sendChooseBasherMsg()
+        }
+        
         if basherSelect == nil {
             if let scene = BasherSelectScene(fileNamed: "BasherSelectScene") {
                 let sceneNode = scene
@@ -118,16 +126,5 @@ class ModeSelectScene:SKScene {
                 view.showsNodeCount = false
             }
         }
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
-        }
-        
-        self.lastUpdateTime = currentTime
     }
 }

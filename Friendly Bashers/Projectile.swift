@@ -21,6 +21,7 @@ class Projectile:SKSpriteNode {
         self.physicsBody!.allowsRotation = false
         self.physicsBody!.friction = 5.0
         self.physicsBody!.restitution = 0
+        self.physicsBody!.affectedByGravity = false
         self.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
         self.physicsBody!.categoryBitMask = ProjectileCategory
         self.physicsBody!.collisionBitMask = 0

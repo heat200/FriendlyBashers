@@ -8,21 +8,33 @@
 
 import SpriteKit
 
-class OptionsScene:SKScene {
+class OptionsScene:SKScene, UITextFieldDelegate {
+    var textField:UITextField!
+    
     var backButton:SKSpriteNode?
     
     var sfxButton:SKSpriteNode?
     var musicButton:SKSpriteNode?
     
+    var playerNameLabel:SKLabelNode?
+    var renamePlayer:SKSpriteNode?
+    
+    var editing = false
     
     override func sceneDidLoad() {
         self.backButton = self.childNode(withName: "//backButton") as? SKSpriteNode
         self.sfxButton = self.childNode(withName: "//sfxButton") as? SKSpriteNode
         self.musicButton = self.childNode(withName: "//musicButton") as? SKSpriteNode
+        self.renamePlayer = self.childNode(withName: "//renameButton") as? SKSpriteNode
+        self.playerNameLabel = self.childNode(withName: "//playerNameLabel") as? SKLabelNode
     }
     
     override func didMove(to view: SKView) {
-        
+        textField = UITextField(frame: CGRect(x: self.size.width/2, y: self.size.height/2 - 50, width: 100, height: 20))
+        textField.delegate = self
+        textField.keyboardType = UIKeyboardType.alphabet
+        self.view?.addSubview(textField)
+        playerNameLabel?.text = playerName
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -48,6 +60,9 @@ class OptionsScene:SKScene {
                 } else {
                     musicEnabled = true
                 }
+            } else if (self.renamePlayer?.contains(pos))! {
+                editing = true
+                textField.becomeFirstResponder()
             }
             
             if sfxEnabled {
@@ -64,7 +79,18 @@ class OptionsScene:SKScene {
         }
     }
     
-    override func update(_ currentTime: TimeInterval) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if editing {
+            if textField.text! == "" {
+                playerName = "No Name"
+            } else {
+                playerName = textField.text!
+            }
+            textField.text = ""
+        }
         
+        editing = false
+        
+        playerNameLabel!.text = playerName
     }
 }

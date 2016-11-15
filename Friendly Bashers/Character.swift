@@ -49,6 +49,12 @@ class Character:SKSpriteNode {
     var maxJumps:Int = 2
     var currentJumps:Int = 0
     
+    var playerMovement = ""
+    var playerLastMovement = ""
+    var playerAction = ""
+    var playerLastAction = ""
+    
+    
     var skillCooldown_1:Double = 10
     var skill_1_Last_Used:Double = 0
     var skillMaxCharges_1:Int = 1
@@ -80,6 +86,8 @@ class Character:SKSpriteNode {
     var animateFaint:SKAction?
     
     var lives = 2
+    var faintCount = 0
+    var lastRegenTime:Double = 0
     
     func setUp(name:String) {
         halfHeight = self.size.height/2
@@ -112,103 +120,402 @@ class Character:SKSpriteNode {
             BASE_SKILL_MAX_CHARGES_2 = 2
             BASE_SKILL_MAX_CHARGES_3 = 1
             
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed = BASE_MOVESPEED
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed = BASE_MOVESPEED * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed = BASE_MOVESPEED * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed = BASE_MOVESPEED * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed = BASE_MOVESPEED * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed = BASE_MOVESPEED * 1.01
-                }
-                
-                if blessingList[chosenBlessing][0] >= 5 {
-                    maxJumps = BASE_MAX_JUMPS + 2
-                } else if blessingList[chosenBlessing][0] == 4 {
-                    maxJumps = BASE_MAX_JUMPS + 1
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if blessingList[chosenBlessing][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power = BASE_POWER
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if blessingList[chosenBlessing][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if blessingList[chosenBlessing][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if blessingList[chosenBlessing][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if blessingList[chosenBlessing][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if blessingList[chosenBlessing][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if blessingList[chosenBlessing][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if blessingList[chosenBlessing][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if blessingList[chosenBlessing][3] == 4 {
+                        hpRegen *= 1.025
+                    }
                 } else {
                     maxJumps = BASE_MAX_JUMPS
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
+                    movespeed = BASE_MOVESPEED
                     power = BASE_POWER
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power = BASE_POWER * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power = BASE_POWER * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power = BASE_POWER * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power = BASE_POWER * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power = BASE_POWER * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
                     resistance = BASE_RESISTANCE
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance = BASE_RESISTANCE * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance = BASE_RESISTANCE * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance = BASE_RESISTANCE * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance = BASE_RESISTANCE * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance = BASE_RESISTANCE * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP = BASE_MAX_HP + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP = BASE_MAX_HP + 25
-                } else {
                     maxHP = BASE_MAX_HP
-                }
-                
-                if blessingList[chosenBlessing][3] == 0 {
                     hpRegen = BASE_HP_REGEN
-                } else if blessingList[chosenBlessing][3] >= 9 {
-                    hpRegen = BASE_HP_REGEN + 1.00
-                } else if blessingList[chosenBlessing][3] >= 8 {
-                    hpRegen = BASE_HP_REGEN + 0.75
-                } else if blessingList[chosenBlessing][3] >= 3 {
-                    hpRegen = BASE_HP_REGEN + 0.5
-                } else if blessingList[chosenBlessing][3] >= 2 {
-                    hpRegen = BASE_HP_REGEN + 0.25
-                } else if blessingList[chosenBlessing][3] >= 1 {
-                    hpRegen = BASE_HP_REGEN + 0.1
                 }
-                
-                if blessingList[chosenBlessing][3] >= 7 {
-                    hpRegen += (maxHP * 0.03)
-                } else if blessingList[chosenBlessing][3] == 6 {
-                    hpRegen += (maxHP * 0.015)
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[0][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[0][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[0][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[0][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[0][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[0][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[0][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[0][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[0][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-                
-                if blessingList[chosenBlessing][3] >= 5 {
-                    hpRegen *= 1.05
-                } else if blessingList[chosenBlessing][3] == 4 {
-                    hpRegen *= 1.025
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[1][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[1][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[1][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[1][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[1][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[1][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[1][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[1][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[1][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-            } else {
-                maxJumps = BASE_MAX_JUMPS
-                movespeed = BASE_MOVESPEED
-                power = BASE_POWER
-                resistance = BASE_RESISTANCE
-                maxHP = BASE_MAX_HP
-                hpRegen = BASE_HP_REGEN
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[2][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[2][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[2][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[2][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[2][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[2][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[2][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[2][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[2][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[2][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
+                }
             }
             
             currentHP = maxHP
@@ -276,103 +583,403 @@ class Character:SKSpriteNode {
             BASE_SKILL_MAX_CHARGES_1 = 1
             BASE_SKILL_MAX_CHARGES_2 = 1
             BASE_SKILL_MAX_CHARGES_3 = 1
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed = BASE_MOVESPEED
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed = BASE_MOVESPEED * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed = BASE_MOVESPEED * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed = BASE_MOVESPEED * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed = BASE_MOVESPEED * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed = BASE_MOVESPEED * 1.01
-                }
-                
-                if blessingList[chosenBlessing][0] >= 5 {
-                    maxJumps = BASE_MAX_JUMPS + 2
-                } else if blessingList[chosenBlessing][0] == 4 {
-                    maxJumps = BASE_MAX_JUMPS + 1
+            
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if blessingList[chosenBlessing][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power = BASE_POWER
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if blessingList[chosenBlessing][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if blessingList[chosenBlessing][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if blessingList[chosenBlessing][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if blessingList[chosenBlessing][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if blessingList[chosenBlessing][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if blessingList[chosenBlessing][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if blessingList[chosenBlessing][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if blessingList[chosenBlessing][3] == 4 {
+                        hpRegen *= 1.025
+                    }
                 } else {
                     maxJumps = BASE_MAX_JUMPS
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
+                    movespeed = BASE_MOVESPEED
                     power = BASE_POWER
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power = BASE_POWER * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power = BASE_POWER * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power = BASE_POWER * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power = BASE_POWER * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power = BASE_POWER * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
                     resistance = BASE_RESISTANCE
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance = BASE_RESISTANCE * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance = BASE_RESISTANCE * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance = BASE_RESISTANCE * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance = BASE_RESISTANCE * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance = BASE_RESISTANCE * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP = BASE_MAX_HP + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP = BASE_MAX_HP + 25
-                } else {
                     maxHP = BASE_MAX_HP
-                }
-                
-                if blessingList[chosenBlessing][3] == 0 {
                     hpRegen = BASE_HP_REGEN
-                } else if blessingList[chosenBlessing][3] >= 9 {
-                    hpRegen = BASE_HP_REGEN + 1.00
-                } else if blessingList[chosenBlessing][3] >= 8 {
-                    hpRegen = BASE_HP_REGEN + 0.75
-                } else if blessingList[chosenBlessing][3] >= 3 {
-                    hpRegen = BASE_HP_REGEN + 0.5
-                } else if blessingList[chosenBlessing][3] >= 2 {
-                    hpRegen = BASE_HP_REGEN + 0.25
-                } else if blessingList[chosenBlessing][3] >= 1 {
-                    hpRegen = BASE_HP_REGEN + 0.1
                 }
-                
-                if blessingList[chosenBlessing][3] >= 7 {
-                    hpRegen += (maxHP * 0.03)
-                } else if blessingList[chosenBlessing][3] == 6 {
-                    hpRegen += (maxHP * 0.015)
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[0][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[0][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[0][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[0][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[0][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[0][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[0][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[0][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[0][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-                
-                if blessingList[chosenBlessing][3] >= 5 {
-                    hpRegen *= 1.05
-                } else if blessingList[chosenBlessing][3] == 4 {
-                    hpRegen *= 1.025
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[1][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[1][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[1][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[1][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[1][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[1][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[1][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[1][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[1][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-            } else {
-                maxJumps = BASE_MAX_JUMPS
-                movespeed = BASE_MOVESPEED
-                power = BASE_POWER
-                resistance = BASE_RESISTANCE
-                maxHP = BASE_MAX_HP
-                hpRegen = BASE_HP_REGEN
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[2][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[2][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[2][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[2][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[2][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[2][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[2][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[2][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[2][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[2][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
+                }
             }
             
             currentHP = maxHP
@@ -413,104 +1020,404 @@ class Character:SKSpriteNode {
             BASE_SKILL_MAX_CHARGES_2 = 1
             BASE_SKILL_MAX_CHARGES_3 = 1
             
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed = BASE_MOVESPEED
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed = BASE_MOVESPEED * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed = BASE_MOVESPEED * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed = BASE_MOVESPEED * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed = BASE_MOVESPEED * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed = BASE_MOVESPEED * 1.01
-                }
-                
-                if blessingList[chosenBlessing][0] >= 5 {
-                    maxJumps = BASE_MAX_JUMPS + 2
-                } else if blessingList[chosenBlessing][0] == 4 {
-                    maxJumps = BASE_MAX_JUMPS + 1
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if blessingList[chosenBlessing][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power = BASE_POWER
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if blessingList[chosenBlessing][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if blessingList[chosenBlessing][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if blessingList[chosenBlessing][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if blessingList[chosenBlessing][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if blessingList[chosenBlessing][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if blessingList[chosenBlessing][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if blessingList[chosenBlessing][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if blessingList[chosenBlessing][3] == 4 {
+                        hpRegen *= 1.025
+                    }
                 } else {
                     maxJumps = BASE_MAX_JUMPS
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
+                    movespeed = BASE_MOVESPEED
                     power = BASE_POWER
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power = BASE_POWER * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power = BASE_POWER * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power = BASE_POWER * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power = BASE_POWER * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power = BASE_POWER * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
                     resistance = BASE_RESISTANCE
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance = BASE_RESISTANCE * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance = BASE_RESISTANCE * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance = BASE_RESISTANCE * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance = BASE_RESISTANCE * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance = BASE_RESISTANCE * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP = BASE_MAX_HP + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP = BASE_MAX_HP + 25
-                } else {
                     maxHP = BASE_MAX_HP
-                }
-                
-                if blessingList[chosenBlessing][3] == 0 {
                     hpRegen = BASE_HP_REGEN
-                } else if blessingList[chosenBlessing][3] >= 9 {
-                    hpRegen = BASE_HP_REGEN + 1.00
-                } else if blessingList[chosenBlessing][3] >= 8 {
-                    hpRegen = BASE_HP_REGEN + 0.75
-                } else if blessingList[chosenBlessing][3] >= 3 {
-                    hpRegen = BASE_HP_REGEN + 0.5
-                } else if blessingList[chosenBlessing][3] >= 2 {
-                    hpRegen = BASE_HP_REGEN + 0.25
-                } else if blessingList[chosenBlessing][3] >= 1 {
-                    hpRegen = BASE_HP_REGEN + 0.1
                 }
-                
-                if blessingList[chosenBlessing][3] >= 7 {
-                    hpRegen += (maxHP * 0.03)
-                } else if blessingList[chosenBlessing][3] == 6 {
-                    hpRegen += (maxHP * 0.015)
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[0][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[0][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[0][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[0][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[0][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[0][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[0][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[0][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[0][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-                
-                if blessingList[chosenBlessing][3] >= 5 {
-                    hpRegen *= 1.05
-                } else if blessingList[chosenBlessing][3] == 4 {
-                    hpRegen *= 1.025
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[1][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[1][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[1][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[1][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[1][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[1][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[1][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[1][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[1][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-            } else {
-                maxJumps = BASE_MAX_JUMPS
-                movespeed = BASE_MOVESPEED
-                power = BASE_POWER
-                resistance = BASE_RESISTANCE
-                maxHP = BASE_MAX_HP
-                hpRegen = BASE_HP_REGEN
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[2][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[2][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[2][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[2][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[2][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[2][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[2][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[2][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[2][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[2][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
+                }
             }
+            
             currentHP = maxHP
             
             skillMaxCharges_1 = BASE_SKILL_MAX_CHARGES_1 + Int(power/10)
@@ -549,104 +1456,405 @@ class Character:SKSpriteNode {
             BASE_SKILL_MAX_CHARGES_1 = 1
             BASE_SKILL_MAX_CHARGES_2 = 1
             BASE_SKILL_MAX_CHARGES_3 = 1
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed = BASE_MOVESPEED
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed = BASE_MOVESPEED * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed = BASE_MOVESPEED * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed = BASE_MOVESPEED * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed = BASE_MOVESPEED * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed = BASE_MOVESPEED * 1.01
-                }
-                
-                if blessingList[chosenBlessing][0] >= 5 {
-                    maxJumps = BASE_MAX_JUMPS + 2
-                } else if blessingList[chosenBlessing][0] == 4 {
-                    maxJumps = BASE_MAX_JUMPS + 1
+            
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if blessingList[chosenBlessing][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power = BASE_POWER
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if blessingList[chosenBlessing][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if blessingList[chosenBlessing][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if blessingList[chosenBlessing][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if blessingList[chosenBlessing][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if blessingList[chosenBlessing][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if blessingList[chosenBlessing][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if blessingList[chosenBlessing][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if blessingList[chosenBlessing][3] == 4 {
+                        hpRegen *= 1.025
+                    }
                 } else {
                     maxJumps = BASE_MAX_JUMPS
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
+                    movespeed = BASE_MOVESPEED
                     power = BASE_POWER
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power = BASE_POWER * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power = BASE_POWER * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power = BASE_POWER * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power = BASE_POWER * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power = BASE_POWER * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
                     resistance = BASE_RESISTANCE
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance = BASE_RESISTANCE * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance = BASE_RESISTANCE * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance = BASE_RESISTANCE * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance = BASE_RESISTANCE * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance = BASE_RESISTANCE * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP = BASE_MAX_HP + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP = BASE_MAX_HP + 25
-                } else {
                     maxHP = BASE_MAX_HP
-                }
-                
-                if blessingList[chosenBlessing][3] == 0 {
                     hpRegen = BASE_HP_REGEN
-                } else if blessingList[chosenBlessing][3] >= 9 {
-                    hpRegen = BASE_HP_REGEN + 1.00
-                } else if blessingList[chosenBlessing][3] >= 8 {
-                    hpRegen = BASE_HP_REGEN + 0.75
-                } else if blessingList[chosenBlessing][3] >= 3 {
-                    hpRegen = BASE_HP_REGEN + 0.5
-                } else if blessingList[chosenBlessing][3] >= 2 {
-                    hpRegen = BASE_HP_REGEN + 0.25
-                } else if blessingList[chosenBlessing][3] >= 1 {
-                    hpRegen = BASE_HP_REGEN + 0.1
                 }
-                
-                if blessingList[chosenBlessing][3] >= 7 {
-                    hpRegen += (maxHP * 0.03)
-                } else if blessingList[chosenBlessing][3] == 6 {
-                    hpRegen += (maxHP * 0.015)
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[0][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[0][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[0][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[0][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[0][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[0][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[0][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[0][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[0][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-                
-                if blessingList[chosenBlessing][3] >= 5 {
-                    hpRegen *= 1.05
-                } else if blessingList[chosenBlessing][3] == 4 {
-                    hpRegen *= 1.025
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[1][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[1][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[1][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[1][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[1][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[1][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[1][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[1][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[1][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-            } else {
-                maxJumps = BASE_MAX_JUMPS
-                movespeed = BASE_MOVESPEED
-                power = BASE_POWER
-                resistance = BASE_RESISTANCE
-                maxHP = BASE_MAX_HP
-                hpRegen = BASE_HP_REGEN
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[2][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[2][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[2][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[2][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[2][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[2][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[2][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[2][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[2][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[2][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
+                }
             }
+            
             currentHP = maxHP
             
             skillMaxCharges_1 = BASE_SKILL_MAX_CHARGES_1 + Int(power/25)
@@ -684,104 +1892,405 @@ class Character:SKSpriteNode {
             BASE_SKILL_MAX_CHARGES_1 = 1
             BASE_SKILL_MAX_CHARGES_2 = 1
             BASE_SKILL_MAX_CHARGES_3 = 1
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed = BASE_MOVESPEED
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed = BASE_MOVESPEED * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed = BASE_MOVESPEED * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed = BASE_MOVESPEED * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed = BASE_MOVESPEED * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed = BASE_MOVESPEED * 1.01
-                }
-                
-                if blessingList[chosenBlessing][0] >= 5 {
-                    maxJumps = BASE_MAX_JUMPS + 2
-                } else if blessingList[chosenBlessing][0] == 4 {
-                    maxJumps = BASE_MAX_JUMPS + 1
+            
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if blessingList[chosenBlessing][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power = BASE_POWER
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if blessingList[chosenBlessing][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if blessingList[chosenBlessing][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if blessingList[chosenBlessing][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if blessingList[chosenBlessing][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if blessingList[chosenBlessing][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if blessingList[chosenBlessing][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if blessingList[chosenBlessing][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if blessingList[chosenBlessing][3] == 4 {
+                        hpRegen *= 1.025
+                    }
                 } else {
                     maxJumps = BASE_MAX_JUMPS
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
+                    movespeed = BASE_MOVESPEED
                     power = BASE_POWER
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power = BASE_POWER * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power = BASE_POWER * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power = BASE_POWER * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power = BASE_POWER * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power = BASE_POWER * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
                     resistance = BASE_RESISTANCE
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance = BASE_RESISTANCE * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance = BASE_RESISTANCE * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance = BASE_RESISTANCE * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance = BASE_RESISTANCE * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance = BASE_RESISTANCE * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP = BASE_MAX_HP + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP = BASE_MAX_HP + 25
-                } else {
                     maxHP = BASE_MAX_HP
-                }
-                
-                if blessingList[chosenBlessing][3] == 0 {
                     hpRegen = BASE_HP_REGEN
-                } else if blessingList[chosenBlessing][3] >= 9 {
-                    hpRegen = BASE_HP_REGEN + 1.00
-                } else if blessingList[chosenBlessing][3] >= 8 {
-                    hpRegen = BASE_HP_REGEN + 0.75
-                } else if blessingList[chosenBlessing][3] >= 3 {
-                    hpRegen = BASE_HP_REGEN + 0.5
-                } else if blessingList[chosenBlessing][3] >= 2 {
-                    hpRegen = BASE_HP_REGEN + 0.25
-                } else if blessingList[chosenBlessing][3] >= 1 {
-                    hpRegen = BASE_HP_REGEN + 0.1
                 }
-                
-                if blessingList[chosenBlessing][3] >= 7 {
-                    hpRegen += (maxHP * 0.03)
-                } else if blessingList[chosenBlessing][3] == 6 {
-                    hpRegen += (maxHP * 0.015)
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[0][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[0][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[0][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[0][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[0][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[0][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[0][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[0][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[0][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-                
-                if blessingList[chosenBlessing][3] >= 5 {
-                    hpRegen *= 1.05
-                } else if blessingList[chosenBlessing][3] == 4 {
-                    hpRegen *= 1.025
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[1][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[1][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[1][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[1][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[1][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[1][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[1][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[1][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[1][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-            } else {
-                maxJumps = BASE_MAX_JUMPS
-                movespeed = BASE_MOVESPEED
-                power = BASE_POWER
-                resistance = BASE_RESISTANCE
-                maxHP = BASE_MAX_HP
-                hpRegen = BASE_HP_REGEN
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[2][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[2][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[2][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[2][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[2][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[2][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[2][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[2][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[2][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[2][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
+                }
             }
+            
             currentHP = maxHP
             
             skillMaxCharges_1 = BASE_SKILL_MAX_CHARGES_1 + Int(power/10)
@@ -824,169 +2333,661 @@ class Character:SKSpriteNode {
             BASE_SKILL_MAX_CHARGES_1 = 1
             BASE_SKILL_MAX_CHARGES_2 = 2
             BASE_SKILL_MAX_CHARGES_3 = 1
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed = BASE_MOVESPEED
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed = BASE_MOVESPEED * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed = BASE_MOVESPEED * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed = BASE_MOVESPEED * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed = BASE_MOVESPEED * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed = BASE_MOVESPEED * 1.01
-                }
-                
-                if blessingList[chosenBlessing][0] >= 5 {
-                    maxJumps = BASE_MAX_JUMPS + 2
-                } else if blessingList[chosenBlessing][0] == 4 {
-                    maxJumps = BASE_MAX_JUMPS + 1
+            
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if blessingList[chosenBlessing][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power = BASE_POWER
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if blessingList[chosenBlessing][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if blessingList[chosenBlessing][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if blessingList[chosenBlessing][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if blessingList[chosenBlessing][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if blessingList[chosenBlessing][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if blessingList[chosenBlessing][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if blessingList[chosenBlessing][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if blessingList[chosenBlessing][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if blessingList[chosenBlessing][3] == 4 {
+                        hpRegen *= 1.025
+                    }
                 } else {
                     maxJumps = BASE_MAX_JUMPS
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
+                    movespeed = BASE_MOVESPEED
                     power = BASE_POWER
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power = BASE_POWER * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power = BASE_POWER * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power = BASE_POWER * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power = BASE_POWER * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power = BASE_POWER * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE = BASE_RESISTANCE + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
                     resistance = BASE_RESISTANCE
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance = BASE_RESISTANCE * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance = BASE_RESISTANCE * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance = BASE_RESISTANCE * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance = BASE_RESISTANCE * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance = BASE_RESISTANCE * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP = BASE_MAX_HP + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP = BASE_MAX_HP + 25
-                } else {
                     maxHP = BASE_MAX_HP
-                }
-                
-                if blessingList[chosenBlessing][3] == 0 {
                     hpRegen = BASE_HP_REGEN
-                } else if blessingList[chosenBlessing][3] >= 9 {
-                    hpRegen = BASE_HP_REGEN + 1.00
-                } else if blessingList[chosenBlessing][3] >= 8 {
-                    hpRegen = BASE_HP_REGEN + 0.75
-                } else if blessingList[chosenBlessing][3] >= 3 {
-                    hpRegen = BASE_HP_REGEN + 0.5
-                } else if blessingList[chosenBlessing][3] >= 2 {
-                    hpRegen = BASE_HP_REGEN + 0.25
-                } else if blessingList[chosenBlessing][3] >= 1 {
-                    hpRegen = BASE_HP_REGEN + 0.1
                 }
-                
-                if blessingList[chosenBlessing][3] >= 7 {
-                    hpRegen += (maxHP * 0.03)
-                } else if blessingList[chosenBlessing][3] == 6 {
-                    hpRegen += (maxHP * 0.015)
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[0][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[0][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[0][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[0][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[0][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[0][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[0][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[0][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[0][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[0][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-                
-                if blessingList[chosenBlessing][3] >= 5 {
-                    hpRegen *= 1.05
-                } else if blessingList[chosenBlessing][3] == 4 {
-                    hpRegen *= 1.025
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[1][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[1][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[1][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[1][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[1][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[1][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[1][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[1][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[1][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[1][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
                 }
-            } else {
-                maxJumps = BASE_MAX_JUMPS
-                movespeed = BASE_MOVESPEED
-                power = BASE_POWER
-                resistance = BASE_RESISTANCE
-                maxHP = BASE_MAX_HP
-                hpRegen = BASE_HP_REGEN
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed = BASE_MOVESPEED
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed = BASE_MOVESPEED * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed = BASE_MOVESPEED * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed = BASE_MOVESPEED * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed = BASE_MOVESPEED * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed = BASE_MOVESPEED * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][0] >= 5 {
+                        maxJumps = BASE_MAX_JUMPS + 2
+                    } else if otherPlayerBlessings[2][0] == 4 {
+                        maxJumps = BASE_MAX_JUMPS + 1
+                    } else {
+                        maxJumps = BASE_MAX_JUMPS
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power = BASE_POWER
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power = BASE_POWER * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power = BASE_POWER * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power = BASE_POWER * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power = BASE_POWER * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power = BASE_POWER * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE = BASE_RESISTANCE + 5
+                    }
+                    
+                    if otherPlayerBlessings[2][2] == 0 {
+                        resistance = BASE_RESISTANCE
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance = BASE_RESISTANCE * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance = BASE_RESISTANCE * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance = BASE_RESISTANCE * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance = BASE_RESISTANCE * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance = BASE_RESISTANCE * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP = BASE_MAX_HP + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP = BASE_MAX_HP + 25
+                    } else {
+                        maxHP = BASE_MAX_HP
+                    }
+                    
+                    if otherPlayerBlessings[2][3] == 0 {
+                        hpRegen = BASE_HP_REGEN
+                    } else if otherPlayerBlessings[2][3] >= 9 {
+                        hpRegen = BASE_HP_REGEN + 1.00
+                    } else if otherPlayerBlessings[2][3] >= 8 {
+                        hpRegen = BASE_HP_REGEN + 0.75
+                    } else if otherPlayerBlessings[2][3] >= 3 {
+                        hpRegen = BASE_HP_REGEN + 0.5
+                    } else if otherPlayerBlessings[2][3] >= 2 {
+                        hpRegen = BASE_HP_REGEN + 0.25
+                    } else if otherPlayerBlessings[2][3] >= 1 {
+                        hpRegen = BASE_HP_REGEN + 0.1
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 7 {
+                        hpRegen += (maxHP * 0.03)
+                    } else if otherPlayerBlessings[2][3] == 6 {
+                        hpRegen += (maxHP * 0.015)
+                    }
+                    
+                    if otherPlayerBlessings[2][3] >= 5 {
+                        hpRegen *= 1.05
+                    } else if otherPlayerBlessings[2][3] == 4 {
+                        hpRegen *= 1.025
+                    }
+                } else {
+                    maxJumps = BASE_MAX_JUMPS
+                    movespeed = BASE_MOVESPEED
+                    power = BASE_POWER
+                    resistance = BASE_RESISTANCE
+                    maxHP = BASE_MAX_HP
+                    hpRegen = BASE_HP_REGEN
+                }
             }
             
             currentHP = maxHP
             
-            if (!(self is CPU) && !(self is AI)) {
-                if blessingList[chosenBlessing][0] == 0 {
-                    movespeed_2 = BASE_MOVESPEED_2
-                } else if blessingList[chosenBlessing][0] >= 9 {
-                    movespeed_2 = BASE_MOVESPEED_2 * 1.1
-                } else if blessingList[chosenBlessing][0] >= 8 {
-                    movespeed_2 = BASE_MOVESPEED_2 * 1.075
-                } else if blessingList[chosenBlessing][0] >= 3 {
-                    movespeed_2 = BASE_MOVESPEED_2 * 1.05
-                } else if blessingList[chosenBlessing][0] >= 2 {
-                    movespeed_2 = BASE_MOVESPEED_2 * 1.025
-                } else if blessingList[chosenBlessing][0] >= 1 {
-                    movespeed_2 = BASE_MOVESPEED_2 * 1.01
-                }
-                
-                if blessingList[chosenBlessing][1] == 0 {
-                    power_2 = BASE_POWER_2
-                } else if blessingList[chosenBlessing][1] >= 9 {
-                    power_2 = BASE_POWER_2 * 1.1
-                } else if blessingList[chosenBlessing][1] >= 8 {
-                    power_2 = BASE_POWER_2 * 1.075
-                } else if blessingList[chosenBlessing][1] >= 3 {
-                    power_2 = BASE_POWER_2 * 1.05
-                } else if blessingList[chosenBlessing][1] >= 2 {
-                    power_2 = BASE_POWER_2 * 1.025
-                } else if blessingList[chosenBlessing][1] >= 1 {
-                    power_2 = BASE_POWER_2 * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 5 {
-                    BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 10
-                } else if blessingList[chosenBlessing][2] == 4 {
-                    BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 5
-                }
-                
-                if blessingList[chosenBlessing][2] == 0 {
-                    resistance_2 = BASE_RESISTANCE_2
-                } else if blessingList[chosenBlessing][2] >= 9 {
-                    resistance_2 = BASE_RESISTANCE_2 * 1.1
-                } else if blessingList[chosenBlessing][2] >= 8 {
-                    resistance_2 = BASE_RESISTANCE_2 * 1.075
-                } else if blessingList[chosenBlessing][2] >= 3 {
-                    resistance_2 = BASE_RESISTANCE_2 * 1.05
-                } else if blessingList[chosenBlessing][2] >= 2 {
-                    resistance_2 = BASE_RESISTANCE_2 * 1.025
-                } else if blessingList[chosenBlessing][2] >= 1 {
-                    resistance_2 = BASE_RESISTANCE_2 * 1.01
-                }
-                
-                if blessingList[chosenBlessing][2] >= 7 {
-                    maxHP_2 = BASE_MAX_HP_2 + 50
-                } else if blessingList[chosenBlessing][2] == 6 {
-                    maxHP_2 = BASE_MAX_HP_2 + 25
+            if self == gameScene?.playerNode {
+                if (!(self is AI)) {
+                    if blessingList[chosenBlessing][0] == 0 {
+                        movespeed_2 = BASE_MOVESPEED_2
+                    } else if blessingList[chosenBlessing][0] >= 9 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.1
+                    } else if blessingList[chosenBlessing][0] >= 8 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.075
+                    } else if blessingList[chosenBlessing][0] >= 3 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.05
+                    } else if blessingList[chosenBlessing][0] >= 2 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.025
+                    } else if blessingList[chosenBlessing][0] >= 1 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][1] == 0 {
+                        power_2 = BASE_POWER_2
+                    } else if blessingList[chosenBlessing][1] >= 9 {
+                        power_2 = BASE_POWER_2 * 1.1
+                    } else if blessingList[chosenBlessing][1] >= 8 {
+                        power_2 = BASE_POWER_2 * 1.075
+                    } else if blessingList[chosenBlessing][1] >= 3 {
+                        power_2 = BASE_POWER_2 * 1.05
+                    } else if blessingList[chosenBlessing][1] >= 2 {
+                        power_2 = BASE_POWER_2 * 1.025
+                    } else if blessingList[chosenBlessing][1] >= 1 {
+                        power_2 = BASE_POWER_2 * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 5 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 10
+                    } else if blessingList[chosenBlessing][2] == 4 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 5
+                    }
+                    
+                    if blessingList[chosenBlessing][2] == 0 {
+                        resistance_2 = BASE_RESISTANCE_2
+                    } else if blessingList[chosenBlessing][2] >= 9 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.1
+                    } else if blessingList[chosenBlessing][2] >= 8 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.075
+                    } else if blessingList[chosenBlessing][2] >= 3 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.05
+                    } else if blessingList[chosenBlessing][2] >= 2 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.025
+                    } else if blessingList[chosenBlessing][2] >= 1 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.01
+                    }
+                    
+                    if blessingList[chosenBlessing][2] >= 7 {
+                        maxHP_2 = BASE_MAX_HP_2 + 50
+                    } else if blessingList[chosenBlessing][2] == 6 {
+                        maxHP_2 = BASE_MAX_HP_2 + 25
+                    } else {
+                        maxHP_2 = BASE_MAX_HP_2
+                    }
                 } else {
+                    movespeed_2 = BASE_MOVESPEED_2
+                    power_2 = BASE_POWER_2
+                    resistance_2 = BASE_RESISTANCE_2
                     maxHP_2 = BASE_MAX_HP_2
                 }
-            } else {
-                movespeed_2 = BASE_MOVESPEED_2
-                power_2 = BASE_POWER_2
-                resistance_2 = BASE_RESISTANCE_2
-                maxHP_2 = BASE_MAX_HP_2
+            } else if self == gameScene?.playerNode2 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[0][0] == 0 {
+                        movespeed_2 = BASE_MOVESPEED_2
+                    } else if otherPlayerBlessings[0][0] >= 9 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.1
+                    } else if otherPlayerBlessings[0][0] >= 8 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.075
+                    } else if otherPlayerBlessings[0][0] >= 3 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.05
+                    } else if otherPlayerBlessings[0][0] >= 2 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.025
+                    } else if otherPlayerBlessings[0][0] >= 1 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][1] == 0 {
+                        power_2 = BASE_POWER_2
+                    } else if otherPlayerBlessings[0][1] >= 9 {
+                        power_2 = BASE_POWER_2 * 1.1
+                    } else if otherPlayerBlessings[0][1] >= 8 {
+                        power_2 = BASE_POWER_2 * 1.075
+                    } else if otherPlayerBlessings[0][1] >= 3 {
+                        power_2 = BASE_POWER_2 * 1.05
+                    } else if otherPlayerBlessings[0][1] >= 2 {
+                        power_2 = BASE_POWER_2 * 1.025
+                    } else if otherPlayerBlessings[0][1] >= 1 {
+                        power_2 = BASE_POWER_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 5 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 10
+                    } else if otherPlayerBlessings[0][2] == 4 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance_2 = BASE_RESISTANCE_2
+                    } else if otherPlayerBlessings[0][2] >= 9 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.1
+                    } else if otherPlayerBlessings[0][2] >= 8 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.075
+                    } else if otherPlayerBlessings[0][2] >= 3 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.05
+                    } else if otherPlayerBlessings[0][2] >= 2 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.025
+                    } else if otherPlayerBlessings[0][2] >= 1 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[0][2] >= 7 {
+                        maxHP_2 = BASE_MAX_HP_2 + 50
+                    } else if otherPlayerBlessings[0][2] == 6 {
+                        maxHP_2 = BASE_MAX_HP_2 + 25
+                    } else {
+                        maxHP_2 = BASE_MAX_HP_2
+                    }
+                } else {
+                    movespeed_2 = BASE_MOVESPEED_2
+                    power_2 = BASE_POWER_2
+                    resistance_2 = BASE_RESISTANCE_2
+                    maxHP_2 = BASE_MAX_HP_2
+                }
+            } else if self == gameScene?.playerNode3 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[1][0] == 0 {
+                        movespeed_2 = BASE_MOVESPEED_2
+                    } else if otherPlayerBlessings[1][0] >= 9 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.1
+                    } else if otherPlayerBlessings[1][0] >= 8 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.075
+                    } else if otherPlayerBlessings[1][0] >= 3 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.05
+                    } else if otherPlayerBlessings[1][0] >= 2 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.025
+                    } else if otherPlayerBlessings[1][0] >= 1 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][1] == 0 {
+                        power_2 = BASE_POWER_2
+                    } else if otherPlayerBlessings[1][1] >= 9 {
+                        power_2 = BASE_POWER_2 * 1.1
+                    } else if otherPlayerBlessings[1][1] >= 8 {
+                        power_2 = BASE_POWER_2 * 1.075
+                    } else if otherPlayerBlessings[1][1] >= 3 {
+                        power_2 = BASE_POWER_2 * 1.05
+                    } else if otherPlayerBlessings[1][1] >= 2 {
+                        power_2 = BASE_POWER_2 * 1.025
+                    } else if otherPlayerBlessings[1][1] >= 1 {
+                        power_2 = BASE_POWER_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 5 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 10
+                    } else if otherPlayerBlessings[1][2] == 4 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 5
+                    }
+                    
+                    if otherPlayerBlessings[1][2] == 0 {
+                        resistance_2 = BASE_RESISTANCE_2
+                    } else if otherPlayerBlessings[1][2] >= 9 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.1
+                    } else if otherPlayerBlessings[1][2] >= 8 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.075
+                    } else if otherPlayerBlessings[1][2] >= 3 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.05
+                    } else if otherPlayerBlessings[1][2] >= 2 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.025
+                    } else if otherPlayerBlessings[1][2] >= 1 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[1][2] >= 7 {
+                        maxHP_2 = BASE_MAX_HP_2 + 50
+                    } else if otherPlayerBlessings[1][2] == 6 {
+                        maxHP_2 = BASE_MAX_HP_2 + 25
+                    } else {
+                        maxHP_2 = BASE_MAX_HP_2
+                    }
+                } else {
+                    movespeed_2 = BASE_MOVESPEED_2
+                    power_2 = BASE_POWER_2
+                    resistance_2 = BASE_RESISTANCE_2
+                    maxHP_2 = BASE_MAX_HP_2
+                }
+            } else if self == gameScene?.playerNode4 {
+                if (!(self is AI)) {
+                    if otherPlayerBlessings[2][0] == 0 {
+                        movespeed_2 = BASE_MOVESPEED_2
+                    } else if otherPlayerBlessings[2][0] >= 9 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.1
+                    } else if otherPlayerBlessings[2][0] >= 8 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.075
+                    } else if otherPlayerBlessings[2][0] >= 3 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.05
+                    } else if otherPlayerBlessings[2][0] >= 2 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.025
+                    } else if otherPlayerBlessings[2][0] >= 1 {
+                        movespeed_2 = BASE_MOVESPEED_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][1] == 0 {
+                        power_2 = BASE_POWER_2
+                    } else if otherPlayerBlessings[2][1] >= 9 {
+                        power_2 = BASE_POWER_2 * 1.1
+                    } else if otherPlayerBlessings[2][1] >= 8 {
+                        power_2 = BASE_POWER_2 * 1.075
+                    } else if otherPlayerBlessings[2][1] >= 3 {
+                        power_2 = BASE_POWER_2 * 1.05
+                    } else if otherPlayerBlessings[2][1] >= 2 {
+                        power_2 = BASE_POWER_2 * 1.025
+                    } else if otherPlayerBlessings[2][1] >= 1 {
+                        power_2 = BASE_POWER_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 5 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 10
+                    } else if otherPlayerBlessings[2][2] == 4 {
+                        BASE_RESISTANCE_2 = BASE_RESISTANCE_2 + 5
+                    }
+                    
+                    if otherPlayerBlessings[0][2] == 0 {
+                        resistance_2 = BASE_RESISTANCE_2
+                    } else if otherPlayerBlessings[2][2] >= 9 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.1
+                    } else if otherPlayerBlessings[2][2] >= 8 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.075
+                    } else if otherPlayerBlessings[2][2] >= 3 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.05
+                    } else if otherPlayerBlessings[2][2] >= 2 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.025
+                    } else if otherPlayerBlessings[2][2] >= 1 {
+                        resistance_2 = BASE_RESISTANCE_2 * 1.01
+                    }
+                    
+                    if otherPlayerBlessings[2][2] >= 7 {
+                        maxHP_2 = BASE_MAX_HP_2 + 50
+                    } else if otherPlayerBlessings[2][2] == 6 {
+                        maxHP_2 = BASE_MAX_HP_2 + 25
+                    } else {
+                        maxHP_2 = BASE_MAX_HP_2
+                    }
+                } else {
+                    movespeed_2 = BASE_MOVESPEED_2
+                    power_2 = BASE_POWER_2
+                    resistance_2 = BASE_RESISTANCE_2
+                    maxHP_2 = BASE_MAX_HP_2
+                }
             }
+            
             currentHP_2 = maxHP_2
             
             skillMaxCharges_1 = BASE_SKILL_MAX_CHARGES_1
@@ -1022,36 +3023,41 @@ class Character:SKSpriteNode {
     }
     
     func applyDamage(_ damage:CGFloat) {
-        let gameWorld = (self.parent?.parent as! GameScene)
-        if abs(self.position.x - gameWorld.playerNode.position.x) <= gameWorld.playerNode.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameWorld.playerNode.position.y) <= gameWorld.playerNode.halfHeight! + 5 + self.halfHeight! && gameWorld.playerNode != self {
-            if self.position.x > gameWorld.playerNode.position.x && self.xScale == -1 {
-                gameWorld.playerNode.takeDamage(damage, direction: self.xScale)
-            } else if self.position.x < gameWorld.playerNode.position.x && self.xScale == 1 {
-                gameWorld.playerNode.takeDamage(damage, direction: self.xScale)
+        if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode != self {
+            if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
+                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
+            } else if self.position.x < gameScene!.playerNode.position.x && self.xScale == 1 {
+                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
             }
         }
         
-        if abs(self.position.x - gameWorld.playerNode2.position.x) <= gameWorld.playerNode2.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameWorld.playerNode2.position.y) <= gameWorld.playerNode2.halfHeight! + 5 + self.halfHeight! && gameWorld.playerNode2 != self{
-            if self.position.x > gameWorld.playerNode2.position.x && self.xScale == -1 {
-                gameWorld.playerNode2.takeDamage(damage, direction: self.xScale)
-            } else if self.position.x < gameWorld.playerNode2.position.x && self.xScale == 1 {
-                gameWorld.playerNode2.takeDamage(damage, direction: self.xScale)
+        if !gameScene!.multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 1 {
+            if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2 != self{
+                if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
+                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
+                } else if self.position.x < gameScene!.playerNode2.position.x && self.xScale == 1 {
+                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
+                }
             }
         }
         
-        if abs(self.position.x - gameWorld.playerNode3.position.x) <= gameWorld.playerNode3.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameWorld.playerNode3.position.y) <= gameWorld.playerNode3.halfHeight! + 5 + self.halfHeight! && gameWorld.playerNode3 != self {
-            if self.position.x > gameWorld.playerNode3.position.x && self.xScale == -1 {
-                gameWorld.playerNode3.takeDamage(damage, direction: self.xScale)
-            } else if self.position.x < gameWorld.playerNode3.position.x && self.xScale == 1 {
-                gameWorld.playerNode3.takeDamage(damage, direction: self.xScale)
+        if !gameScene!.multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3 != self {
+                if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
+                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
+                } else if self.position.x < gameScene!.playerNode3.position.x && self.xScale == 1 {
+                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
+                }
             }
         }
         
-        if abs(self.position.x - gameWorld.playerNode4.position.x) <= gameWorld.playerNode4.halfWidth! + self.halfWidth! + 5 && abs(self.position.y - gameWorld.playerNode4.position.y) <= gameWorld.playerNode4.halfHeight! + 5 + self.halfHeight! && gameWorld.playerNode4 != self {
-            if self.position.x > gameWorld.playerNode4.position.x && self.xScale == -1 {
-                gameWorld.playerNode4.takeDamage(damage, direction: self.xScale)
-            } else if self.position.x < gameWorld.playerNode4.position.x && self.xScale == 1 {
-                gameWorld.playerNode4.takeDamage(damage, direction: self.xScale)
+        if !gameScene!.multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! + 5 && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4 != self {
+                if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
+                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
+                } else if self.position.x < gameScene!.playerNode4.position.x && self.xScale == 1 {
+                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
+                }
             }
         }
     }
@@ -1382,12 +3388,250 @@ class Character:SKSpriteNode {
         } else {
             self.physicsBody?.applyImpulse(CGVector(dx: (damageToTake * direction) * (maxHP/currentHP), dy: damageToTake * (maxHP/currentHP)))
         }
+        
+        if appDelegate.mpcHandler.session != nil {
+            MP_TRAFFIC_HANDLER.confirmPlayerStats()
+        }
     }
     
     func returnToIdle() {
         if self.physicsBody?.velocity.dx == 0 {
             self.removeAllActions()
             self.run(animateIdle!)
+        }
+    }
+    
+    func playerMovement(mod:CGFloat) {
+        if playerMovement == "Move_Left" {
+            self.physicsBody?.velocity = CGVector(dx: -self.movespeed * mod, dy: (self.physicsBody?.velocity.dy)!)
+        } else if playerMovement == "Move_Right" {
+            self.physicsBody?.velocity = CGVector(dx: self.movespeed * mod, dy: (self.physicsBody?.velocity.dy)!)
+        }
+    }
+    
+    func checkBlockUnder() {
+        let tile = self.returnBlockBelow()
+        
+        if tile == "Dirt" {
+            playerMovement(mod: 1.0)
+            self.resetJumpsCount()
+            if playerMovement == "" {
+                self.physicsBody?.velocity.dx = 0
+            }
+            
+            if self.isResting && self.allowedToRecover {
+                self.recovered()
+            }
+        } else if tile == "Water" {
+            self.physicsBody?.applyForce(CGVector(dx: 0, dy: 30))
+            self.physicsBody?.affectedByGravity = false
+            playerMovement(mod: 0.4)
+            self.resetJumpsCount()
+        } else {
+            self.physicsBody?.affectedByGravity = true
+            playerMovement(mod: 0.75)
+        }
+        
+        if self.isResting {
+            self.playerMovement = ""
+            self.playerLastMovement = ""
+        }
+        
+        if self.isResting && self.currentHP >= self.maxHP {
+            self.recovered()
+        }
+        
+        if deathMode == 2 && (tile == "Water" && self.isResting) && !isDead {
+            self.isDead = true
+            self.parent?.run(SKAction.wait(forDuration: 0.2),completion:{
+                self.removeFromParent()
+                self.removeAllChildren()
+                self.removeAllActions()
+            })
+        } else if deathMode == 1 && self.lives <= 0 && self.isResting && !isDead {
+            self.isDead = true
+            self.parent?.run(SKAction.wait(forDuration: 0.2),completion:{
+                self.removeFromParent()
+                self.removeAllChildren()
+                self.removeAllActions()
+            })
+        }
+    }
+    
+    func returnBlockBelow() -> String {
+        let position = CGPoint(x: self.position.x, y: self.position.y - self.size.height/2)
+        let column = gameScene?.tileMapNode?.tileColumnIndex(fromPosition: position)
+        let row = gameScene?.tileMapNode?.tileRowIndex(fromPosition: position)
+        let tile = gameScene?.tileMapNode?.tileGroup(atColumn: column!, row: row!)
+        var blockBelow = ""
+        
+        if tile?.name == "Water" {
+            blockBelow = "Water"
+        } else if tile?.name == "Dirt" {
+            blockBelow = "Dirt"
+        }
+        
+        return blockBelow
+    }
+    
+    func isSkillReady_1(_ currentTime:TimeInterval) -> Bool {
+        var skillReady = false
+        
+        if self.skillCurrentCharges_1 > 0 {
+            skillReady = true
+        }
+        
+        return skillReady
+    }
+    
+    func isSkillReady_2(_ currentTime:TimeInterval) -> Bool {
+        var skillReady = false
+        
+        if self.skillCurrentCharges_2 > 0 {
+            skillReady = true
+        }
+        
+        return skillReady
+    }
+    
+    func isSkillReady_3(_ currentTime:TimeInterval) -> Bool {
+        var skillReady = false
+        
+        if self.skillCurrentCharges_3 > 0 {
+            skillReady = true
+        }
+        
+        return skillReady
+    }
+    
+    func performFrameBasedUpdates(_ currentTime:TimeInterval) {
+        if currentTime - self.skill_1_Last_Used >= self.skillCooldown_1 {
+            self.skill_1_Last_Used = currentTime
+            if self.skillCurrentCharges_1 < self.skillMaxCharges_1 {
+                self.skillCurrentCharges_1 += 1
+            }
+        }
+        
+        if currentTime - self.skill_2_Last_Used >= self.skillCooldown_2 {
+            self.skill_2_Last_Used = currentTime
+            if self.skillCurrentCharges_2 < self.skillMaxCharges_2 {
+                self.skillCurrentCharges_2 += 1
+            }
+        }
+        
+        if currentTime - self.skill_3_Last_Used >= self.skillCooldown_3 {
+            self.skill_3_Last_Used = currentTime
+            if self.skillCurrentCharges_3 < self.skillMaxCharges_3 {
+                self.skillCurrentCharges_3 += 1
+            }
+        }
+        
+        if self.playerAction != self.playerLastAction {
+            if self.playerAction == "Jump" && self.currentJumps < self.maxJumps {
+                self.physicsBody?.applyImpulse(CGVector(dx: 0, dy: self.movespeed * 0.25))
+                self.currentJumps += 1
+            } else if self.playerAction == "Skill_1" && self.isSkillReady_1(currentTime) {
+                self.skill_1_Last_Used = currentTime
+                self.skillCurrentCharges_1 -= 1
+                self.doSkill_1()
+            } else if self.playerAction == "Skill_2" && self.isSkillReady_2(currentTime) {
+                self.skill_2_Last_Used = currentTime
+                self.skillCurrentCharges_2 -= 1
+                self.doSkill_2()
+            } else if self.playerAction == "Skill_3" && self.isSkillReady_3(currentTime) {
+                self.skill_3_Last_Used = currentTime
+                self.skillCurrentCharges_3 -= 1
+                self.doSkill_3()
+            }
+        }
+    }
+    
+    func playerAnimations(_ currentTime: TimeInterval) {
+        if !isResting {
+            if playerAction != playerLastAction || playerMovement != playerLastMovement {
+                if playerMovement == "Move_Right" || playerMovement == "Move_Left" {
+                    self.removeAllActions()
+                    self.run(self.animateRun!)
+                } else if playerMovement == "" && playerAction == "" {
+                    self.removeAllActions()
+                    self.run(self.animateIdle!)
+                } else if playerMovement == "" {
+                    self.removeAllActions()
+                    self.run(self.animateIdle!)
+                }
+                
+                if playerAction == "" && playerMovement == "" {
+                    self.removeAllActions()
+                    self.run(self.animateIdle!)
+                } else if playerAction == "Jump" && self.currentJumps < self.maxJumps {
+                    self.run((self.animateJump)!)
+                } else if playerAction == "Skill_1" && isSkillReady_1(currentTime) {
+                    self.run(self.animateSkill_1!)
+                    self.run(SKAction.wait(forDuration: 0.75),completion:{
+                        if self.playerLastAction == "Skill_1" && self.playerAction == "Skill_1" {
+                            self.playerAction = ""
+                            self.playerLastAction = ""
+                        } else if self.playerLastAction == "Skill_1" {
+                            self.playerLastAction = ""
+                        }
+                        
+                        if self.playerMovement == ""  {
+                            self.removeAllActions()
+                            self.run(self.animateIdle!)
+                        }
+                    })
+                } else if playerAction == "Skill_2" && isSkillReady_2(currentTime) {
+                    self.run((self.animateSkill_2)!)
+                    self.run(SKAction.wait(forDuration: 0.75),completion:{
+                        if self.playerLastAction == "Skill_2" && self.playerAction == "Skill_2" {
+                            self.playerAction = ""
+                            self.playerLastAction = ""
+                        } else if self.playerLastAction == "Skill_2" {
+                            self.playerLastAction = ""
+                        }
+                        
+                        if self.playerMovement == ""  {
+                            self.removeAllActions()
+                            self.run((self.animateIdle)!)
+                        }
+                    })
+                } else if playerAction == "Skill_3" && isSkillReady_3(currentTime) {
+                    self.run((self.animateSkill_3)!)
+                    self.run(SKAction.wait(forDuration: 0.75),completion:{
+                        if self.playerLastAction == "Skill_3" && self.playerAction == "Skill_3" {
+                            self.playerAction = ""
+                            self.playerLastAction = ""
+                        } else if self.playerLastAction == "Skill_3" {
+                            self.playerLastAction = ""
+                        }
+                        
+                        if self.playerMovement == ""  {
+                            self.removeAllActions()
+                            self.run((self.animateIdle)!)
+                        }
+                    })
+                }
+            }
+        }
+    }
+    
+    func followNaturalRegen(_ currentTime:TimeInterval) {
+        self.playerLastAction = self.playerAction
+        self.playerLastMovement = self.playerMovement
+        
+        if currentTime - lastRegenTime >= 0.5 && !isDead {
+            if self.currentHP < self.maxHP {
+                if self.isResting {
+                    self.currentHP += (self.maxHP/6)
+                } else {
+                    self.currentHP += self.hpRegen
+                }
+                
+                if self.currentHP > self.maxHP {
+                    self.currentHP = self.maxHP
+                }
+            }
+            lastRegenTime = currentTime
         }
     }
     
@@ -1401,6 +3645,10 @@ class Character:SKSpriteNode {
         self.run(SKAction.setTexture(new))
         self.size = new.size()
         lives -= 1
+        
+        if appDelegate.mpcHandler.session != nil {
+            MP_TRAFFIC_HANDLER.confirmPlayerStats()
+        }
     }
     
 }

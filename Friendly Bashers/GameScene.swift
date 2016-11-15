@@ -18,18 +18,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var entities = [GKEntity]()
     var graphs = [String : GKGraph]()
     var playerCharacter = ""
-    var playerMovement = ""
-    var playerLastMovement = ""
-    var playerAction = ""
-    var playerLastAction = ""
     var timeSinceNoAction: TimeInterval = 0
-    var lastRegenTime:TimeInterval = 0
+    var lastSyncTime:TimeInterval = 0
     
     var playerCharacter2 = ""
     var playerCharacter3 = ""
     var playerCharacter4 = ""
     
     var gamePaused = false
+    var multiplayerGame = false
     
     private var lastUpdateTime : TimeInterval = 0
     var CAMERA_NODE : SKCameraNode?
@@ -74,10 +71,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var skillChargeDisplay_2:SKLabelNode?
     var skillChargeDisplay_3:SKLabelNode?
     
-    var playerLabelNode:SKLabelNode?
-    var playerLabelNode2:SKLabelNode?
-    var playerLabelNode3:SKLabelNode?
-    var playerLabelNode4:SKLabelNode?
+    var p1ChosenView:SKSpriteNode?
+    var p2ChosenView:SKSpriteNode?
+    var p3ChosenView:SKSpriteNode?
+    var p4ChosenView:SKSpriteNode?
     
     override func sceneDidLoad() {
         self.lastUpdateTime = 0
@@ -85,6 +82,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         gameScene = self
+        if appDelegate.mpcHandler.session != nil {
+            multiplayerGame = true
+        }
+        playerCharacter2 = chosenBasher2
+        playerCharacter3 = chosenBasher3
+        playerCharacter4 = chosenBasher4
         self.physicsWorld.contactDelegate = self
         self.CAMERA_NODE = self.childNode(withName: "//CAMERA_NODE") as? SKCameraNode
         self.tileMapNode = self.childNode(withName: "//TILE_MAP") as? SKTileMapNode
@@ -99,6 +102,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if self.playerCharacter == "Cog" {
             playerNode.characterForm = "Cat"
         }
+        
         self.playerNode.player = playerName
         self.playerNode.setUp(name: self.playerCharacter)
         self.playerNode.position = CGPoint(x: -80, y: (self.playerNode?.size.height)!/2 + 33)
@@ -108,26 +112,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.playerNode.physicsBody!.contactTestBitMask = ProjectileCategory
         self.playerNode.physicsBody!.categoryBitMask = CharacterCategory
         self.playerNode.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-        
-        playerLabelNode = SKLabelNode(text: playerName + " " + String(describing: self.playerNode.currentHP) + "/" + String(describing: self.playerNode.maxHP) + "HP")
-        playerLabelNode?.fontColor = SKColor.black
-        playerLabelNode?.fontSize = 30
-        playerLabelNode?.position.y = 80
-        
-        playerLabelNode2 = SKLabelNode(text: "")
-        playerLabelNode2?.fontColor = SKColor.black
-        playerLabelNode2?.fontSize = 30
-        playerLabelNode2?.position.y = 80
-        
-        playerLabelNode3 = SKLabelNode(text:"")
-        playerLabelNode3?.fontColor = SKColor.black
-        playerLabelNode3?.fontSize = 30
-        playerLabelNode3?.position.y = 80
-        
-        playerLabelNode4 = SKLabelNode(text:"")
-        playerLabelNode4?.fontColor = SKColor.black
-        playerLabelNode4?.fontSize = 30
-        playerLabelNode4?.position.y = 80
+        self.p1ChosenView = SKSpriteNode(texture: playerTexture)
         
         if playerCharacter2 != "" {
             var playerTexture2 = SKTexture(imageNamed: self.playerCharacter2 + "_Idle_1")
@@ -145,6 +130,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode2.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode2.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
             self.tileMapNode!.addChild(playerNode2!)
+            self.p2ChosenView = SKSpriteNode(texture: playerTexture2)
         } else {
             playerCharacter2 = characterRoulette()
             var playerTexture2 = SKTexture(imageNamed: self.playerCharacter2 + "_Idle_1")
@@ -165,6 +151,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.tileMapNode!.addChild(playerNode2!)
             self.playerNode2.world = self
             self.playerNode2.startCPU()
+            self.p2ChosenView = SKSpriteNode(texture: playerTexture2)
         }
         
         if playerCharacter3 != "" {
@@ -183,8 +170,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode3.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode3.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
             self.tileMapNode!.addChild(playerNode3!)
-        } else {
-            playerCharacter3 = characterRoulette()
+            self.p3ChosenView = SKSpriteNode(texture: playerTexture3)
+        } else if playerCharacter3 == "" && !multiplayerGame {
+            self.playerCharacter3 = self.characterRoulette()
             var playerTexture3 = SKTexture(imageNamed: self.playerCharacter3 + "_Idle_1")
             
             if self.playerCharacter3 == "Cog" {
@@ -200,9 +188,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode3.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode3.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode3.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.tileMapNode!.addChild(playerNode3!)
+            self.tileMapNode!.addChild(self.playerNode3!)
             self.playerNode3.world = self
             self.playerNode3.startCPU()
+            self.p3ChosenView = SKSpriteNode(texture: playerTexture3)
         }
         
         if playerCharacter4 != "" {
@@ -221,8 +210,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode4.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode4.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
             self.tileMapNode!.addChild(playerNode4!)
-        } else {
-            playerCharacter4 = characterRoulette()
+            self.p4ChosenView = SKSpriteNode(texture: playerTexture4)
+        } else if playerCharacter4 == "" && !multiplayerGame {
+            self.playerCharacter4 = self.characterRoulette()
             var playerTexture4 = SKTexture(imageNamed: self.playerCharacter4 + "_Idle_1")
             
             if self.playerCharacter4 == "Cog" {
@@ -238,45 +228,46 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.playerNode4.physicsBody!.contactTestBitMask = ProjectileCategory
             self.playerNode4.physicsBody!.categoryBitMask = CharacterCategory
             self.playerNode4.physicsBody!.collisionBitMask = WorldCategory | ProjectileCategory
-            self.tileMapNode!.addChild(playerNode4!)
+            self.tileMapNode!.addChild(self.playerNode4!)
             self.playerNode4.world = self
             self.playerNode4.startCPU()
+            self.p4ChosenView = SKSpriteNode(texture: playerTexture4)
         }
         
         jumpButton = SKSpriteNode(imageNamed: "Button_Up")
-        jumpButton?.scale(to: CGSize(width: 120, height: 120))
+        jumpButton?.scale(to: CGSize(width: 135, height: 135))
         skillButton_1 = SKSpriteNode(imageNamed: "Button_Blue")
-        skillButton_1?.scale(to: CGSize(width: 120, height: 120))
+        skillButton_1?.scale(to: CGSize(width: 135, height: 135))
         skillButton_2 = SKSpriteNode(imageNamed: "Button_Blue")
-        skillButton_2?.scale(to: CGSize(width: 120, height: 120))
+        skillButton_2?.scale(to: CGSize(width: 135, height: 135))
         runeButton = SKSpriteNode(imageNamed: "Button_Blue")
-        runeButton?.scale(to: CGSize(width: 120, height: 120))
+        runeButton?.scale(to: CGSize(width: 135, height: 135))
         
         leftButton = SKSpriteNode(imageNamed: "Button_Left")
-        leftButton?.scale(to: CGSize(width: 120, height: 120))
+        leftButton?.scale(to: CGSize(width: 135, height: 135))
         rightButton = SKSpriteNode(imageNamed: "Button_Right")
-        rightButton?.scale(to: CGSize(width: 120, height: 120))
+        rightButton?.scale(to: CGSize(width: 135, height: 135))
         
         pauseButton = SKSpriteNode(imageNamed: "Button_Pause")
-        pauseButton?.scale(to: CGSize(width: 120, height: 120))
+        pauseButton?.scale(to: CGSize(width: 135, height: 135))
         
         pauseUI = SKSpriteNode(color: UIColor.black, size: CGSize(width: self.size.width, height: self.size.height))
         pauseUI?.alpha = 0.6
         
         sfxButton = SKSpriteNode(imageNamed: "Button_Sfx_Off")
-        sfxButton?.scale(to: CGSize(width: 120, height: 120))
+        sfxButton?.scale(to: CGSize(width: 135, height: 135))
         sfxButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 200)
         
         musicButton = SKSpriteNode(imageNamed: "Button_Music_Off")
-        musicButton?.scale(to: CGSize(width: 120, height: 120))
+        musicButton?.scale(to: CGSize(width: 135, height: 135))
         musicButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 330)
         
         homeButton = SKSpriteNode(imageNamed: "Button_Home")
-        homeButton?.scale(to: CGSize(width: 120, height: 120))
+        homeButton?.scale(to: CGSize(width: 135, height: 135))
         homeButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 455)
         
         exitButton = SKSpriteNode(imageNamed: "Button_Exit")
-        exitButton?.scale(to: CGSize(width: 120, height: 120))
+        exitButton?.scale(to: CGSize(width: 135, height: 135))
         exitButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 585)
         
         skillChargeDisplay_1 = SKLabelNode(text: "0")
@@ -305,6 +296,70 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         //Left Side of Screen
         leftButton?.position = CGPoint(x: -self.size.width/2 + 75,y: -self.size.height/2 + 75)
         rightButton?.position = CGPoint(x: -self.size.width/2 + 205,y: -self.size.height/2 + 75)
+        
+        player1Bubble = SKSpriteNode(imageNamed: "Button_Green")
+        player1Bubble?.position = CGPoint(x: -self.size.width/2 + 120,y: self.size.height/2 - 75)
+        player1Bubble?.size.width = 120
+        player1Bubble?.size.height = 120
+        
+        player1Name = SKLabelNode(text: "")
+        player1Name?.text = playerName
+        player1Name?.fontColor = UIColor.black
+        player1Name?.position = CGPoint(x: -self.size.width/2 + 120,y: self.size.height/2 - 150)
+        
+        player1Health = SKSpriteNode(imageNamed: "HealthBar")
+        player1Health?.position = CGPoint(x: -self.size.width/2 + 45,y: self.size.height/2 - 135)
+        player1Health?.size.height = 120
+        player1Health?.size.width = 40
+        player1Health?.anchorPoint.y = 0
+        
+        player2Bubble = SKSpriteNode(imageNamed: "Button_Green")
+        player2Bubble?.position = CGPoint(x: -self.size.width/2 + 290,y: self.size.height/2 - 75)
+        player2Bubble?.size.width = 120
+        player2Bubble?.size.height = 120
+        
+        player2Name = SKLabelNode(text: "")
+        player2Name?.text = "P2"
+        player2Name?.fontColor = UIColor.black
+        player2Name?.position = CGPoint(x: -self.size.width/2 + 290,y: self.size.height/2 - 150)
+        
+        player2Health = SKSpriteNode(imageNamed: "HealthBar")
+        player2Health?.position = CGPoint(x: -self.size.width/2 + 215,y: self.size.height/2 - 135)
+        player2Health?.size.height = 120
+        player2Health?.size.width = 40
+        player2Health?.anchorPoint.y = 0
+        
+        player3Bubble = SKSpriteNode(imageNamed: "Button_Green")
+        player3Bubble?.position = CGPoint(x: -self.size.width/2 + 460,y: self.size.height/2 - 75)
+        player3Bubble?.size.width = 120
+        player3Bubble?.size.height = 120
+        
+        player3Name = SKLabelNode(text: "")
+        player3Name?.text = "P3"
+        player3Name?.fontColor = UIColor.black
+        player3Name?.position = CGPoint(x: -self.size.width/2 + 460,y: self.size.height/2 - 150)
+        
+        player3Health = SKSpriteNode(imageNamed: "HealthBar")
+        player3Health?.position = CGPoint(x: -self.size.width/2 + 385,y: self.size.height/2 - 135)
+        player3Health?.size.height = 120
+        player3Health?.size.width = 40
+        player3Health?.anchorPoint.y = 0
+
+        player4Bubble = SKSpriteNode(imageNamed: "Button_Green")
+        player4Bubble?.position = CGPoint(x: -self.size.width/2 + 630,y: self.size.height/2 - 75)
+        player4Bubble?.size.width = 120
+        player4Bubble?.size.height = 120
+        
+        player4Name = SKLabelNode(text: "")
+        player4Name?.text = "P4"
+        player4Name?.fontColor = UIColor.black
+        player4Name?.position = CGPoint(x: -self.size.width/2 + 630,y: self.size.height/2 - 150)
+        
+        player4Health = SKSpriteNode(imageNamed: "HealthBar")
+        player4Health?.position = CGPoint(x: -self.size.width/2 + 555,y: self.size.height/2 - 135)
+        player4Health?.size.height = 120
+        player4Health?.size.width = 40
+        player4Health?.anchorPoint.y = 0
         
         var tilePhysicsBodyArray = [SKPhysicsBody]()
         
@@ -350,13 +405,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.CAMERA_NODE?.addChild(runeButton!)
         self.CAMERA_NODE?.addChild(rightButton!)
         self.CAMERA_NODE?.addChild(leftButton!)
+        self.CAMERA_NODE?.addChild(player1Health!)
+        self.CAMERA_NODE?.addChild(player1Bubble!)
+        self.CAMERA_NODE?.addChild(player1Name!)
+        self.player1Bubble?.addChild(p1ChosenView!)
+        self.CAMERA_NODE?.addChild(player2Health!)
+        self.CAMERA_NODE?.addChild(player2Bubble!)
+        self.CAMERA_NODE?.addChild(player2Name!)
+        self.player2Bubble?.addChild(p2ChosenView!)
         self.skillButton_1?.addChild(skillChargeDisplay_1!)
         self.skillButton_2?.addChild(skillChargeDisplay_2!)
         self.skillButton_2?.addChild(skillChargeDisplay_3!)
-        self.playerNode.addChild(playerLabelNode!)
-        self.playerNode2.addChild(playerLabelNode2!)
-        self.playerNode3.addChild(playerLabelNode3!)
-        self.playerNode4.addChild(playerLabelNode4!)
+        
+        if multiplayerGame && appDelegate.mpcHandler.session.connectedPeers.count == 1 {
+            player2Name?.text = otherPlayers[0]
+        }
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            if multiplayerGame {
+                player3Name?.text = otherPlayers[1]
+            }
+            
+            self.CAMERA_NODE?.addChild(player3Health!)
+            self.CAMERA_NODE?.addChild(player3Bubble!)
+            self.CAMERA_NODE?.addChild(player3Name!)
+            self.player3Bubble?.addChild(p3ChosenView!)
+        }
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            if multiplayerGame {
+                player4Name?.text = otherPlayers[1]
+            }
+            
+            self.CAMERA_NODE?.addChild(player4Health!)
+            self.CAMERA_NODE?.addChild(player4Bubble!)
+            self.CAMERA_NODE?.addChild(player4Name!)
+            self.player4Bubble?.addChild(p4ChosenView!)
+        }
         
         self.pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Pause")))
         self.leftButton?.isHidden = false
@@ -374,8 +459,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if timeLimit != 0 {
             self.run(SKAction.wait(forDuration: Double(timeLimit * 60)),completion:{
-                self.endScreen("Out of Time")
+                self.endScreen("Out of Time",receiving: false)
             })
+        }
+        
+        if multiplayerGame {
+            MP_TRAFFIC_HANDLER.confirmPlayerStats()
         }
     }
     
@@ -385,7 +474,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         switch randomNum {
         case 1:
-            chosenOne = "Jack-O" 
+            chosenOne = "Jack-O"
         case 2:
             chosenOne = "Plum"
         case 3:
@@ -445,55 +534,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let pos = t.location(in: self)
             if !gamePaused {
                 if self.atPoint(pos) == self.leftButton && !self.playerNode!.isResting {
-                    playerMovement = "Move_Left"
+                    playerNode?.playerMovement = "Move_Left"
                     self.playerNode.xScale = -1
                 } else if self.atPoint(pos) == self.rightButton && !self.playerNode!.isResting {
-                    playerMovement = "Move_Right"
+                    playerNode?.playerMovement = "Move_Right"
                     self.playerNode.xScale = 1
                 }
                 
-                if playerAction == "" {
+                if playerNode?.playerAction == "" {
                     if self.atPoint(pos) == self.jumpButton && !self.playerNode!.isResting {
-                        playerAction = "Jump"
+                        playerNode?.playerAction = "Jump"
                     } else if self.atPoint(pos) == self.skillButton_1 && !self.playerNode!.isResting {
-                        playerAction = "Skill_1"
-                    } else if self.atPoint(pos) == self.skillButton_2 && playerMovement == "" && !self.playerNode!.isResting {
-                        playerAction = "Skill_2"
-                    } else if self.atPoint(pos) == self.skillButton_2 && playerMovement != "" && !self.playerNode!.isResting {
-                        playerAction = "Skill_3"
+                        playerNode?.playerAction = "Skill_1"
+                    } else if self.atPoint(pos) == self.skillButton_2 && playerNode?.playerMovement == "" && !self.playerNode!.isResting {
+                        playerNode?.playerAction = "Skill_2"
+                    } else if self.atPoint(pos) == self.skillButton_2 && playerNode?.playerMovement != "" && !self.playerNode!.isResting {
+                        playerNode?.playerAction = "Skill_3"
                     }
                 }
                 
                 if !(self.atPoint(pos) == self.leftButton) && !(self.atPoint(pos) == self.rightButton) && !(self.atPoint(pos) == self.jumpButton) && !(self.atPoint(pos) == self.skillButton_1) && !(self.atPoint(pos) == self.skillButton_2) {
-                    playerAction = ""
-                    playerMovement = ""
+                    playerNode?.playerAction = ""
+                    playerNode?.playerMovement = ""
+                }
+                
+                if multiplayerGame {
+                    MP_TRAFFIC_HANDLER.sendPlayerInfo()
                 }
             } else {
                 if self.atPoint(pos) == self.exitButton {
-                    // Present the scene
-                    if let view = self.view {
-                        view.presentScene(basherSelect)
-                        view.ignoresSiblingOrder = false
-                        
-                        view.showsFPS = true
-                        view.showsNodeCount = false
-                        
-                        if self.playerNode2.brain != nil {
-                            self.playerNode2.brain.invalidate()
-                        }
-                        
-                        if self.playerNode3.brain != nil {
-                            self.playerNode3.brain.invalidate()
-                        }
-                        
-                        if self.playerNode4.brain != nil {
-                            self.playerNode4.brain.invalidate()
-                        }
-                        
-                        self.removeAllActions()
-                        self.removeAllChildren()
-                        self.removeFromParent()
-                    }
+                    quitGame(false)
                 } else if self.atPoint(pos) == self.sfxButton {
                     if sfxEnabled {
                         sfxEnabled = false
@@ -515,16 +585,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         view.showsFPS = true
                         view.showsNodeCount = false
                         
-                        if self.playerNode2.brain != nil {
-                            self.playerNode2.brain.invalidate()
-                        }
-                        
-                        if self.playerNode3.brain != nil {
-                            self.playerNode3.brain.invalidate()
-                        }
-                        
-                        if self.playerNode4.brain != nil {
-                            self.playerNode4.brain.invalidate()
+                        if !multiplayerGame {
+                            if self.playerNode2.brain != nil {
+                                self.playerNode2.brain.invalidate()
+                            }
+                            
+                            if self.playerNode3.brain != nil {
+                                self.playerNode3.brain.invalidate()
+                            }
+                            
+                            if self.playerNode4.brain != nil {
+                                self.playerNode4.brain.invalidate()
+                            }
                         }
                         
                         self.removeAllActions()
@@ -535,13 +607,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
             if self.atPoint(pos) == self.pauseButton {
-                if gamePaused {
-                    gamePaused = false
-                    togglePause()
-                } else {
-                    gamePaused = true
-                    togglePause()
-                }
+                togglePause(false)
             }
         }
     }
@@ -551,55 +617,36 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let pos = t.location(in: self)
             if !gamePaused {
                 if self.atPoint(pos) == self.leftButton && !self.playerNode!.isResting {
-                    playerMovement = "Move_Left"
+                    playerNode?.playerMovement = "Move_Left"
                     self.playerNode.xScale = -1
                 } else if self.atPoint(pos) == self.rightButton && !self.playerNode!.isResting {
-                    playerMovement = "Move_Right"
+                    playerNode?.playerMovement = "Move_Right"
                     self.playerNode.xScale = 1
                 }
                 
-                if playerAction == "" {
+                if playerNode?.playerAction == "" {
                     if self.atPoint(pos) == self.jumpButton && !self.playerNode!.isResting {
-                        playerAction = "Jump"
+                        playerNode?.playerAction = "Jump"
                     } else if self.atPoint(pos) == self.skillButton_1 && !self.playerNode!.isResting {
-                        playerAction = "Skill_1"
-                    } else if self.atPoint(pos) == self.skillButton_2 && playerMovement == "" && !self.playerNode!.isResting {
-                        playerAction = "Skill_2"
-                    } else if self.atPoint(pos) == self.skillButton_2 && playerMovement != "" && !self.playerNode!.isResting {
-                        playerAction = "Skill_3"
+                        playerNode?.playerAction = "Skill_1"
+                    } else if self.atPoint(pos) == self.skillButton_2 && playerNode?.playerMovement == "" && !self.playerNode!.isResting {
+                        playerNode?.playerAction = "Skill_2"
+                    } else if self.atPoint(pos) == self.skillButton_2 && playerNode?.playerMovement != "" && !self.playerNode!.isResting {
+                        playerNode?.playerAction = "Skill_3"
                     }
                 }
                 
                 if !(self.atPoint(pos) == self.leftButton) && !(self.atPoint(pos) == self.rightButton) && !(self.atPoint(pos) == self.jumpButton) && !(self.atPoint(pos) == self.skillButton_1) && !(self.atPoint(pos) == self.skillButton_2) {
-                    playerAction = ""
-                    playerMovement = ""
+                    playerNode?.playerAction = ""
+                    playerNode?.playerMovement = ""
+                }
+                
+                if multiplayerGame {
+                    MP_TRAFFIC_HANDLER.sendPlayerInfo()
                 }
             } else {
                 if self.atPoint(pos) == self.exitButton {
-                    // Present the scene
-                    if let view = self.view {
-                        view.presentScene(basherSelect)
-                        view.ignoresSiblingOrder = false
-                        
-                        view.showsFPS = true
-                        view.showsNodeCount = false
-                        
-                        if self.playerNode2.brain != nil {
-                            self.playerNode2.brain.invalidate()
-                        }
-                        
-                        if self.playerNode3.brain != nil {
-                            self.playerNode3.brain.invalidate()
-                        }
-                        
-                        if self.playerNode4.brain != nil {
-                            self.playerNode4.brain.invalidate()
-                        }
-                        
-                        self.removeAllActions()
-                        self.removeAllChildren()
-                        self.removeFromParent()
-                    }
+                    quitGame(false)
                 } else if self.atPoint(pos) == self.sfxButton {
                     if sfxEnabled {
                         sfxEnabled = false
@@ -621,16 +668,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                         view.showsFPS = true
                         view.showsNodeCount = false
                         
-                        if self.playerNode2.brain != nil {
-                            self.playerNode2.brain.invalidate()
-                        }
-                        
-                        if self.playerNode3.brain != nil {
-                            self.playerNode3.brain.invalidate()
-                        }
-                        
-                        if self.playerNode4.brain != nil {
-                            self.playerNode4.brain.invalidate()
+                        if !multiplayerGame {
+                            if self.playerNode2.brain != nil {
+                                self.playerNode2.brain.invalidate()
+                            }
+                            
+                            if self.playerNode3.brain != nil {
+                                self.playerNode3.brain.invalidate()
+                            }
+                            
+                            if self.playerNode4.brain != nil {
+                                self.playerNode4.brain.invalidate()
+                            }
                         }
                         
                         self.removeAllActions()
@@ -641,13 +690,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
             if self.atPoint(pos) == self.pauseButton {
-                if gamePaused {
-                    gamePaused = false
-                    togglePause()
-                } else {
-                    gamePaused = true
-                    togglePause()
-                }
+                togglePause(false)
             }
         }
     }
@@ -657,15 +700,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let pos = t.location(in: self)
             
             if self.atPoint(pos) == self.leftButton && !self.playerNode!.isResting {
-                playerMovement = ""
+                playerNode?.playerMovement = ""
                 self.playerNode.xScale = -1
             } else if self.atPoint(pos) == self.rightButton && !self.playerNode!.isResting {
-                playerMovement = ""
+                playerNode?.playerMovement = ""
                 self.playerNode.xScale = 1
             }
             
             if self.atPoint(pos) == self.jumpButton && !self.playerNode!.isResting {
-                playerAction = ""
+                playerNode?.playerAction = ""
+            }
+            
+            if multiplayerGame {
+                MP_TRAFFIC_HANDLER.sendPlayerInfo()
             }
         }
     }
@@ -675,125 +722,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let pos = t.location(in: self)
             
             if self.atPoint(pos) == self.leftButton && !self.playerNode!.isResting {
-                playerMovement = ""
+                playerNode?.playerMovement = ""
                 self.playerNode.xScale = -1
             } else if self.atPoint(pos) == self.rightButton && !self.playerNode!.isResting {
-                playerMovement = ""
+                playerNode?.playerMovement = ""
                 self.playerNode.xScale = 1
             }
             
             if self.atPoint(pos) == self.jumpButton && !self.playerNode!.isResting {
-                playerAction = ""
+                playerNode?.playerAction = ""
             }
-        }
-    }
-    
-    func playerMovement(mod:CGFloat) {
-        if playerMovement == "Move_Left" {
-            self.playerNode?.physicsBody?.velocity = CGVector(dx: -self.playerNode!.movespeed * mod, dy: (self.playerNode?.physicsBody?.velocity.dy)!)
-        } else if playerMovement == "Move_Right" {
-            self.playerNode?.physicsBody?.velocity = CGVector(dx: self.playerNode!.movespeed * mod, dy: (self.playerNode?.physicsBody?.velocity.dy)!)
-        }
-    }
-    
-    func isSkillReady_1(_ currentTime:TimeInterval) -> Bool {
-        var skillReady = false
-        let player = self.playerNode!
-        
-        if player.skillCurrentCharges_1 > 0 {
-            skillReady = true
-        }
-        
-        return skillReady
-    }
-    
-    func isSkillReady_2(_ currentTime:TimeInterval) -> Bool {
-        var skillReady = false
-        let player = self.playerNode!
-        
-        if player.skillCurrentCharges_2 > 0 {
-            skillReady = true
-        }
-        
-        return skillReady
-    }
-    
-    func isSkillReady_3(_ currentTime:TimeInterval) -> Bool {
-        var skillReady = false
-        let player = self.playerNode!
-        
-        if player.skillCurrentCharges_3 > 0 {
-            skillReady = true
-        }
-        
-        return skillReady
-    }
-    
-    func playerAnimations(_ currentTime: TimeInterval) {
-        if !playerNode!.isResting {
-            if playerAction != playerLastAction || playerMovement != playerLastMovement {
-                if playerMovement == "Move_Right" || playerMovement == "Move_Left" {
-                    self.playerNode!.removeAllActions()
-                    self.playerNode?.run((self.playerNode?.animateRun)!)
-                } else if playerMovement == "" && playerAction == "" {
-                    self.playerNode!.removeAllActions()
-                    self.playerNode?.run((self.playerNode?.animateIdle)!)
-                } else if playerMovement == "" {
-                    self.removeAllActions()
-                    self.run((self.playerNode?.animateIdle!)!)
-                }
-                
-                if playerAction == "" && playerMovement == "" {
-                    self.playerNode!.removeAllActions()
-                    self.playerNode?.run((self.playerNode?.animateIdle)!)
-                } else if playerAction == "Jump" && self.playerNode!.currentJumps < self.playerNode!.maxJumps {
-                    self.playerNode?.run((self.playerNode?.animateJump)!)
-                } else if playerAction == "Skill_1" && isSkillReady_1(currentTime) {
-                    self.playerNode?.run((self.playerNode?.animateSkill_1)!)
-                    self.run(SKAction.wait(forDuration: 0.75),completion:{
-                        if self.playerLastAction == "Skill_1" && self.playerAction == "Skill_1" {
-                            self.playerAction = ""
-                            self.playerLastAction = ""
-                        } else if self.playerLastAction == "Skill_1" {
-                            self.playerLastAction = ""
-                        }
-                        
-                        if self.playerMovement == ""  {
-                            self.playerNode!.removeAllActions()
-                            self.playerNode?.run((self.playerNode?.animateIdle)!)
-                        }
-                    })
-                } else if playerAction == "Skill_2" && isSkillReady_2(currentTime) {
-                    self.playerNode?.run((self.playerNode?.animateSkill_2)!)
-                    self.run(SKAction.wait(forDuration: 0.75),completion:{
-                        if self.playerLastAction == "Skill_2" && self.playerAction == "Skill_2" {
-                            self.playerAction = ""
-                            self.playerLastAction = ""
-                        } else if self.playerLastAction == "Skill_2" {
-                            self.playerLastAction = ""
-                        }
-                        
-                        if self.playerMovement == ""  {
-                            self.playerNode!.removeAllActions()
-                            self.playerNode?.run((self.playerNode?.animateIdle)!)
-                        }
-                    })
-                } else if playerAction == "Skill_3" && isSkillReady_3(currentTime) {
-                    self.playerNode?.run((self.playerNode?.animateSkill_3)!)
-                    self.run(SKAction.wait(forDuration: 0.75),completion:{
-                        if self.playerLastAction == "Skill_3" && self.playerAction == "Skill_3" {
-                            self.playerAction = ""
-                            self.playerLastAction = ""
-                        } else if self.playerLastAction == "Skill_3" {
-                            self.playerLastAction = ""
-                        }
-                        
-                        if self.playerMovement == ""  {
-                            self.playerNode!.removeAllActions()
-                            self.playerNode?.run((self.playerNode?.animateIdle)!)
-                        }
-                    })
-                }
+            
+            if multiplayerGame {
+                MP_TRAFFIC_HANDLER.sendPlayerInfo()
             }
         }
     }
@@ -809,17 +750,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.skillChargeDisplay_2?.text = String(self.playerNode!.skillCurrentCharges_2)
         self.skillChargeDisplay_3?.text = String(self.playerNode!.skillCurrentCharges_3)
         
-        if isSkillReady_1(currentTime) && !self.playerNode!.isResting {
+        if playerNode!.isSkillReady_1(currentTime) && !self.playerNode!.isResting {
             self.skillButton_1?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Blue")))
         } else {
             self.skillButton_1?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
         }
         
-        if self.playerMovement == "" {
+        if playerNode?.playerMovement == "" {
             self.skillChargeDisplay_2?.isHidden = false
             self.skillChargeDisplay_3?.isHidden = true
             
-            if isSkillReady_2(currentTime) && !self.playerNode!.isResting {
+            if playerNode!.isSkillReady_2(currentTime) && !self.playerNode!.isResting {
                 self.skillButton_2?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Blue")))
             } else {
                 self.skillButton_2?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
@@ -828,7 +769,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.skillChargeDisplay_2?.isHidden = true
             self.skillChargeDisplay_3?.isHidden = false
             
-            if isSkillReady_3(currentTime) && !self.playerNode!.isResting {
+            if playerNode!.isSkillReady_3(currentTime) && !self.playerNode!.isResting {
                 self.skillButton_2?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Blue")))
             } else {
                 self.skillButton_2?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
@@ -860,8 +801,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
-    func togglePause() {
-        if gamePaused {
+    func togglePause(_ received:Bool) {
+        if multiplayerGame && !received {
+            MP_TRAFFIC_HANDLER.sendTogglePauseGameMessage()
+        }
+        
+        if !gamePaused {
+            gamePaused = true
             pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Right")))
             leftButton?.isHidden = true
             rightButton?.isHidden = true
@@ -881,6 +827,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             self.view!.isPaused = false
             self.run(SKAction.wait(forDuration: 0.2),completion:{
+                self.gamePaused = false
                 self.pauseButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Pause")))
                 self.leftButton?.isHidden = false
                 self.rightButton?.isHidden = false
@@ -899,192 +846,141 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        let position = CGPoint(x: (self.playerNode?.position.x)!, y: self.playerNode!.position.y - self.playerNode!.size.height/2)
-        let column = self.tileMapNode?.tileColumnIndex(fromPosition: position)
-        let row = self.tileMapNode?.tileRowIndex(fromPosition: position)
-        let tile = self.tileMapNode?.tileGroup(atColumn: column!, row: row!)
-        
         self.CAMERA_NODE?.position = (self.playerNode?.position)!
+        MP_TRAFFIC_HANDLER.currentTime = currentTime
         
-        if playerAction == "" {
+        if playerNode?.playerAction == "" {
             timeSinceNoAction = currentTime
         }
         
-        if tile?.name == "Dirt" {
-            playerMovement(mod: 1.0)
-            self.playerNode?.resetJumpsCount()
-            if playerMovement == "" {
-                self.playerNode!.physicsBody?.velocity.dx = 0
+        playerNode.checkBlockUnder()
+        playerNode2.checkBlockUnder()
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            playerNode3.checkBlockUnder()
+        }
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            playerNode4.checkBlockUnder()
+        }
+        
+        if !multiplayerGame {
+            if playerNode!.isDead {
+                endScreen("Defeat", receiving: false)
+            } else if self.playerNode2!.isDead && self.playerNode3!.isDead && self.playerNode4!.isDead {
+                endScreen("Victory", receiving: false)
+            }
+        } else {
+            if playerNode!.isDead {
+                endScreen("Defeat", receiving: false)
+            } else if self.playerNode2!.isDead {
+                endScreen("Victory", receiving: false)
+            }
+        }
+        playerNode!.playerAnimations(currentTime)
+        playerNode2!.playerAnimations(currentTime)
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            playerNode3.playerAnimations(currentTime)
+        }
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            playerNode4.playerAnimations(currentTime)
+        }
+        
+        playerNode!.performFrameBasedUpdates(currentTime)
+        playerNode2!.performFrameBasedUpdates(currentTime)
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            playerNode3.performFrameBasedUpdates(currentTime)
+        }
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            playerNode4.performFrameBasedUpdates(currentTime)
+        }
+        
+        if !multiplayerGame {
+            if playerNode2.brain != nil {
+                self.playerNode2.currentTime = currentTime
             }
             
-            if self.playerNode!.isResting && self.playerNode!.allowedToRecover {
-                self.playerNode!.recovered()
+            if playerNode3.brain != nil {
+                self.playerNode3.currentTime = currentTime
             }
-        } else if tile?.name == "Water" {
-            self.playerNode?.physicsBody?.applyForce(CGVector(dx: 0, dy: 30))
-            self.playerNode?.physicsBody?.affectedByGravity = false
-            playerMovement(mod: 0.4)
-            self.playerNode?.resetJumpsCount()
-        } else {
-            self.playerNode?.physicsBody?.affectedByGravity = true
-            playerMovement(mod: 0.75)
-        }
-        
-        if self.playerNode!.isResting {
-            playerMovement = ""
-            playerLastMovement = ""
-        }
-        
-        if self.playerNode!.isResting && self.playerNode!.currentHP >= self.playerNode!.maxHP {
-            self.playerNode!.recovered()
-        }
-        
-        if deathMode == 2 && (tile?.name == "Water" && self.playerNode!.isResting) {
-            endScreen("Defeat")
-        } else if deathMode == 1 && self.playerNode!.lives <= 0 && self.playerNode!.isResting {
-            endScreen("Defeat")
-        } else if self.playerNode2!.isDead && self.playerNode3!.isDead && self.playerNode4!.isDead {
-            endScreen("Victory")
-        }
-        
-        if currentTime - self.playerNode!.skill_1_Last_Used >= self.playerNode!.skillCooldown_1 {
-            self.playerNode!.skill_1_Last_Used = currentTime
-            if self.playerNode!.skillCurrentCharges_1 < self.playerNode!.skillMaxCharges_1 {
-                self.playerNode!.skillCurrentCharges_1 += 1
+            
+            if playerNode4.brain != nil {
+                self.playerNode4.currentTime = currentTime
             }
         }
         
-        if currentTime - self.playerNode!.skill_2_Last_Used >= self.playerNode!.skillCooldown_2 {
-            self.playerNode!.skill_2_Last_Used = currentTime
-            if self.playerNode!.skillCurrentCharges_2 < self.playerNode!.skillMaxCharges_2 {
-                self.playerNode!.skillCurrentCharges_2 += 1
-            }
+        player1Health?.size.height = 120 * (self.playerNode.currentHP/self.playerNode.maxHP)
+        player2Health?.size.height = 120 * (self.playerNode2.currentHP/self.playerNode2.maxHP)
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            player3Health?.size.height = 120 * (self.playerNode3.currentHP/self.playerNode3.maxHP)
         }
         
-        if currentTime - self.playerNode!.skill_3_Last_Used >= self.playerNode!.skillCooldown_3 {
-            self.playerNode!.skill_3_Last_Used = currentTime
-            if self.playerNode!.skillCurrentCharges_3 < self.playerNode!.skillMaxCharges_3 {
-                self.playerNode!.skillCurrentCharges_3 += 1
-            }
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            player4Health?.size.height = 120 * (self.playerNode4.currentHP/self.playerNode4.maxHP)
         }
-        
-        playerAnimations(currentTime)
-        
-        if playerAction != playerLastAction {
-            if playerAction == "Jump" && self.playerNode!.currentJumps < self.playerNode!.maxJumps {
-                self.playerNode?.physicsBody?.applyImpulse(CGVector(dx: 0, dy: self.playerNode!.movespeed * 0.25))
-                self.playerNode?.currentJumps += 1
-            } else if playerAction == "Skill_1" && self.isSkillReady_1(currentTime) {
-                self.playerNode!.skill_1_Last_Used = currentTime
-                self.playerNode!.skillCurrentCharges_1 -= 1
-                self.playerNode!.doSkill_1()
-            } else if playerAction == "Skill_2" && self.isSkillReady_2(currentTime) {
-                self.playerNode!.skill_2_Last_Used = currentTime
-                self.playerNode!.skillCurrentCharges_2 -= 1
-                self.playerNode!.doSkill_2()
-            } else if playerAction == "Skill_3" && self.isSkillReady_3(currentTime) {
-                self.playerNode!.skill_3_Last_Used = currentTime
-                self.playerNode!.skillCurrentCharges_3 -= 1
-                self.playerNode!.doSkill_3()
-            }
-        }
-        
-        if playerNode!.xScale == -1 {
-            playerLabelNode?.xScale = -1
-        } else {
-            playerLabelNode?.xScale = 1
-        }
-        
-        if playerNode2!.xScale == -1 {
-            playerLabelNode2?.xScale = -1
-        } else {
-            playerLabelNode2?.xScale = 1
-        }
-        
-        if playerNode3!.xScale == -1 {
-            playerLabelNode3?.xScale = -1
-        } else {
-            playerLabelNode3?.xScale = 1
-        }
-        
-        if playerNode4!.xScale == -1 {
-            playerLabelNode4?.xScale = -1
-        } else {
-            playerLabelNode4?.xScale = 1
-        }
-        
-        if playerNode2.brain != nil {
-            self.playerNode2.currentTime = currentTime
-        }
-        
-        if playerNode3.brain != nil {
-            self.playerNode3.currentTime = currentTime
-        }
-        
-        if playerNode4.brain != nil {
-            self.playerNode4.currentTime = currentTime
-        }
-        
-        playerLabelNode?.text = playerName + " " + String(describing: self.playerNode.currentHP) + "/" + String(describing: self.playerNode.maxHP) + "HP"
-        playerLabelNode2?.text = "P2 " + String(describing: self.playerNode2.currentHP) + "/" + String(describing: self.playerNode2.maxHP) + "HP"
-        playerLabelNode3?.text = "P3 " + String(describing: self.playerNode3.currentHP) + "/" + String(describing: self.playerNode3.maxHP) + "HP"
-        playerLabelNode4?.text = "P4 " + String(describing: self.playerNode4.currentHP) + "/" + String(describing: self.playerNode4.maxHP) + "HP"
-        
-        playerLastAction = playerAction
-        playerLastMovement = playerMovement
         
         updateUI(currentTime)
         
-        if currentTime - lastRegenTime >= 1 {
-            if playerNode.currentHP < playerNode.maxHP {
-                if playerNode.isResting {
-                    playerNode.currentHP += (playerNode.maxHP/3)
-                } else {
-                    playerNode.currentHP += playerNode.hpRegen
-                }
-                
-                if playerNode.currentHP > playerNode.maxHP {
-                    playerNode.currentHP = playerNode.maxHP
-                }
+        playerNode?.followNaturalRegen(currentTime)
+        playerNode2?.followNaturalRegen(currentTime)
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            playerNode3?.followNaturalRegen(currentTime)
+        }
+        
+        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
+            playerNode4?.followNaturalRegen(currentTime)
+        }
+        
+        if self.playerNode.isDead {
+            self.player1Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+            if self.playerCharacter == "Cog" {
+                let texture = SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")
+                self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")))
+                self.p1ChosenView?.size = texture.size()
+            } else {
+                let texture = SKTexture(imageNamed: playerCharacter + "_Faint_10")
+                self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter + "_Faint_10")))
+                self.p1ChosenView?.size = texture.size()
             }
-            
-            if playerNode2.currentHP < playerNode2.maxHP {
-                if playerNode2.isResting {
-                    playerNode2.currentHP += (playerNode2.maxHP/3)
-                } else {
-                    playerNode2.currentHP += playerNode2.hpRegen
-                }
-                
-                if playerNode2.currentHP > playerNode2.maxHP {
-                    playerNode2.currentHP = playerNode2.maxHP
-                }
+        } else if self.playerNode2.isDead {
+            self.player2Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+            if self.playerCharacter2 == "Cog" {
+                let texture = SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")
+                self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")))
+                self.p2ChosenView?.size = texture.size()
+            } else {
+                let texture = SKTexture(imageNamed: playerCharacter2 + "_Faint_10")
+                self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter2 + "_Faint_10")))
+                self.p2ChosenView?.size = texture.size()
             }
-            
-            if playerNode3.currentHP < playerNode3.maxHP {
-                if playerNode3.isResting {
-                    playerNode3.currentHP += (playerNode3.maxHP/3)
-                } else {
-                    playerNode3.currentHP += playerNode3.hpRegen
-                }
-                
-                if playerNode3.currentHP > playerNode3.maxHP {
-                    playerNode3.currentHP = playerNode3.maxHP
-                }
+        } else if self.playerNode3.isDead {
+            self.player3Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+            if self.playerCharacter3 == "Cog" {
+                let texture = SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")
+                self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")))
+                self.p3ChosenView?.size = texture.size()
+            } else {
+                let texture = SKTexture(imageNamed: playerCharacter3 + "_Faint_10")
+                self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter3 + "_Faint_10")))
+                self.p3ChosenView?.size = texture.size()
             }
-            
-            if playerNode4.currentHP < playerNode4.maxHP {
-                if playerNode4.isResting {
-                    playerNode4.currentHP += (playerNode4.maxHP/3)
-                } else {
-                    playerNode4.currentHP += playerNode4.hpRegen
-                }
-                
-                if playerNode4.currentHP > playerNode4.maxHP {
-                    playerNode4.currentHP = playerNode4.maxHP
-                }
+        } else if self.playerNode4.isDead {
+            self.player4Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+            if self.playerCharacter4 == "Cog" {
+                let texture = SKTexture(imageNamed: playerNode4.characterForm + "_Faint_10")
+                self.p4ChosenView?.run(SKAction.setTexture(texture))
+                self.p4ChosenView?.size = texture.size()
+            } else {
+                let texture = SKTexture(imageNamed: playerCharacter4 + "_Faint_10")
+                self.p4ChosenView?.run(SKAction.setTexture(texture))
+                self.p4ChosenView?.size = texture.size()
             }
-            lastRegenTime = currentTime
         }
         
         // Initialize _lastUpdateTime if it has not already been
@@ -1101,10 +997,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             
         }
         self.lastUpdateTime = currentTime
+        
+        if currentTime - lastSyncTime >= 0.25 && multiplayerGame {
+            MP_TRAFFIC_HANDLER.sendPlayerInfo()
+        }
     }
     
-    func endScreen(_ stance:String) {
+    func endScreen(_ stance:String,receiving:Bool) {
         print(stance)
+        
+        if multiplayerGame && !receiving {
+            if stance == "Victory" {
+                MP_TRAFFIC_HANDLER.sendEndGameMessage("Defeat")
+            } else {
+                MP_TRAFFIC_HANDLER.sendEndGameMessage("Victory")
+            }
+        }
+        
         if let sceneNode = EndScene(fileNamed: "EndScene") {
             // Set the scale mode to scale to fit the window
             sceneNode.scaleMode = globalScaleMode
@@ -1128,6 +1037,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 view.showsFPS = false
                 view.showsNodeCount = true
             }
+        }
+    }
+    
+    func quitGame(_ receiving:Bool) {
+        if multiplayerGame && !receiving {
+            MP_TRAFFIC_HANDLER.sendQuitGameMessage()
+        }
+        
+        if let view = self.view {
+            view.presentScene(basherSelect)
+            view.ignoresSiblingOrder = false
+            
+            view.showsFPS = true
+            view.showsNodeCount = false
+            
+            if self.playerNode2.brain != nil {
+                self.playerNode2.brain.invalidate()
+            }
+            
+            if !multiplayerGame {
+                if self.playerNode3.brain != nil {
+                    self.playerNode3.brain.invalidate()
+                }
+                
+                if self.playerNode4.brain != nil {
+                    self.playerNode4.brain.invalidate()
+                }
+            }
+            
+            self.removeAllActions()
+            self.removeAllChildren()
+            self.removeFromParent()
         }
     }
 }

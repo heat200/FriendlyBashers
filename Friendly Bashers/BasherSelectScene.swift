@@ -35,6 +35,8 @@ class BasherSelectScene:SKScene {
     var p3ChosenView:SKSpriteNode?
     var p4ChosenView:SKSpriteNode?
     
+    var readyForGame = false
+    
     override func sceneDidLoad() {
         basherSelect = self
         self.lastUpdateTime = 0
@@ -86,16 +88,22 @@ class BasherSelectScene:SKScene {
         for t in touches {
             let pos = t.location(in: self)
             
-            if self.atPoint(pos) == self.agreeButton && chosenBasher != "" {
-                headToGameScene()
+            if self.atPoint(pos) == self.agreeButton && readyForGame {
+                if appDelegate.mpcHandler.session == nil {
+                    headToGameScene()
+                } else {
+                    MP_TRAFFIC_HANDLER.sendPlayerBlessings()
+                    self.run(SKAction.wait(forDuration: 3),completion:{
+                        MP_TRAFFIC_HANDLER.sendStartGameMessage()
+                        self.headToGameScene()
+                    })
+                }
             } else if self.atPoint(pos) == self.backButton {
-                // Present the scene
-                if let view = self.view {
-                    view.presentScene(modeSelect)
-                    view.ignoresSiblingOrder = false
-                    
-                    view.showsFPS = true
-                    view.showsNodeCount = false
+                if appDelegate.mpcHandler.session == nil {
+                    backToModeSelect()
+                } else {
+                    MP_TRAFFIC_HANDLER.backToModeSelect()
+                    backToModeSelect()
                 }
             } else if self.atPoint(pos) == self.settingsButton {
                 if let sceneNode = GameOptionsScene(fileNamed: "GameOptionsScene") {
@@ -130,6 +138,7 @@ class BasherSelectScene:SKScene {
             
             if appDelegate.mpcHandler.session != nil {
                 MP_TRAFFIC_HANDLER.sendPlayerCharacter()
+                MP_TRAFFIC_HANDLER.syncChosenMap()
             }
             
             updateUI()
@@ -140,16 +149,36 @@ class BasherSelectScene:SKScene {
         if appDelegate.mpcHandler.session == nil {
             if chosenBasher == "" {
                 self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
+                readyForGame = false
             } else {
                 self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
+                readyForGame = true
             }
         } else {
             if appDelegate.mpcHandler.session.connectedPeers.count == 1 {
-                
+                if chosenBasher == "" || chosenBasher2 == "" {
+                    self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
+                    readyForGame = false
+                } else {
+                    self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
+                    readyForGame = true
+                }
             } else if appDelegate.mpcHandler.session.connectedPeers.count == 2 {
-                
+                if chosenBasher == "" || chosenBasher2 == "" || chosenBasher3 == "" {
+                    self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
+                    readyForGame = false
+                } else {
+                    self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
+                    readyForGame = true
+                }
             } else if appDelegate.mpcHandler.session.connectedPeers.count == 3 {
-                
+                if chosenBasher == "" || chosenBasher2 == "" || chosenBasher3 == "" || chosenBasher4 == "" {
+                    self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree_Disabled")))
+                    readyForGame = false
+                } else {
+                    self.agreeButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Agree")))
+                    readyForGame = true
+                }
             }
         }
         
@@ -251,6 +280,17 @@ class BasherSelectScene:SKScene {
                     view.showsNodeCount = true
                 }
             }
+        }
+    }
+    
+    func backToModeSelect() {
+        // Present the scene
+        if let view = self.view {
+            view.presentScene(modeSelect)
+            view.ignoresSiblingOrder = false
+            
+            view.showsFPS = true
+            view.showsNodeCount = false
         }
     }
 }
