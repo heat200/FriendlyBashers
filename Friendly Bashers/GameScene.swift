@@ -516,6 +516,26 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
+        if contact.bodyA.node is AI {
+            let ai = contact.bodyA.node as! AI
+            if contact.bodyB.node is Character {
+                let character = contact.bodyB.node as! Character
+                if character.player != ai.player {
+                    character.takeDamage(ai.contactDamage, direction: ai.xScale)
+                    ai.contactDamage = 0
+                }
+            }
+        } else if contact.bodyB.node is AI {
+            let ai = contact.bodyB.node as! AI
+            if contact.bodyA.node is Character {
+                let character = contact.bodyA.node as! Character
+                if character.player != ai.player {
+                    character.takeDamage(ai.contactDamage, direction: ai.xScale)
+                    ai.contactDamage = 0
+                }
+            }
+        }
+        
         if (contact.bodyA.node is Projectile && contact.bodyB.node is Projectile) || (contact.bodyA.node is Projectile && !(contact.bodyB.node is Character)) || (contact.bodyB.node is Projectile && !(contact.bodyA.node is Character)) {
             if contact.bodyA.node is Projectile {
                 let projectile = contact.bodyA.node as! Projectile
@@ -799,6 +819,113 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         } else {
             sfxButton?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Sfx_Off")))
         }
+        
+        if !multiplayerGame || (multiplayerGame && appDelegate.mpcHandler.session.connectedPeers.count == 3) {
+            if self.playerNode.isDead {
+                self.player1Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")
+                    self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")))
+                    self.p1ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter + "_Faint_10")
+                    self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter + "_Faint_10")))
+                    self.p1ChosenView?.size = texture.size()
+                }
+            } else if self.playerNode2.isDead {
+                self.player2Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter2 == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")
+                    self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")))
+                    self.p2ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter2 + "_Faint_10")
+                    self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter2 + "_Faint_10")))
+                    self.p2ChosenView?.size = texture.size()
+                }
+            } else if self.playerNode3.isDead {
+                self.player3Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter3 == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")
+                    self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")))
+                    self.p3ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter3 + "_Faint_10")
+                    self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter3 + "_Faint_10")))
+                    self.p3ChosenView?.size = texture.size()
+                }
+            } else if self.playerNode4.isDead {
+                self.player4Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter4 == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode4.characterForm + "_Faint_10")
+                    self.p4ChosenView?.run(SKAction.setTexture(texture))
+                    self.p4ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter4 + "_Faint_10")
+                    self.p4ChosenView?.run(SKAction.setTexture(texture))
+                    self.p4ChosenView?.size = texture.size()
+                }
+            }
+        } else if multiplayerGame && appDelegate.mpcHandler.session.connectedPeers.count == 2 {
+            if self.playerNode.isDead {
+                self.player1Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")
+                    self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")))
+                    self.p1ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter + "_Faint_10")
+                    self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter + "_Faint_10")))
+                    self.p1ChosenView?.size = texture.size()
+                }
+            } else if self.playerNode2.isDead {
+                self.player2Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter2 == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")
+                    self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")))
+                    self.p2ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter2 + "_Faint_10")
+                    self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter2 + "_Faint_10")))
+                    self.p2ChosenView?.size = texture.size()
+                }
+            } else if self.playerNode3.isDead {
+                self.player3Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter3 == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")
+                    self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")))
+                    self.p3ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter3 + "_Faint_10")
+                    self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter3 + "_Faint_10")))
+                    self.p3ChosenView?.size = texture.size()
+                }
+            }
+        } else if multiplayerGame && appDelegate.mpcHandler.session.connectedPeers.count == 1 {
+            if self.playerNode.isDead {
+                self.player1Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")
+                    self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")))
+                    self.p1ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter + "_Faint_10")
+                    self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter + "_Faint_10")))
+                    self.p1ChosenView?.size = texture.size()
+                }
+            } else if self.playerNode2.isDead {
+                self.player2Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
+                if self.playerCharacter2 == "Cog" {
+                    let texture = SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")
+                    self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")))
+                    self.p2ChosenView?.size = texture.size()
+                } else {
+                    let texture = SKTexture(imageNamed: playerCharacter2 + "_Faint_10")
+                    self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter2 + "_Faint_10")))
+                    self.p2ChosenView?.size = texture.size()
+                }
+            }
+        }
     }
     
     func togglePause(_ received:Bool) {
@@ -877,16 +1004,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 endScreen("Victory", receiving: false)
             }
         }
-        playerNode!.playerAnimations(currentTime)
-        playerNode2!.playerAnimations(currentTime)
-        
-        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 2 {
-            playerNode3.playerAnimations(currentTime)
-        }
-        
-        if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
-            playerNode4.playerAnimations(currentTime)
-        }
         
         playerNode!.performFrameBasedUpdates(currentTime)
         playerNode2!.performFrameBasedUpdates(currentTime)
@@ -935,52 +1052,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         if !multiplayerGame || appDelegate.mpcHandler.session.connectedPeers.count == 3 {
             playerNode4?.followNaturalRegen(currentTime)
-        }
-        
-        if self.playerNode.isDead {
-            self.player1Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
-            if self.playerCharacter == "Cog" {
-                let texture = SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")
-                self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode.characterForm + "_Faint_10")))
-                self.p1ChosenView?.size = texture.size()
-            } else {
-                let texture = SKTexture(imageNamed: playerCharacter + "_Faint_10")
-                self.p1ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter + "_Faint_10")))
-                self.p1ChosenView?.size = texture.size()
-            }
-        } else if self.playerNode2.isDead {
-            self.player2Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
-            if self.playerCharacter2 == "Cog" {
-                let texture = SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")
-                self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode2.characterForm + "_Faint_10")))
-                self.p2ChosenView?.size = texture.size()
-            } else {
-                let texture = SKTexture(imageNamed: playerCharacter2 + "_Faint_10")
-                self.p2ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter2 + "_Faint_10")))
-                self.p2ChosenView?.size = texture.size()
-            }
-        } else if self.playerNode3.isDead {
-            self.player3Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
-            if self.playerCharacter3 == "Cog" {
-                let texture = SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")
-                self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerNode3.characterForm + "_Faint_10")))
-                self.p3ChosenView?.size = texture.size()
-            } else {
-                let texture = SKTexture(imageNamed: playerCharacter3 + "_Faint_10")
-                self.p3ChosenView?.run(SKAction.setTexture(SKTexture(imageNamed: playerCharacter3 + "_Faint_10")))
-                self.p3ChosenView?.size = texture.size()
-            }
-        } else if self.playerNode4.isDead {
-            self.player4Bubble?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Grey")))
-            if self.playerCharacter4 == "Cog" {
-                let texture = SKTexture(imageNamed: playerNode4.characterForm + "_Faint_10")
-                self.p4ChosenView?.run(SKAction.setTexture(texture))
-                self.p4ChosenView?.size = texture.size()
-            } else {
-                let texture = SKTexture(imageNamed: playerCharacter4 + "_Faint_10")
-                self.p4ChosenView?.run(SKAction.setTexture(texture))
-                self.p4ChosenView?.size = texture.size()
-            }
         }
         
         // Initialize _lastUpdateTime if it has not already been

@@ -52,7 +52,6 @@ class Character:SKSpriteNode {
     var playerMovement = ""
     var playerLastMovement = ""
     var playerAction = ""
-    var playerLastAction = ""
     
     
     var skillCooldown_1:Double = 10
@@ -516,6 +515,13 @@ class Character:SKSpriteNode {
                     maxHP = BASE_MAX_HP
                     hpRegen = BASE_HP_REGEN
                 }
+            } else {
+                maxJumps = BASE_MAX_JUMPS
+                movespeed = BASE_MOVESPEED
+                power = BASE_POWER
+                resistance = BASE_RESISTANCE
+                maxHP = BASE_MAX_HP
+                hpRegen = BASE_HP_REGEN
             }
             
             currentHP = maxHP
@@ -2730,6 +2736,13 @@ class Character:SKSpriteNode {
                     maxHP = BASE_MAX_HP
                     hpRegen = BASE_HP_REGEN
                 }
+            } else {
+                maxJumps = BASE_MAX_JUMPS
+                movespeed = BASE_MOVESPEED
+                power = BASE_POWER
+                resistance = BASE_RESISTANCE
+                maxHP = BASE_MAX_HP
+                hpRegen = BASE_HP_REGEN
             }
             
             currentHP = maxHP
@@ -2986,6 +2999,13 @@ class Character:SKSpriteNode {
                     resistance_2 = BASE_RESISTANCE_2
                     maxHP_2 = BASE_MAX_HP_2
                 }
+            } else {
+                movespeed_2 = BASE_MOVESPEED_2
+                power_2 = BASE_POWER_2
+                resistance_2 = BASE_RESISTANCE_2
+                maxHP_2 = BASE_MAX_HP_2
+                maxJumps = BASE_MAX_JUMPS
+                hpRegen = BASE_HP_REGEN
             }
             
             currentHP_2 = maxHP_2
@@ -3063,6 +3083,8 @@ class Character:SKSpriteNode {
     }
     
     func doSkill_1() {
+        doSkillAnimation("Skill_1")
+        
         if characterName == "Jack-O" {
             let damage:CGFloat = 0 + (power * 1.0)
             applyDamage(damage)
@@ -3184,13 +3206,10 @@ class Character:SKSpriteNode {
             
             animateSkill_3 = SKAction.animate(with: [SKTexture(imageNamed:characterForm + "_Slide_1"),SKTexture(imageNamed:characterForm + "_Slide_2"),SKTexture(imageNamed:characterForm + "_Slide_3"),SKTexture(imageNamed:characterForm + "_Slide_4"),SKTexture(imageNamed:characterForm + "_Slide_5"),SKTexture(imageNamed:characterForm + "_Slide_6"),SKTexture(imageNamed:characterForm + "_Slide_7"),SKTexture(imageNamed:characterForm + "_Slide_8"),SKTexture(imageNamed:characterForm + "_Slide_9"),SKTexture(imageNamed:characterForm + "_Slide_10")], timePerFrame: 0.065,resize:true,restore:true)
         }
-        
-        self.parent?.run(SKAction.wait(forDuration: 1.5),completion:{
-            self.returnToIdle()
-        })
     }
     
     func doSkill_2() {
+        doSkillAnimation("Skill_2")
         if characterName == "Jack-O" {
             let damage:CGFloat = 0
             summon(damage)
@@ -3217,13 +3236,10 @@ class Character:SKSpriteNode {
             applyDamage(damage)
             summon(damage)
         }
-        
-        self.parent?.run(SKAction.wait(forDuration: 1.5),completion:{
-            self.returnToIdle()
-        })
     }
     
     func doSkill_3() {
+        doSkillAnimation("Skill_3")
         if characterName == "Jack-O" {
             let damage:CGFloat = 15 + (power * 0.5)
             applyDamage(damage)
@@ -3246,10 +3262,6 @@ class Character:SKSpriteNode {
             let damage:CGFloat = 15 + (power * 0.5)
             applyDamage(damage)
         }
-        
-        self.parent?.run(SKAction.wait(forDuration: 2),completion:{
-            self.returnToIdle()
-        })
     }
     
     func summon(_ damage:CGFloat) {
@@ -3319,6 +3331,7 @@ class Character:SKSpriteNode {
                     dog.physicsBody?.allowsRotation = false
                     dog.physicsBody!.categoryBitMask = SummonedCategory
                     dog.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
+                    dog.physicsBody!.contactTestBitMask = CharacterCategory
                     self.parent!.addChild(dog)
                     self.parent!.run(SKAction.wait(forDuration: 2),completion:{
                         dog.brain.invalidate()
@@ -3338,6 +3351,7 @@ class Character:SKSpriteNode {
                     cat.physicsBody?.allowsRotation = false
                     cat.physicsBody!.categoryBitMask = SummonedCategory
                     cat.physicsBody!.collisionBitMask = WorldCategory | CharacterCategory
+                    cat.physicsBody!.contactTestBitMask = CharacterCategory
                     self.parent!.addChild(cat)
                     self.parent!.run(SKAction.wait(forDuration: 2),completion:{
                         cat.brain.invalidate()
@@ -3391,13 +3405,6 @@ class Character:SKSpriteNode {
         
         if appDelegate.mpcHandler.session != nil {
             MP_TRAFFIC_HANDLER.confirmPlayerStats()
-        }
-    }
-    
-    func returnToIdle() {
-        if self.physicsBody?.velocity.dx == 0 {
-            self.removeAllActions()
-            self.run(animateIdle!)
         }
     }
     
@@ -3526,97 +3533,65 @@ class Character:SKSpriteNode {
             }
         }
         
-        if self.playerAction != self.playerLastAction {
+        if !isResting && !isDead {
+            if (playerMovement == "Move_Right" || playerMovement == "Move_Left") && playerMovement != playerLastMovement {
+                doMoveAnimation(playerMovement)
+            } else if playerMovement == "" && playerMovement != playerLastMovement {
+                doMoveAnimation(playerMovement)
+            }
+            
             if self.playerAction == "Jump" && self.currentJumps < self.maxJumps {
                 self.physicsBody?.applyImpulse(CGVector(dx: 0, dy: self.movespeed * 0.25))
                 self.currentJumps += 1
+                self.doSkillAnimation(playerAction)
             } else if self.playerAction == "Skill_1" && self.isSkillReady_1(currentTime) {
                 self.skill_1_Last_Used = currentTime
                 self.skillCurrentCharges_1 -= 1
                 self.doSkill_1()
+                self.doSkillAnimation(playerAction)
             } else if self.playerAction == "Skill_2" && self.isSkillReady_2(currentTime) {
                 self.skill_2_Last_Used = currentTime
                 self.skillCurrentCharges_2 -= 1
                 self.doSkill_2()
+                self.doSkillAnimation(playerAction)
             } else if self.playerAction == "Skill_3" && self.isSkillReady_3(currentTime) {
                 self.skill_3_Last_Used = currentTime
                 self.skillCurrentCharges_3 -= 1
                 self.doSkill_3()
+                self.doSkillAnimation(playerAction)
             }
         }
     }
     
-    func playerAnimations(_ currentTime: TimeInterval) {
-        if !isResting {
-            if playerAction != playerLastAction || playerMovement != playerLastMovement {
-                if playerMovement == "Move_Right" || playerMovement == "Move_Left" {
-                    self.removeAllActions()
-                    self.run(self.animateRun!)
-                } else if playerMovement == "" && playerAction == "" {
-                    self.removeAllActions()
-                    self.run(self.animateIdle!)
-                } else if playerMovement == "" {
-                    self.removeAllActions()
-                    self.run(self.animateIdle!)
-                }
-                
-                if playerAction == "" && playerMovement == "" {
-                    self.removeAllActions()
-                    self.run(self.animateIdle!)
-                } else if playerAction == "Jump" && self.currentJumps < self.maxJumps {
-                    self.run((self.animateJump)!)
-                } else if playerAction == "Skill_1" && isSkillReady_1(currentTime) {
-                    self.run(self.animateSkill_1!)
-                    self.run(SKAction.wait(forDuration: 0.75),completion:{
-                        if self.playerLastAction == "Skill_1" && self.playerAction == "Skill_1" {
-                            self.playerAction = ""
-                            self.playerLastAction = ""
-                        } else if self.playerLastAction == "Skill_1" {
-                            self.playerLastAction = ""
-                        }
-                        
-                        if self.playerMovement == ""  {
-                            self.removeAllActions()
-                            self.run(self.animateIdle!)
-                        }
-                    })
-                } else if playerAction == "Skill_2" && isSkillReady_2(currentTime) {
-                    self.run((self.animateSkill_2)!)
-                    self.run(SKAction.wait(forDuration: 0.75),completion:{
-                        if self.playerLastAction == "Skill_2" && self.playerAction == "Skill_2" {
-                            self.playerAction = ""
-                            self.playerLastAction = ""
-                        } else if self.playerLastAction == "Skill_2" {
-                            self.playerLastAction = ""
-                        }
-                        
-                        if self.playerMovement == ""  {
-                            self.removeAllActions()
-                            self.run((self.animateIdle)!)
-                        }
-                    })
-                } else if playerAction == "Skill_3" && isSkillReady_3(currentTime) {
-                    self.run((self.animateSkill_3)!)
-                    self.run(SKAction.wait(forDuration: 0.75),completion:{
-                        if self.playerLastAction == "Skill_3" && self.playerAction == "Skill_3" {
-                            self.playerAction = ""
-                            self.playerLastAction = ""
-                        } else if self.playerLastAction == "Skill_3" {
-                            self.playerLastAction = ""
-                        }
-                        
-                        if self.playerMovement == ""  {
-                            self.removeAllActions()
-                            self.run((self.animateIdle)!)
-                        }
-                    })
-                }
-            }
+    func doSkillAnimation(_ skill:String) {
+        if skill == "Skill_1" {
+            self.removeAction(forKey: skill)
+            self.run(self.animateSkill_1!,withKey:skill)
+        } else if skill == "Skill_2" {
+            self.removeAction(forKey: skill)
+            self.run(self.animateSkill_2!,withKey:skill)
+        } else if skill == "Skill_3" {
+            self.removeAction(forKey: skill)
+            self.run(self.animateSkill_3!,withKey:skill)
+        } else if skill == "Jump" {
+            self.removeAction(forKey: skill)
+            self.run(self.animateJump!,withKey:skill)
+        }
+        
+        playerAction = ""
+    }
+    
+    func doMoveAnimation(_ move:String) {
+        if move == "Move_Left" || move == "Move_Right" {
+            self.removeAction(forKey: "Idle")
+            self.run(self.animateRun!,withKey:"Run")
+        } else if move == "" {
+            self.removeAction(forKey: "Run")
+            self.run(self.animateIdle!,withKey:"Idle")
         }
     }
     
     func followNaturalRegen(_ currentTime:TimeInterval) {
-        self.playerLastAction = self.playerAction
         self.playerLastMovement = self.playerMovement
         
         if currentTime - lastRegenTime >= 0.5 && !isDead {

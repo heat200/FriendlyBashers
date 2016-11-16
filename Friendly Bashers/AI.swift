@@ -12,6 +12,7 @@ class AI:Character {
     var brain:Timer!
     var inAction = false
     var thoughtCount = 0
+    var contactDamage:CGFloat = 0
     
     var facingCharacter:Character?
     
@@ -26,6 +27,7 @@ class AI:Character {
                 self.doSkill_2()
                 self.run(animateSkill_2!)
                 inAction = true
+                contactDamage = 15 + (power * 0.5)
             }
         } else if characterName == "Jack-O" {
             if self.facingCharacter != nil && !inAction {

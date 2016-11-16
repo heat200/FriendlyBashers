@@ -9,7 +9,7 @@
 import SpriteKit
 import GameplayKit
 
-var APP_VERSION = "0.2"
+var APP_VERSION = "0.2.5 b1"
 
 var playerName = "heat200"
 var chosenMode = ""
@@ -97,10 +97,11 @@ class MainMenuScene:SKScene {
         label4.position.y -= 15
         
         appVersionLabel = SKLabelNode(text: "Ver: " + APP_VERSION)
-        appVersionLabel?.position = CGPoint(x: self.size.width/2 - (appVersionLabel?.frame.width)!/2, y: -self.size.height/2 + (appVersionLabel?.frame.height)!/2)
+        appVersionLabel?.position = CGPoint(x: self.size.width/2 - 10, y: -self.size.height/2 + (appVersionLabel?.frame.height)!/2)
         appVersionLabel?.fontName = TEXT_FONT
         appVersionLabel?.fontColor = TEXT_COLOR
         appVersionLabel?.fontSize = 25
+        appVersionLabel?.horizontalAlignmentMode = .right
         
         self.addChild(titleLabel!)
         
@@ -179,17 +180,5 @@ class MainMenuScene:SKScene {
                 view.showsNodeCount = false
             }
         }
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        
-        
-        // Initialize _lastUpdateTime if it has not already been
-        if (self.lastUpdateTime == 0) {
-            self.lastUpdateTime = currentTime
-        }
-        
-        self.lastUpdateTime = currentTime
     }
 }

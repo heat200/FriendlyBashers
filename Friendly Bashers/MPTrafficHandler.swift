@@ -112,7 +112,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
                     gameScene?.playerNode2?.position.x = playerPositionX!
                     gameScene?.playerNode2?.position.y = playerPositionY!
                     gameScene?.playerNode2?.checkBlockUnder()
-                    gameScene?.playerNode2?.playerAnimations(currentTime)
+                    gameScene?.playerNode2?.performFrameBasedUpdates(currentTime)
                     if playerMovement! == "Move_Left" {
                         gameScene?.playerNode2?.xScale = -1
                     } else if playerMovement! == "Move_Right" {
@@ -124,7 +124,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
                     gameScene?.playerNode3?.position.x = playerPositionX!
                     gameScene?.playerNode3?.position.y = playerPositionY!
                     gameScene?.playerNode3?.checkBlockUnder()
-                    gameScene?.playerNode3?.playerAnimations(currentTime)
+                    gameScene?.playerNode3?.performFrameBasedUpdates(currentTime)
                     if playerMovement! == "Move_Left" {
                         gameScene?.playerNode3?.xScale = -1
                     } else if playerMovement! == "Move_Right" {
@@ -136,7 +136,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
                     gameScene?.playerNode4?.position.x = playerPositionX!
                     gameScene?.playerNode4?.position.y = playerPositionY!
                     gameScene?.playerNode4?.checkBlockUnder()
-                    gameScene?.playerNode4?.playerAnimations(currentTime)
+                    gameScene?.playerNode4?.performFrameBasedUpdates(currentTime)
                     if playerMovement! == "Move_Left" {
                         gameScene?.playerNode4?.xScale = -1
                     } else if playerMovement! == "Move_Right" {

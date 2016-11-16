@@ -64,56 +64,6 @@ class CPU:Character {
         return skillReady
     }
     
-    /*
-    func playerAnimations() {
-        if playerMovement != playerLastMovement {
-            if playerMovement == "Move_Right" || playerMovement == "Move_Left" {
-                self.removeAllActions()
-                self.run(self.animateRun!)
-            } else if playerMovement == "" && playerAction == "" {
-                self.removeAllActions()
-                self.run(self.animateIdle!)
-            } else if playerMovement == "" {
-                self.removeAllActions()
-                self.run(self.animateIdle!)
-            }
-        }
-        
-        if playerAction != playerLastAction {
-            if playerAction == "" && playerMovement == "" {
-                self.removeAllActions()
-                self.run(self.animateIdle!)
-            } else if playerAction == "Jump" && self.currentJumps < self.maxJumps{
-                self.run(self.animateJump!)
-            } else if playerAction == "Skill_1" && isSkillReady_1() {
-                self.run(self.animateSkill_1!)
-                self.parent?.run(SKAction.wait(forDuration: 0.6),completion:{
-                    self.playerLastAction = ""
-                    self.parent?.run(SKAction.wait(forDuration: 0.6),completion:{
-                        self.playerLastAction = ""
-                    })
-                })
-            } else if playerAction == "Skill_2" && isSkillReady_2() {
-                self.run(self.animateSkill_2!)
-                self.parent?.run(SKAction.wait(forDuration: 0.6),completion:{
-                    self.playerLastAction = ""
-                    self.parent?.run(SKAction.wait(forDuration: 0.6),completion:{
-                        self.playerLastAction = ""
-                    })
-                })
-            } else if playerAction == "Skill_3" && isSkillReady_3() {
-                self.run(self.animateSkill_3!)
-                self.parent?.run(SKAction.wait(forDuration: 0.6),completion:{
-                    self.playerLastAction = ""
-                    self.parent?.run(SKAction.wait(forDuration: 0.6),completion:{
-                        self.playerLastAction = ""
-                    })
-                })
-            }
-        }
-    }
-    */
-    
     func attackTypeAvailable(_ type:String) -> Bool {
         var available = false
         
@@ -250,7 +200,6 @@ class CPU:Character {
     
     func processInfo() {
         think()
-        update(currentTime)
     }
     
     func think() {
@@ -276,8 +225,6 @@ class CPU:Character {
                 } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
                     useAttack("Still_Buff")
                 }
-                //print(self.characterName + " should attack")
-                //print("Current Action: " + self.playerAction + " Last Action: " + self.playerLastAction)
             } else if self.position.y > player1!.position.y {
                 playerAction = ""
                 playerMovement = "Move_Left"
@@ -300,7 +247,6 @@ class CPU:Character {
                     }
                 }
             }
-            //print(characterName + " chasing " + player1!.characterName)
         } else if distanceFrom(player2!.position) < distanceFrom(player1!.position) && distanceFrom(player2!.position) < distanceFrom(player3!.position) && !self.isResting && !player2!.isDead {
             if abs(self.position.x - player2!.position.x) <= player2!.size.width/2 + halfWidth! + 10 {
                 playerMovement = ""
@@ -323,8 +269,6 @@ class CPU:Character {
                 } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
                     useAttack("Still_Buff")
                 }
-                //print(self.characterName + " should attack")
-                //print("Current Action: " + self.playerAction + " Last Action: " + self.playerLastAction)
             } else if self.position.y > player2!.position.y {
                 playerAction = ""
                 playerMovement = "Move_Left"
@@ -347,7 +291,6 @@ class CPU:Character {
                     }
                 }
             }
-            //print(characterName + " chasing " + player2!.characterName)
         } else if distanceFrom(player3!.position) < distanceFrom(player1!.position) && distanceFrom(player3!.position) < distanceFrom(player2!.position) && !self.isResting && !player3!.isDead {
             if abs(self.position.x - player3!.position.x) <= player3!.size.width/2 + halfWidth! + 10 {
                 playerMovement = ""
@@ -370,8 +313,6 @@ class CPU:Character {
                 } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
                     useAttack("Still_Buff")
                 }
-                //print(self.characterName + " should attack")
-                //print("Current Action: " + self.playerAction + " Last Action: " + self.playerLastAction)
             } else if self.position.y > player3!.position.y {
                 playerAction = ""
                 playerMovement = "Move_Left"
@@ -394,7 +335,6 @@ class CPU:Character {
                     }
                 }
             }
-            //print(characterName + " chasing " + player3!.characterName)
         }
     }
     
@@ -422,113 +362,7 @@ class CPU:Character {
             returnedP4 = true
             otherPlayer = world.playerNode4
         }
-
-        //print("P1 Taken:" + String(returnedP1))
-        //print("P2 Taken:" + String(returnedP2))
-        //print("P3 Taken:" + String(returnedP3))
-        //print("P4 Taken:" + String(returnedP4))
-        //print(otherPlayer!)
+        
         return otherPlayer!
-    }
-    
-    func update(_ currentTime: TimeInterval) {
-        // Called before each frame is rendered
-        let position = CGPoint(x: (self.position.x), y: self.position.y - self.size.height/2)
-        let column = world!.tileMapNode?.tileColumnIndex(fromPosition: position)
-        let row = world!.tileMapNode?.tileRowIndex(fromPosition: position)
-        let tile = world!.tileMapNode?.tileGroup(atColumn: column!, row: row!)
-        
-        if playerAction == "" {
-            timeSinceNoAction = currentTime
-        }
-        
-        if tile?.name == "Dirt" {
-            playerMovement(mod: 1.0)
-            self.resetJumpsCount()
-            if playerMovement == "" {
-                self.physicsBody?.velocity.dx = 0
-            }
-            
-            if self.isResting && self.allowedToRecover {
-                self.recovered()
-            }
-        } else if tile?.name == "Water" {
-            self.physicsBody?.applyForce(CGVector(dx: 0, dy: 30))
-            self.physicsBody?.affectedByGravity = false
-            playerMovement(mod: 0.4)
-            self.resetJumpsCount()
-        } else {
-            self.physicsBody?.affectedByGravity = true
-            playerMovement(mod: 0.75)
-        }
-        
-        if self.isResting {
-            playerMovement = ""
-            playerLastMovement = ""
-        }
-        
-        if self.isResting && self.currentHP >= self.maxHP {
-            self.recovered()
-        }
-        
-        if deathMode == 2 && (tile?.name == "Water" && self.isResting) {
-            self.brain.invalidate()
-            self.removeAllActions()
-            self.removeFromParent()
-            self.isDead = true
-        } else if deathMode == 1 && self.lives <= 0 && self.isResting {
-            self.brain.invalidate()
-            self.removeAllActions()
-            self.removeFromParent()
-            self.isDead = true
-        }
-        
-        if currentTime - self.skill_1_Last_Used >= self.skillCooldown_1 {
-            self.skill_1_Last_Used = currentTime
-            if self.skillCurrentCharges_1 < self.skillMaxCharges_1 {
-                self.skillCurrentCharges_1 += 1
-            }
-        }
-        
-        if currentTime - self.skill_2_Last_Used >= self.skillCooldown_2 {
-            self.skill_2_Last_Used = currentTime
-            if self.skillCurrentCharges_2 < self.skillMaxCharges_2 {
-                self.skillCurrentCharges_2 += 1
-            }
-        }
-        
-        if currentTime - self.skill_3_Last_Used >= self.skillCooldown_3 {
-            self.skill_3_Last_Used = currentTime
-            if self.skillCurrentCharges_3 < self.skillMaxCharges_3 {
-                self.skillCurrentCharges_3 += 1
-            }
-        }
-        
-        playerAnimations(currentTime)
-        
-        if playerAction != playerLastAction {
-            if playerAction == "Jump" && self.currentJumps < self.maxJumps {
-                self.physicsBody?.applyImpulse(CGVector(dx: 0, dy: self.movespeed * 0.25))
-                self.currentJumps += 1
-                playerLastAction = playerAction
-            } else if playerAction == "Skill_1" && self.isSkillReady_1() {
-                self.skill_1_Last_Used = currentTime
-                playerLastAction = playerAction
-                self.skillCurrentCharges_1 -= 1
-                self.doSkill_1()
-            } else if playerAction == "Skill_2" && self.isSkillReady_2() {
-                self.skill_2_Last_Used = currentTime
-                playerLastAction = playerAction
-                self.skillCurrentCharges_2 -= 1
-                self.doSkill_2()
-            } else if playerAction == "Skill_3" && self.isSkillReady_3() {
-                self.skill_3_Last_Used = currentTime
-                playerLastAction = playerAction
-                self.skillCurrentCharges_3 -= 1
-                self.doSkill_3()
-            }
-        }
-        
-        playerLastMovement = playerMovement
     }
 }
