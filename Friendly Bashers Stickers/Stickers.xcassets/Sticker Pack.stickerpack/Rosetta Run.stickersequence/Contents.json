@@ -1,0 +1,43 @@
+{
+  "properties" : {
+    "duration" : 11,
+    "duration-type" : "fps",
+    "repetitions" : 0
+  },
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "frames" : [
+    {
+      "filename" : "Rosetta_Run_1.png"
+    },
+    {
+      "filename" : "Rosetta_Run_2.png"
+    },
+    {
+      "filename" : "Rosetta_Run_3.png"
+    },
+    {
+      "filename" : "Rosetta_Run_4.png"
+    },
+    {
+      "filename" : "Rosetta_Run_5.png"
+    },
+    {
+      "filename" : "Rosetta_Run_6.png"
+    },
+    {
+      "filename" : "Rosetta_Run_7.png"
+    },
+    {
+      "filename" : "Rosetta_Run_8.png"
+    },
+    {
+      "filename" : "Rosetta_Run_9.png"
+    },
+    {
+      "filename" : "Rosetta_Run_10.png"
+    }
+  ]
+}

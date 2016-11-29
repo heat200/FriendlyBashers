@@ -7,10 +7,8 @@
 
 import MultipeerConnectivity
 
-
 class MPCHandler: NSObject, MCSessionDelegate {
-    @available(iOS 7.0, *)
-    public func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
+    open func session(_ session: MCSession, didFinishReceivingResourceWithName resourceName: String, fromPeer peerID: MCPeerID, at localURL: URL, withError error: Error?) {
         
     }
     
@@ -30,7 +28,8 @@ class MPCHandler: NSObject, MCSessionDelegate {
     
     func setupBrowser() {
         browser = MCBrowserViewController(serviceType: "my-game", session: session)
-        
+        browser.maximumNumberOfPeers = 4
+        browser.minimumNumberOfPeers = 2
     }
     
     func advertiseSelf(_ advertise:Bool) {

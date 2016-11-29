@@ -56,6 +56,10 @@ class GameOptionsScene:SKScene {
     }
     
     override func didMove(to view: SKView) {
+        if menuMusic.parent == nil && musicEnabled {
+            self.addChild(menuMusic)
+        }
+        
         blessingPageName1!.text = blessingNames[0]
         blessingPageName2!.text = blessingNames[1]
         blessingPageName3!.text = blessingNames[2]
@@ -68,49 +72,98 @@ class GameOptionsScene:SKScene {
             let pos = t.location(in: self)
             
             if (self.backButton?.contains(pos))! {
-                if appDelegate.mpcHandler.session != nil {
-                    MP_TRAFFIC_HANDLER.syncGameSettings()
+                if sfxEnabled {
+                    self.run(clickSound)
                 }
                 
-                if let view = self.view {
-                    view.presentScene(basherSelect)
-                    view.ignoresSiblingOrder = false
+                menuMusic.run(SKAction.pause(),completion:{
+                    menuMusic.removeFromParent()
+                })
+                
+                self.run(SKAction.wait(forDuration: 0.03),completion:{
+                    if appDelegate.mpcHandler.session != nil {
+                        MP_TRAFFIC_HANDLER.syncGameSettings()
+                    } else if GK_TRAFFIC_HANDLER.match != nil {
+                        GK_TRAFFIC_HANDLER.syncGameSettings()
+                    }
                     
-                    view.showsFPS = false
-                }
+                    if let view = self.view {
+                        view.presentScene(basherSelect)
+                        view.ignoresSiblingOrder = false
+                        
+                        view.showsFPS = false
+                    }
+                })
             } else if (self.sfxButton?.contains(pos))! {
                 if sfxEnabled {
                     sfxEnabled = false
                 } else {
                     sfxEnabled = true
+                    self.run(clickSound)
                 }
             } else if (self.musicButton?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 if musicEnabled {
                     musicEnabled = false
                 } else {
                     musicEnabled = true
                 }
             } else if (self.leftButton?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 timeLimit -= 1
                 if timeLimit < 0 {
                     timeLimit = 0
                 }
             } else if (self.rightButton?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 timeLimit += 1
                 if timeLimit > 5 {
                     timeLimit = 5
                 }
             } else if (self.deathMode1Button?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 deathMode = 1
             } else if (self.deathMode2Button?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 deathMode = 2
             } else if (self.chooseBlessingPage1?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 chosenBlessing = 0
             } else if (self.chooseBlessingPage2?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 chosenBlessing = 1
             } else if (self.chooseBlessingPage3?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 chosenBlessing = 2
             } else if (self.chooseBlessingPage4?.contains(pos))! {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
                 chosenBlessing = 3
             }
             updateUI()
@@ -177,9 +230,5 @@ class GameOptionsScene:SKScene {
             deathMode1Button?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Enabled")))
             deathMode2Button?.run(SKAction.setTexture(SKTexture(imageNamed: "Button_Disabled")))
         }
-    }
-    
-    override func update(_ currentTime: TimeInterval) {
-        
     }
 }

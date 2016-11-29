@@ -19,25 +19,52 @@ class CPU:Character {
     var returnedP3 = false
     var returnedP4 = false
     
-    var world:GameScene?
     var player1:Character?
     var player2:Character?
     var player3:Character?
     
+    var rand:Int?
+    
     func startCPU() {
-        self.run(SKAction.wait(forDuration: 3),completion:{
-            self.player1 = self.returnPlayer(self.world!,num: 1)
-            self.player2 = self.returnPlayer(self.world!,num: 2)
-            self.player3 = self.returnPlayer(self.world!,num: 3)
+        rand = Int(arc4random_uniform(2) + 1)
+        self.run(SKAction.wait(forDuration: 0.25),completion:{
+            self.player1 = self.returnPlayer(gameScene!,num: 1)
+            self.player2 = self.returnPlayer(gameScene!,num: 2)
+            self.player3 = self.returnPlayer(gameScene!,num: 3)
             self.run(self.animateIdle!)
-            self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.processInfo), userInfo: nil, repeats: true)
+            self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_A), userInfo: nil, repeats: true)
         })
+    }
+    
+    func updateCPU() {
+        if brain != nil {
+            self.brain.invalidate()
+            self.brain = nil
+        }
+        
+        if !self.isDead {
+            if !player1!.isDead && !player2!.isDead && !player3!.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_A), userInfo: nil, repeats: true)
+            } else if !player1!.isDead && !player2!.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_B_1), userInfo: nil, repeats: true)
+            } else if !player2!.isDead && !player3!.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_B_2), userInfo: nil, repeats: true)
+            } else if !player1!.isDead && !player3!.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_B_3), userInfo: nil, repeats: true)
+            } else if !player1!.isDead && !self.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_C_1), userInfo: nil, repeats: true)
+            } else if !player2!.isDead && !self.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_C_2), userInfo: nil, repeats: true)
+            } else if !player3!.isDead && !self.isDead {
+                self.brain = Timer.scheduledTimer(timeInterval: 0.016, target: self, selector: #selector(CPU.think_C_3), userInfo: nil, repeats: true)
+            }
+        }
     }
     
     func isSkillReady_1() -> Bool {
         var skillReady = false
         
-        if self.skillCurrentCharges_1 > 0 && !self.isResting {
+        if self.skillCurrentCharges_1 > 0 && !self.isResting && !self.isDead {
             skillReady = true
         }
         
@@ -47,7 +74,7 @@ class CPU:Character {
     func isSkillReady_2() -> Bool {
         var skillReady = false
         
-        if self.skillCurrentCharges_2 > 0 && !self.isResting {
+        if self.skillCurrentCharges_2 > 0 && !self.isResting && !self.isDead {
             skillReady = true
         }
         
@@ -57,7 +84,7 @@ class CPU:Character {
     func isSkillReady_3() -> Bool {
         var skillReady = false
         
-        if self.skillCurrentCharges_3 > 0 && !self.isResting {
+        if self.skillCurrentCharges_3 > 0 && !self.isResting && !self.isDead {
             skillReady = true
         }
         
@@ -68,11 +95,11 @@ class CPU:Character {
         var available = false
         
         if characterName == "Jack-O" {
-            if type == "Ranged" && skillCurrentCharges_2 > 0 {
+            if type == "Ranged" && isSkillReady_2() {
                 available = true
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 available = true
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 available = true
             } else if type == "Still_Buff" {
                 available = false
@@ -80,11 +107,11 @@ class CPU:Character {
                 available = false
             }
         } else if characterName == "Plum" {
-            if type == "Ranged" && skillCurrentCharges_1 > 0 {
+            if type == "Ranged" && isSkillReady_1() {
                 available = true
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 available = true
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 available = true
             } else if type == "Still_Buff" {
                 available = false
@@ -92,11 +119,11 @@ class CPU:Character {
                 available = false
             }
         } else if characterName == "Rosetta" {
-            if type == "Ranged" && skillCurrentCharges_1 > 0 {
+            if type == "Ranged" && isSkillReady_1() {
                 available = true
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 available = true
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 available = true
             } else if type == "Still_Buff" {
                 available = false
@@ -108,31 +135,31 @@ class CPU:Character {
                 available = false
             } else if type == "Slide" {
                 available = false
-            } else if type == "Melee" && skillCurrentCharges_1 > 0 {
+            } else if type == "Melee" && isSkillReady_1() {
                 available = true
-            } else if type == "Still_Buff" && skillCurrentCharges_2 > 0 {
+            } else if type == "Still_Buff" && isSkillReady_2() {
                 available = true
-            } else if type == "Moving_Buff" && skillCurrentCharges_3 > 0 {
+            } else if type == "Moving_Buff" && isSkillReady_3() {
                 available = true
             }
         } else if characterName == "Cog" {
-            if type == "Ranged" && skillCurrentCharges_2 > 0 {
+            if type == "Ranged" && isSkillReady_2() {
                 available = true
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 available = true
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 available = true
-            } else if type == "Still_Buff" && skillCurrentCharges_1 > 0 {
+            } else if type == "Still_Buff" && isSkillReady_1() {
                 available = true
             } else if type == "Moving_Buff" {
                 available = false
             }
         } else if characterName == "Sarah" {
-            if type == "Ranged" && skillCurrentCharges_2 > 0 {
+            if type == "Ranged" && isSkillReady_2() {
                 available = true
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 available = true
-            } else if type == "Melee" && skillCurrentCharges_1 > 0 {
+            } else if type == "Melee" && isSkillReady_1() {
                 available = true
             } else if type == "Still_Buff" {
                 available = false
@@ -145,66 +172,72 @@ class CPU:Character {
     }
     
     func useAttack(_ type:String) {
+        rand = Int(arc4random_uniform(2) + 1)
         if characterName == "Jack-O" {
-            if type == "Ranged" && skillCurrentCharges_2 > 0 {
+            if type == "Ranged" && isSkillReady_2() {
                 playerAction = "Skill_2"
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 playerAction = "Skill_3"
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 playerAction = "Skill_2"
             }
         } else if characterName == "Plum" {
-            if type == "Ranged" && skillCurrentCharges_1 > 0 {
+            if type == "Ranged" && isSkillReady_1() {
                 playerAction = "Skill_1"
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 playerAction = "Skill_3"
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 playerAction = "Skill_2"
             }
         } else if characterName == "Rosetta" {
-            if type == "Ranged" && skillCurrentCharges_1 > 0 {
+            if type == "Ranged" && isSkillReady_1() {
                 playerAction = "Skill_1"
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 playerAction = "Skill_3"
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 playerAction = "Skill_2"
             }
         } else if characterName == "Silva" {
-            if type == "Melee" && skillCurrentCharges_1 > 0 {
+            if type == "Melee" && isSkillReady_1() {
                 playerAction = "Skill_1"
-            } else if type == "Still_Buff" && skillCurrentCharges_2 > 0 {
+            } else if type == "Still_Buff" && isSkillReady_2() {
                 playerAction = "Skill_2"
-            } else if type == "Moving_Buff" && skillCurrentCharges_3 > 0 {
+            } else if type == "Moving_Buff" && isSkillReady_3() {
                 playerAction = "Skill_3"
             }
         } else if characterName == "Cog" {
-            if type == "Ranged" && skillCurrentCharges_2 > 0 {
+            if type == "Ranged" && isSkillReady_2() {
                 playerAction = "Skill_2"
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 playerAction = "Skill_3"
-            } else if type == "Melee" && skillCurrentCharges_2 > 0 {
+            } else if type == "Melee" && isSkillReady_2() {
                 playerAction = "Skill_2"
-            } else if type == "Still_Buff" && skillCurrentCharges_1 > 0 {
+            } else if type == "Still_Buff" && isSkillReady_1() {
                 playerAction = "Skill_1"
             }
         } else if characterName == "Sarah" {
-            if type == "Ranged" && skillCurrentCharges_2 > 0 {
+            if type == "Ranged" && isSkillReady_2() {
                 playerAction = "Skill_2"
-            } else if type == "Slide" && skillCurrentCharges_3 > 0 {
+            } else if type == "Slide" && isSkillReady_3() {
                 playerAction = "Skill_3"
-            } else if type == "Melee" && skillCurrentCharges_1 > 0 {
+            } else if type == "Melee" && isSkillReady_1() {
                 playerAction = "Skill_1"
             }
         }
     }
     
-    func processInfo() {
-        think()
+    func isLowHP() -> Bool {
+        var low = false
+        if self.currentHP <= self.maxHP * 0.15 {
+            low = true
+        }
+        
+        return low
     }
     
-    func think() {
-        if distanceFrom(player1!.position) < distanceFrom(player2!.position) && distanceFrom(player1!.position) < distanceFrom(player2!.position) && !self.isResting && !player1!.isDead {
-            if abs(self.position.x - player1!.position.x) <= player1!.size.width/2 + halfWidth! + 10 {
+    func think_A() {
+        if distanceFrom(player1!.position) < distanceFrom(player2!.position) && distanceFrom(player1!.position) < distanceFrom(player3!.position) && !self.isResting && !player1!.isDead && !self.isDead {
+            if abs(self.position.x - player1!.position.x) <= player1!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
                 playerMovement = ""
                 if self.position.x > player1!.position.x {
                     self.xScale = -1
@@ -212,14 +245,24 @@ class CPU:Character {
                     self.xScale = 1
                 }
             } else if self.position.x > player1!.position.x {
-                playerMovement = "Move_Left"
-                self.xScale = -1
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
             } else {
-                playerMovement = "Move_Right"
-                self.xScale = 1
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
             }
             
-            if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
+            if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
                 if attackTypeAvailable("Melee") && playerMovement == "" {
                     useAttack("Melee")
                 } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
@@ -227,8 +270,13 @@ class CPU:Character {
                 }
             } else if self.position.y > player1!.position.y {
                 playerAction = ""
-                playerMovement = "Move_Left"
-                self.xScale = -1
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
             } else {
                 playerAction = "Jump"
             }
@@ -247,23 +295,33 @@ class CPU:Character {
                     }
                 }
             }
-        } else if distanceFrom(player2!.position) < distanceFrom(player1!.position) && distanceFrom(player2!.position) < distanceFrom(player3!.position) && !self.isResting && !player2!.isDead {
-            if abs(self.position.x - player2!.position.x) <= player2!.size.width/2 + halfWidth! + 10 {
+        } else if distanceFrom(player2!.position) < distanceFrom(player1!.position) && distanceFrom(player2!.position) < distanceFrom(player3!.position) && !self.isResting && !player2!.isDead && !self.isDead {
+            if abs(self.position.x - player2!.position.x) <= player2!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
                 playerMovement = ""
-                if self.position.x > player1!.position.x {
+                if self.position.x > player2!.position.x {
                     self.xScale = -1
                 } else {
                     self.xScale = 1
                 }
             } else if self.position.x > player2!.position.x {
-                playerMovement = "Move_Left"
-                self.xScale = -1
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
             } else {
-                playerMovement = "Move_Right"
-                self.xScale = 1
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
             }
             
-            if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
+            if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 && !self.isLowHP() {
                 if attackTypeAvailable("Melee") && playerMovement == "" {
                     useAttack("Melee")
                 } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
@@ -271,8 +329,13 @@ class CPU:Character {
                 }
             } else if self.position.y > player2!.position.y {
                 playerAction = ""
-                playerMovement = "Move_Left"
-                self.xScale = -1
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
             } else {
                 playerAction = "Jump"
             }
@@ -291,23 +354,33 @@ class CPU:Character {
                     }
                 }
             }
-        } else if distanceFrom(player3!.position) < distanceFrom(player1!.position) && distanceFrom(player3!.position) < distanceFrom(player2!.position) && !self.isResting && !player3!.isDead {
-            if abs(self.position.x - player3!.position.x) <= player3!.size.width/2 + halfWidth! + 10 {
+        } else if distanceFrom(player3!.position) < distanceFrom(player1!.position) && distanceFrom(player3!.position) < distanceFrom(player2!.position) && !self.isResting && !player3!.isDead && !self.isDead{
+            if abs(self.position.x - player3!.position.x) <= player3!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
                 playerMovement = ""
-                if self.position.x > player1!.position.x {
+                if self.position.x > player3!.position.x {
                     self.xScale = -1
                 } else {
                     self.xScale = 1
                 }
             } else if self.position.x > player3!.position.x {
-                playerMovement = "Move_Left"
-                self.xScale = -1
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
             } else if self.position.x < player3!.position.x {
-                playerMovement = "Move_Right"
-                self.xScale = 1
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
             }
             
-            if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
+            if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
                 if attackTypeAvailable("Melee") && playerMovement == "" {
                     useAttack("Melee")
                 } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
@@ -315,8 +388,13 @@ class CPU:Character {
                 }
             } else if self.position.y > player3!.position.y {
                 playerAction = ""
-                playerMovement = "Move_Left"
-                self.xScale = -1
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
             } else {
                 playerAction = "Jump"
             }
@@ -333,6 +411,555 @@ class CPU:Character {
                         self.playerMovement = ""
                         useAttack("Slide")
                     }
+                }
+            }
+        }
+    }
+    
+    func think_B_1() {
+        if distanceFrom(player1!.position) < distanceFrom(player2!.position) && !self.isResting && !player1!.isDead && !self.isDead {
+            if abs(self.position.x - player1!.position.x) <= player1!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+                playerMovement = ""
+                if self.position.x > player1!.position.x {
+                    self.xScale = -1
+                } else {
+                    self.xScale = 1
+                }
+            } else if self.position.x > player1!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
+            } else {
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            }
+            
+            if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
+                if attackTypeAvailable("Melee") && playerMovement == "" {
+                    useAttack("Melee")
+                } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                    useAttack("Still_Buff")
+                }
+            } else if self.position.y > player1!.position.y {
+                playerAction = ""
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            } else {
+                playerAction = "Jump"
+            }
+            
+            if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
+                if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+                    if attackTypeAvailable("Ranged") {
+                        self.playerMovement = ""
+                        useAttack("Ranged")
+                    } else if attackTypeAvailable("Moving_Buff") {
+                        self.playerMovement = ""
+                        useAttack("Moving_Buff")
+                    } else if attackTypeAvailable("Slide") {
+                        self.playerMovement = ""
+                        useAttack("Slide")
+                    }
+                }
+            }
+        } else if distanceFrom(player2!.position) < distanceFrom(player1!.position) && !self.isResting && !player2!.isDead && !self.isDead {
+            if abs(self.position.x - player2!.position.x) <= player2!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+                playerMovement = ""
+                if self.position.x > player2!.position.x {
+                    self.xScale = -1
+                } else {
+                    self.xScale = 1
+                }
+            } else if self.position.x > player2!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
+            } else {
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            }
+            
+            if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 && !self.isLowHP() {
+                if attackTypeAvailable("Melee") && playerMovement == "" {
+                    useAttack("Melee")
+                } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                    useAttack("Still_Buff")
+                }
+            } else if self.position.y > player2!.position.y {
+                playerAction = ""
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            } else {
+                playerAction = "Jump"
+            }
+            
+            if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
+                if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+                    if attackTypeAvailable("Ranged") {
+                        self.playerMovement = ""
+                        useAttack("Ranged")
+                    } else if attackTypeAvailable("Moving_Buff") {
+                        self.playerMovement = ""
+                        useAttack("Moving_Buff")
+                    } else if attackTypeAvailable("Slide") {
+                        self.playerMovement = ""
+                        useAttack("Slide")
+                    }
+                }
+            }
+        }
+    }
+    
+    func think_B_2() {
+        if distanceFrom(player2!.position) < distanceFrom(player3!.position) && !self.isResting && !player2!.isDead && !self.isDead {
+            if abs(self.position.x - player2!.position.x) <= player2!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+                playerMovement = ""
+                if self.position.x > player2!.position.x {
+                    self.xScale = -1
+                } else {
+                    self.xScale = 1
+                }
+            } else if self.position.x > player2!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
+            } else {
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            }
+            
+            if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 && !self.isLowHP() {
+                if attackTypeAvailable("Melee") && playerMovement == "" {
+                    useAttack("Melee")
+                } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                    useAttack("Still_Buff")
+                }
+            } else if self.position.y > player2!.position.y {
+                playerAction = ""
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            } else {
+                playerAction = "Jump"
+            }
+            
+            if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
+                if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+                    if attackTypeAvailable("Ranged") {
+                        self.playerMovement = ""
+                        useAttack("Ranged")
+                    } else if attackTypeAvailable("Moving_Buff") {
+                        self.playerMovement = ""
+                        useAttack("Moving_Buff")
+                    } else if attackTypeAvailable("Slide") {
+                        self.playerMovement = ""
+                        useAttack("Slide")
+                    }
+                }
+            }
+        } else if distanceFrom(player3!.position) < distanceFrom(player2!.position) && !self.isResting && !player3!.isDead && !self.isDead {
+            if abs(self.position.x - player3!.position.x) <= player3!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+                playerMovement = ""
+                if self.position.x > player3!.position.x {
+                    self.xScale = -1
+                } else {
+                    self.xScale = 1
+                }
+            } else if self.position.x > player3!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
+            } else if self.position.x < player3!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            }
+            
+            if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
+                if attackTypeAvailable("Melee") && playerMovement == "" {
+                    useAttack("Melee")
+                } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                    useAttack("Still_Buff")
+                }
+            } else if self.position.y > player3!.position.y {
+                playerAction = ""
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            } else {
+                playerAction = "Jump"
+            }
+            
+            if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
+                if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+                    if attackTypeAvailable("Ranged") {
+                        self.playerMovement = ""
+                        useAttack("Ranged")
+                    } else if attackTypeAvailable("Moving_Buff") {
+                        self.playerMovement = ""
+                        useAttack("Moving_Buff")
+                    } else if attackTypeAvailable("Slide") {
+                        self.playerMovement = ""
+                        useAttack("Slide")
+                    }
+                }
+            }
+        }
+    }
+    
+    func think_B_3() {
+        if distanceFrom(player1!.position) < distanceFrom(player3!.position) && !self.isResting && !player1!.isDead && !self.isDead {
+            if abs(self.position.x - player1!.position.x) <= player1!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+                playerMovement = ""
+                if self.position.x > player1!.position.x {
+                    self.xScale = -1
+                } else {
+                    self.xScale = 1
+                }
+            } else if self.position.x > player1!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
+            } else {
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            }
+            
+            if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
+                if attackTypeAvailable("Melee") && playerMovement == "" {
+                    useAttack("Melee")
+                } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                    useAttack("Still_Buff")
+                }
+            } else if self.position.y > player1!.position.y {
+                playerAction = ""
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            } else {
+                playerAction = "Jump"
+            }
+            
+            if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
+                if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+                    if attackTypeAvailable("Ranged") {
+                        self.playerMovement = ""
+                        useAttack("Ranged")
+                    } else if attackTypeAvailable("Moving_Buff") {
+                        self.playerMovement = ""
+                        useAttack("Moving_Buff")
+                    } else if attackTypeAvailable("Slide") {
+                        self.playerMovement = ""
+                        useAttack("Slide")
+                    }
+                }
+            }
+        } else if distanceFrom(player3!.position) < distanceFrom(player1!.position) && !self.isResting && !player3!.isDead && !self.isDead {
+            if abs(self.position.x - player3!.position.x) <= player3!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+                playerMovement = ""
+                if self.position.x > player3!.position.x {
+                    self.xScale = -1
+                } else {
+                    self.xScale = 1
+                }
+            } else if self.position.x > player3!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                } else {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                }
+            } else if self.position.x < player3!.position.x {
+                if self.isLowHP() {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            }
+            
+            if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
+                if attackTypeAvailable("Melee") && playerMovement == "" {
+                    useAttack("Melee")
+                } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                    useAttack("Still_Buff")
+                }
+            } else if self.position.y > player3!.position.y {
+                playerAction = ""
+                if rand == 1 {
+                    playerMovement = "Move_Left"
+                    self.xScale = -1
+                } else {
+                    playerMovement = "Move_Right"
+                    self.xScale = 1
+                }
+            } else {
+                playerAction = "Jump"
+            }
+            
+            if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
+                if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+                    if attackTypeAvailable("Ranged") {
+                        self.playerMovement = ""
+                        useAttack("Ranged")
+                    } else if attackTypeAvailable("Moving_Buff") {
+                        self.playerMovement = ""
+                        useAttack("Moving_Buff")
+                    } else if attackTypeAvailable("Slide") {
+                        self.playerMovement = ""
+                        useAttack("Slide")
+                    }
+                }
+            }
+        }
+    }
+    
+    func think_C_1() {
+        if abs(self.position.x - player1!.position.x) <= player1!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+            playerMovement = ""
+            if self.position.x > player1!.position.x {
+                self.xScale = -1
+            } else {
+                self.xScale = 1
+            }
+        } else if self.position.x > player1!.position.x {
+            if self.isLowHP() {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            } else {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            }
+        } else {
+            if self.isLowHP() {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            } else {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            }
+        }
+        
+        if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
+            if attackTypeAvailable("Melee") && playerMovement == "" {
+                useAttack("Melee")
+            } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                useAttack("Still_Buff")
+            }
+        } else if self.position.y > player1!.position.y {
+            playerAction = ""
+            if rand == 1 {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            } else {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            }
+        } else {
+            playerAction = "Jump"
+        }
+        
+        if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
+            if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+                if attackTypeAvailable("Ranged") {
+                    self.playerMovement = ""
+                    useAttack("Ranged")
+                } else if attackTypeAvailable("Moving_Buff") {
+                    self.playerMovement = ""
+                    useAttack("Moving_Buff")
+                } else if attackTypeAvailable("Slide") {
+                    self.playerMovement = ""
+                    useAttack("Slide")
+                }
+            }
+        }
+    }
+    
+    func think_C_2() {
+        if abs(self.position.x - player2!.position.x) <= player2!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+            playerMovement = ""
+            if self.position.x > player2!.position.x {
+                self.xScale = -1
+            } else {
+                self.xScale = 1
+            }
+        } else if self.position.x > player2!.position.x {
+            if self.isLowHP() {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            } else {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            }
+        } else {
+            if self.isLowHP() {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            } else {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            }
+        }
+        
+        if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 && !self.isLowHP() {
+            if attackTypeAvailable("Melee") && playerMovement == "" {
+                useAttack("Melee")
+            } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                useAttack("Still_Buff")
+            }
+        } else if self.position.y > player2!.position.y {
+            playerAction = ""
+            if rand == 1 {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            } else {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            }
+        } else {
+            playerAction = "Jump"
+        }
+        
+        if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
+            if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+                if attackTypeAvailable("Ranged") {
+                    self.playerMovement = ""
+                    useAttack("Ranged")
+                } else if attackTypeAvailable("Moving_Buff") {
+                    self.playerMovement = ""
+                    useAttack("Moving_Buff")
+                } else if attackTypeAvailable("Slide") {
+                    self.playerMovement = ""
+                    useAttack("Slide")
+                }
+            }
+        }
+    }
+    
+    func think_C_3() {
+        if abs(self.position.x - player3!.position.x) <= player3!.size.width/2 + halfWidth! + 10 && !self.isLowHP() {
+            playerMovement = ""
+            if self.position.x > player3!.position.x {
+                self.xScale = -1
+            } else {
+                self.xScale = 1
+            }
+        } else if self.position.x > player3!.position.x {
+            if self.isLowHP() {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            } else {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            }
+        } else if self.position.x < player3!.position.x {
+            if self.isLowHP() {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            } else {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            }
+        }
+        
+        if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5  && !self.isLowHP() {
+            if attackTypeAvailable("Melee") && playerMovement == "" {
+                useAttack("Melee")
+            } else if attackTypeAvailable("Still_Buff") && playerMovement == "" {
+                useAttack("Still_Buff")
+            }
+        } else if self.position.y > player3!.position.y {
+            playerAction = ""
+            if rand == 1 {
+                playerMovement = "Move_Left"
+                self.xScale = -1
+            } else {
+                playerMovement = "Move_Right"
+                self.xScale = 1
+            }
+        } else {
+            playerAction = "Jump"
+        }
+        
+        if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
+            if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+                if attackTypeAvailable("Ranged") {
+                    self.playerMovement = ""
+                    useAttack("Ranged")
+                } else if attackTypeAvailable("Moving_Buff") {
+                    self.playerMovement = ""
+                    useAttack("Moving_Buff")
+                } else if attackTypeAvailable("Slide") {
+                    self.playerMovement = ""
+                    useAttack("Slide")
                 }
             }
         }

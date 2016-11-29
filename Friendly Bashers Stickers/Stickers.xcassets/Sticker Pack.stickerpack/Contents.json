@@ -1,0 +1,56 @@
+{
+  "stickers" : [
+    {
+      "filename" : "Dog Faint.stickersequence"
+    },
+    {
+      "filename" : "Cat Idle & Jump.stickersequence"
+    },
+    {
+      "filename" : "Cat Faint.stickersequence"
+    },
+    {
+      "filename" : "ZombieBoy Idle.stickersequence"
+    },
+    {
+      "filename" : "ZombieGirl Idle.stickersequence"
+    },
+    {
+      "filename" : "Jack-O Run.stickersequence"
+    },
+    {
+      "filename" : "Plum Run.stickersequence"
+    },
+    {
+      "filename" : "Plum Slash.stickersequence"
+    },
+    {
+      "filename" : "Rosetta Run.stickersequence"
+    },
+    {
+      "filename" : "Rosetta Slash.stickersequence"
+    },
+    {
+      "filename" : "Sarah Shoot.stickersequence"
+    },
+    {
+      "filename" : "Silva Faint.stickersequence"
+    },
+    {
+      "filename" : "Grass Left.sticker"
+    },
+    {
+      "filename" : "Grass Middle.sticker"
+    },
+    {
+      "filename" : "Grass Right.sticker"
+    }
+  ],
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "properties" : {
+    "grid-size" : "small"
+  }
+}

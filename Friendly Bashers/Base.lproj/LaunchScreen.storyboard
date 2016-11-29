@@ -1,7 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11134" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="11542" systemVersion="16B2555" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina4_7" orientation="landscape">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11106"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11524"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -14,14 +18,184 @@
                         <viewControllerLayoutGuide type="bottom" id="xb3-aO-Qok"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="redraw" image="BG_SPRING" translatesAutoresizingMaskIntoConstraints="NO" id="SfE-1b-4Jh">
+                                <rect key="frame" x="0.0" y="0.0" width="667" height="375"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Xv-MY-TiA">
+                                <rect key="frame" x="172" y="0.0" width="323" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="323" id="9s9-st-6Fm"/>
+                                    <constraint firstAttribute="height" constant="80" id="gAu-Mq-Ixn"/>
+                                </constraints>
+                                <attributedString key="attributedText">
+                                    <fragment content="Friendly Bashers">
+                                        <attributes>
+                                            <font key="NSFont" size="36" name="ChalkboardSE-Regular"/>
+                                            <paragraphStyle key="NSParagraphStyle" alignment="center" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
+                                        </attributes>
+                                    </fragment>
+                                </attributedString>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Dirt_Middle" translatesAutoresizingMaskIntoConstraints="NO" id="B0E-II-rTt">
+                                <rect key="frame" x="237.5" y="272" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="laO-gP-z4r"/>
+                                    <constraint firstAttribute="height" constant="64" id="p7S-IJ-RoN"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Dirt_Middle" translatesAutoresizingMaskIntoConstraints="NO" id="Qa0-bQ-mSa">
+                                <rect key="frame" x="301.5" y="272" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="5LV-GE-sGQ"/>
+                                    <constraint firstAttribute="width" constant="64" id="KVf-Ei-j9y"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Dirt_Middle" translatesAutoresizingMaskIntoConstraints="NO" id="tW9-6I-HmH">
+                                <rect key="frame" x="365.5" y="272" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="crv-ay-qPg"/>
+                                    <constraint firstAttribute="height" constant="64" id="xIh-KP-MJj"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Dirt_Right" translatesAutoresizingMaskIntoConstraints="NO" id="iBc-ze-PF0">
+                                <rect key="frame" x="429.5" y="272" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="2Xl-3b-73R"/>
+                                    <constraint firstAttribute="width" constant="64" id="EhP-TG-GI7"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Dirt_Left" translatesAutoresizingMaskIntoConstraints="NO" id="A0P-K5-I9h">
+                                <rect key="frame" x="173.5" y="272" width="64" height="64"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="64" id="i7O-H4-TvX"/>
+                                    <constraint firstAttribute="height" constant="64" id="wEh-Ok-BTG"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Dog_Slide_4" translatesAutoresizingMaskIntoConstraints="NO" id="vFU-0F-xns">
+                                <rect key="frame" x="424.5" y="221" width="66" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="65" id="FWB-q8-sWn"/>
+                                    <constraint firstAttribute="width" constant="66" id="c91-z4-HRE"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Jack-O_Faint_2" translatesAutoresizingMaskIntoConstraints="NO" id="6OH-B1-yQi">
+                                <rect key="frame" x="179.5" y="164" width="132" height="144"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="132" id="NT3-Fn-p1f"/>
+                                    <constraint firstAttribute="height" constant="144" id="lwU-0r-Hy5"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Jack-O_Zombie_Boy_Attack_2" translatesAutoresizingMaskIntoConstraints="NO" id="bYh-mf-8Ko">
+                                <rect key="frame" x="259.5" y="205" width="58" height="88"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="58" id="9qZ-Ch-hYd"/>
+                                    <constraint firstAttribute="height" constant="88" id="cWi-jL-x3h"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Plum_Run_3" translatesAutoresizingMaskIntoConstraints="NO" id="XfL-LY-6Gz">
+                                <rect key="frame" x="375.5" y="218" width="44" height="73"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="44" id="2BP-bM-jHe"/>
+                                    <constraint firstAttribute="height" constant="73" id="q5k-Re-W1n"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Rosetta_Throw_1" translatesAutoresizingMaskIntoConstraints="NO" id="cau-Cm-bv1">
+                                <rect key="frame" x="171.5" y="203" width="49" height="92"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="92" id="dH8-Z9-dtk"/>
+                                    <constraint firstAttribute="width" constant="49" id="eYj-Fk-jnR"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Jack-O_Zombie_Girl_Faint_7" translatesAutoresizingMaskIntoConstraints="NO" id="fGK-CE-zdX">
+                                <rect key="frame" x="272.5" y="203" width="84" height="101"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="101" id="ccn-nd-Fk4"/>
+                                    <constraint firstAttribute="width" constant="84" id="pwb-Ft-EwH"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Silva_Faint_3" translatesAutoresizingMaskIntoConstraints="NO" id="juE-lZ-Mro">
+                                <rect key="frame" x="64.5" y="173" width="128" height="143"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="143" id="8JO-VX-Dch"/>
+                                    <constraint firstAttribute="width" constant="128" id="SDE-ry-gXb"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFit" image="Sarah_Run_8" translatesAutoresizingMaskIntoConstraints="NO" id="xxp-5b-QRI">
+                                <rect key="frame" x="306.5" y="205" width="81" height="91"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="91" id="2Sv-gT-Fy9"/>
+                                    <constraint firstAttribute="width" constant="81" id="aQE-Su-uDo"/>
+                                </constraints>
+                            </imageView>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleAspectFill" image="Cat_Jump_6" translatesAutoresizingMaskIntoConstraints="NO" id="cx8-I3-eIa">
+                                <rect key="frame" x="470.5" y="156" width="58" height="62"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="62" id="3S5-EI-pCg"/>
+                                    <constraint firstAttribute="width" constant="58" id="MnS-hO-vFL"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="vFU-0F-xns" firstAttribute="centerY" secondItem="XfL-LY-6Gz" secondAttribute="centerY" constant="-1" id="184-N8-S4g"/>
+                            <constraint firstItem="B0E-II-rTt" firstAttribute="top" secondItem="bYh-mf-8Ko" secondAttribute="bottom" constant="-21" id="22W-3y-qYF"/>
+                            <constraint firstItem="B0E-II-rTt" firstAttribute="trailing" secondItem="bYh-mf-8Ko" secondAttribute="trailing" constant="-16" id="2Xf-L9-ODg"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="top" secondItem="xxp-5b-QRI" secondAttribute="bottom" constant="-24" id="59B-Vg-Eoc"/>
+                            <constraint firstItem="1Xv-MY-TiA" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="5LI-BF-PKG"/>
+                            <constraint firstItem="iBc-ze-PF0" firstAttribute="centerX" secondItem="vFU-0F-xns" secondAttribute="centerX" constant="4.5" id="66u-Ja-GsI"/>
+                            <constraint firstItem="iBc-ze-PF0" firstAttribute="top" secondItem="cx8-I3-eIa" secondAttribute="bottom" constant="54" id="ALt-Jf-Lwb"/>
+                            <constraint firstItem="A0P-K5-I9h" firstAttribute="leading" secondItem="6OH-B1-yQi" secondAttribute="leading" constant="-6" id="Bxs-ab-Lgf"/>
+                            <constraint firstItem="tW9-6I-HmH" firstAttribute="centerX" secondItem="XfL-LY-6Gz" secondAttribute="centerX" id="EHY-sN-Pz0"/>
+                            <constraint firstItem="tW9-6I-HmH" firstAttribute="centerY" secondItem="A0P-K5-I9h" secondAttribute="centerY" id="KJi-Rd-86C"/>
+                            <constraint firstItem="A0P-K5-I9h" firstAttribute="leading" secondItem="cau-Cm-bv1" secondAttribute="leading" constant="2" id="PRW-Si-nUa"/>
+                            <constraint firstItem="A0P-K5-I9h" firstAttribute="bottom" secondItem="6OH-B1-yQi" secondAttribute="bottom" constant="28" id="QcG-tq-5uT"/>
+                            <constraint firstItem="SfE-1b-4Jh" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="Qh9-Or-xCu"/>
+                            <constraint firstItem="A0P-K5-I9h" firstAttribute="top" secondItem="juE-lZ-Mro" secondAttribute="bottom" constant="-44" id="Qst-OX-7Yz"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="trailing" secondItem="fGK-CE-zdX" secondAttribute="trailing" constant="9" id="RHq-ib-Mtl"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="centerY" secondItem="A0P-K5-I9h" secondAttribute="centerY" id="Saz-cJ-dVc"/>
+                            <constraint firstItem="iBc-ze-PF0" firstAttribute="leading" secondItem="tW9-6I-HmH" secondAttribute="trailing" id="Ubp-Ic-Yxn"/>
+                            <constraint firstItem="1Xv-MY-TiA" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="Ve3-dS-i3m"/>
+                            <constraint firstItem="SfE-1b-4Jh" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" id="bNJ-4B-eCa"/>
+                            <constraint firstItem="iBc-ze-PF0" firstAttribute="centerY" secondItem="A0P-K5-I9h" secondAttribute="centerY" id="dB9-q7-Wic"/>
+                            <constraint firstItem="B0E-II-rTt" firstAttribute="centerY" secondItem="A0P-K5-I9h" secondAttribute="centerY" id="dbX-O7-MKv"/>
+                            <constraint firstItem="xb3-aO-Qok" firstAttribute="top" secondItem="Qa0-bQ-mSa" secondAttribute="bottom" constant="39" id="f8K-j4-Ftc"/>
+                            <constraint firstItem="SfE-1b-4Jh" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="fbP-73-veH"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="top" secondItem="fGK-CE-zdX" secondAttribute="bottom" constant="-32" id="gZ8-le-bEk"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="leading" secondItem="B0E-II-rTt" secondAttribute="trailing" id="jT2-fp-owJ"/>
+                            <constraint firstItem="A0P-K5-I9h" firstAttribute="top" secondItem="cau-Cm-bv1" secondAttribute="bottom" constant="-23" id="k0h-em-vsD"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="nH1-sV-BSG"/>
+                            <constraint firstItem="Qa0-bQ-mSa" firstAttribute="leading" secondItem="xxp-5b-QRI" secondAttribute="leading" constant="-5" id="naT-ic-hah"/>
+                            <constraint firstItem="tW9-6I-HmH" firstAttribute="leading" secondItem="Qa0-bQ-mSa" secondAttribute="trailing" id="oHX-HR-fMM"/>
+                            <constraint firstItem="B0E-II-rTt" firstAttribute="leading" secondItem="A0P-K5-I9h" secondAttribute="trailing" id="qFl-qG-rgw"/>
+                            <constraint firstItem="iBc-ze-PF0" firstAttribute="top" secondItem="vFU-0F-xns" secondAttribute="bottom" constant="-14" id="qJW-6V-1rb"/>
+                            <constraint firstItem="A0P-K5-I9h" firstAttribute="leading" secondItem="juE-lZ-Mro" secondAttribute="trailing" constant="-19" id="qqi-H1-xqS"/>
+                            <constraint firstItem="iBc-ze-PF0" firstAttribute="trailing" secondItem="cx8-I3-eIa" secondAttribute="leading" constant="23.5" id="vrh-kw-bwF"/>
+                            <constraint firstItem="SfE-1b-4Jh" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" id="xat-gg-O6D"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="53" y="375"/>
+            <point key="canvasLocation" x="-265.81709145427288" y="380"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="BG_SPRING" width="1000" height="750"/>
+        <image name="Cat_Jump_6" width="108" height="95"/>
+        <image name="Dirt_Left" width="128" height="93"/>
+        <image name="Dirt_Middle" width="128" height="93"/>
+        <image name="Dirt_Right" width="128" height="93"/>
+        <image name="Dog_Slide_4" width="109" height="96"/>
+        <image name="Jack-O_Faint_2" width="197" height="159"/>
+        <image name="Jack-O_Zombie_Boy_Attack_2" width="86" height="104"/>
+        <image name="Jack-O_Zombie_Girl_Faint_7" width="137" height="125"/>
+        <image name="Plum_Run_3" width="73" height="92"/>
+        <image name="Rosetta_Throw_1" width="77" height="103"/>
+        <image name="Sarah_Run_8" width="128" height="108"/>
+        <image name="Silva_Faint_3" width="189" height="150"/>
+    </resources>
 </document>

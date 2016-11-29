@@ -1,0 +1,43 @@
+{
+  "properties" : {
+    "duration" : 11,
+    "duration-type" : "fps",
+    "repetitions" : 1
+  },
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "frames" : [
+    {
+      "filename" : "Dog_Faint_1.png"
+    },
+    {
+      "filename" : "Dog_Faint_2.png"
+    },
+    {
+      "filename" : "Dog_Faint_3.png"
+    },
+    {
+      "filename" : "Dog_Faint_4.png"
+    },
+    {
+      "filename" : "Dog_Faint_5.png"
+    },
+    {
+      "filename" : "Dog_Faint_6.png"
+    },
+    {
+      "filename" : "Dog_Faint_7.png"
+    },
+    {
+      "filename" : "Dog_Faint_8.png"
+    },
+    {
+      "filename" : "Dog_Faint_9.png"
+    },
+    {
+      "filename" : "Dog_Faint_10.png"
+    }
+  ]
+}

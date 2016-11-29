@@ -17,20 +17,24 @@ class Projectile:SKSpriteNode {
         self.damage = damage
         self.owner = owner
         self.direction = direction
-        self.physicsBody = SKPhysicsBody(texture: self.texture!, size: (self.texture?.size())!)
-        self.physicsBody!.allowsRotation = false
+        let width = self.texture?.size().width
+        let height = self.texture?.size().height
+        self.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: width!, height: height!))
+        self.physicsBody!.allowsRotation = true
         self.physicsBody!.friction = 5.0
         self.physicsBody!.restitution = 0
-        self.physicsBody!.affectedByGravity = false
-        self.physicsBody!.contactTestBitMask = ProjectileCategory | WorldCategory | CharacterCategory
+        self.physicsBody!.linearDamping = 0.2
+        self.physicsBody!.affectedByGravity = true
+        self.physicsBody!.contactTestBitMask = CharacterCategory
         self.physicsBody!.categoryBitMask = ProjectileCategory
-        self.physicsBody!.collisionBitMask = 0
+        self.physicsBody!.collisionBitMask = ItemCategory | CharacterCategory
         
         if direction == 1 {
             self.zRotation = 80
         } else {
             self.zRotation = -80
         }
+        
         self.run(SKAction.wait(forDuration: 5), completion:{
             self.removeFromParent()
         })

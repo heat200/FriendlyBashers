@@ -59,7 +59,7 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         
         if state == MCSessionState.connected.rawValue {
             print(connected)
-            
+            modeSelect?.dismissMultiplayerSelect()
             sendPlayerSetupInfo()
         }
     }
@@ -90,23 +90,27 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
             let playerMovement:String? = message.object(forKey: "playerMovement") as? String
             let chosenBasher:String? = message.object(forKey: "chosenBasher") as? String
             let playerBlessing:String? = message.object(forKey: "playerBlessing") as? String
+            let blessingMove:String? = message.object(forKey: "moveUsed") as? String
             if chosenBasher != nil {
+                let selectedMap:String? = message.object(forKey: "chosenMap") as? String
                 if playerName == otherPlayers[0] {
                     print(playerName! + " picked " + chosenBasher!)
                     chosenBasher2 = chosenBasher!
+                    chosenMap = selectedMap!
                 } else if playerName == otherPlayers[1] {
                     print(playerName! + " picked " + chosenBasher!)
                     chosenBasher3 = chosenBasher!
+                    chosenMap = selectedMap!
                 } else if playerName == otherPlayers[2] {
                     print(playerName! + " picked " + chosenBasher!)
                     chosenBasher4 = chosenBasher!
+                    chosenMap = selectedMap!
                 }
                 basherSelect?.updateUI()
             } else if playerAction != nil {
                 let playerPositionX:CGFloat? = NumberFormatter().number(from: (message.object(forKey: "playerPositionX") as? String)!) as CGFloat?
                 let playerPositionY:CGFloat? = NumberFormatter().number(from: (message.object(forKey: "playerPositionY") as? String)!) as CGFloat?
                 if playerName == otherPlayers[0] {
-                    print("Received Action: " + playerAction! + ". Movement: " + playerMovement!)
                     gameScene?.playerNode2?.playerAction = playerAction!
                     gameScene?.playerNode2?.playerMovement = playerMovement!
                     gameScene?.playerNode2?.position.x = playerPositionX!
@@ -178,6 +182,87 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
                 if !sentBlessings {
                     self.sendPlayerBlessings()
                 }
+            } else if blessingMove != nil {
+                if otherPlayers[0] == playerName! {
+                    gameScene?.playerNode2.useBlessingPower(blessingMove!)
+                } else if otherPlayers[1] == playerName! {
+                    gameScene?.playerNode3.useBlessingPower(blessingMove!)
+                } else if otherPlayers[2] == playerName! {
+                    gameScene?.playerNode4.useBlessingPower(blessingMove!)
+                }
+            } else if message.object(forKey: "playerFainted") != nil {
+                let currentHealth:CGFloat = NumberFormatter().number(from: message.object(forKey: "playerCurrentHP") as! String) as! CGFloat
+                let maxHealth:CGFloat = NumberFormatter().number(from: message.object(forKey: "playerMaxHP") as! String) as! CGFloat
+                let currentSpeed:CGFloat = NumberFormatter().number(from: message.object(forKey: "playerCurrentSpeed") as! String) as! CGFloat
+                let currentResistance:CGFloat = NumberFormatter().number(from: message.object(forKey: "playerCurrentResistance") as! String) as! CGFloat
+                let currentPower:CGFloat = NumberFormatter().number(from: message.object(forKey: "playerCurrentPower") as! String) as! CGFloat
+                let currentRegen:CGFloat = NumberFormatter().number(from: message.object(forKey: "playerCurrentRegen") as! String) as! CGFloat
+                let currentLives:Int = NumberFormatter().number(from: message.object(forKey: "playerLives") as! String) as! Int
+                let currentlyFainted = message.object(forKey: "playerFainted") as? String
+                let currentlyStunned = message.object(forKey: "playerStunned") as? String
+                let currentlyHeld = message.object(forKey: "itemHeld") as! String
+                
+                if otherPlayers[0] == playerName! {
+                    gameScene?.playerNode2?.currentHP = currentHealth
+                    gameScene?.playerNode2?.maxHP = maxHealth
+                    gameScene?.playerNode2?.movespeed = currentSpeed
+                    gameScene?.playerNode2?.resistance = currentResistance
+                    gameScene?.playerNode2?.power = currentPower
+                    gameScene?.playerNode2?.hpRegen = currentRegen
+                    gameScene?.playerNode2?.lives = currentLives
+                    gameScene?.playerNode2?.itemHeld = currentlyHeld
+                    if currentlyFainted == "true" {
+                        gameScene?.playerNode2?.isResting = true
+                    } else {
+                        gameScene?.playerNode2?.isResting = false
+                    }
+                    
+                    if currentlyStunned == "true" {
+                        gameScene?.playerNode2?.isStunned = true
+                    } else {
+                        gameScene?.playerNode2?.isStunned = false
+                    }
+                } else if otherPlayers[1] == playerName! {
+                    gameScene?.playerNode3?.currentHP = currentHealth
+                    gameScene?.playerNode3?.maxHP = maxHealth
+                    gameScene?.playerNode3?.movespeed = currentSpeed
+                    gameScene?.playerNode3?.resistance = currentResistance
+                    gameScene?.playerNode3?.power = currentPower
+                    gameScene?.playerNode3?.hpRegen = currentRegen
+                    gameScene?.playerNode3?.lives = currentLives
+                    gameScene?.playerNode3?.itemHeld = currentlyHeld
+                    if currentlyFainted == "true" {
+                        gameScene?.playerNode2?.isResting = true
+                    } else {
+                        gameScene?.playerNode2?.isResting = false
+                    }
+                    
+                    if currentlyStunned == "true" {
+                        gameScene?.playerNode2?.isStunned = true
+                    } else {
+                        gameScene?.playerNode2?.isStunned = false
+                    }
+                } else if otherPlayers[2] == playerName! {
+                    gameScene?.playerNode4?.currentHP = currentHealth
+                    gameScene?.playerNode4?.maxHP = maxHealth
+                    gameScene?.playerNode4?.movespeed = currentSpeed
+                    gameScene?.playerNode4?.resistance = currentResistance
+                    gameScene?.playerNode4?.power = currentPower
+                    gameScene?.playerNode4?.hpRegen = currentRegen
+                    gameScene?.playerNode4?.lives = currentLives
+                    gameScene?.playerNode4?.itemHeld = currentlyHeld
+                    if currentlyFainted == "true" {
+                        gameScene?.playerNode2?.isResting = true
+                    } else {
+                        gameScene?.playerNode2?.isResting = false
+                    }
+                    
+                    if currentlyStunned == "true" {
+                        gameScene?.playerNode2?.isStunned = true
+                    } else {
+                        gameScene?.playerNode2?.isStunned = false
+                    }
+                }
             } else if playerName != nil {
                 if otherPlayers[0] == "" && otherPlayers[0] != playerName {
                     otherPlayers[0] = playerName!
@@ -189,6 +274,18 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
                     otherPlayers[2] = playerName!
                     print("Player 4 is " + playerName!)
                 }
+            }
+        } else if message.object(forKey: "childName") != nil {
+            let name:String? = message.object(forKey: "childName") as? String
+            let positionX:CGFloat? = message.object(forKey: "positionX") as? CGFloat
+            let positionY:CGFloat? = message.object(forKey: "positionY") as? CGFloat
+            let direction:CGFloat? = message.object(forKey: "direction") as? CGFloat
+            let health:CGFloat? = message.object(forKey: "health") as? CGFloat
+            
+            if let zombie = gameScene?.childNode(withName: name!) {
+                zombie.position = CGPoint(x: positionX!, y: positionY!)
+                zombie.xScale = direction!
+                (zombie as? AI)?.currentHP = health!
             }
         } else if message.object(forKey: "backToModeSelect") != nil {
             let msg:String? = message.object(forKey: "backToModeSelect") as? String
@@ -240,6 +337,14 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
             } else if msg == "Defeat" {
                 gameScene?.endScreen("Defeat", receiving: true)
             }
+        } else if message.object(forKey: "blockName") != nil {
+            let blockName:String? = message.object(forKey: "blockName") as? String
+            let blockCoord:Int? = message.object(forKey: "blockCoord") as? Int
+            gameScene?.spawnItemAt(blockCoord!, blockName: blockName!)
+        } else if message.object(forKey: "chosenTheme") != nil {
+            let chosenTheme:String? = message.object(forKey: "chosenTheme") as? String
+            currentTheme = chosenTheme!
+            gameScene?.applyTheme()
         }
     }
     
@@ -251,8 +356,21 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         appDelegate.mpcHandler.browser.dismiss(animated: true, completion: {})
     }
     
+    func sendChildInfo(_ withName:String,position:CGPoint,direction:CGFloat,health:CGFloat) {
+        let messageDict = ["childName":withName,"positionX":position.x,"positionY":position.y,"direction":direction,"health":health] as [String : Any]
+        
+        let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+        
+        do {
+            try appDelegate.mpcHandler.session.send(messageData, toPeers: appDelegate.mpcHandler.session.connectedPeers, with: MCSessionSendDataMode.reliable)
+            //print("Sent Player#")
+        } catch {
+            print("Error: Couldn't send Player#")
+        }
+    }
+    
     func sendPlayerCharacter() {
-        let messageDict = ["playerName":playerName,"chosenBasher":chosenBasher]
+        let messageDict = ["playerName":playerName,"chosenBasher":chosenBasher,"chosenMap":chosenMap]
         
         let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.prettyPrinted)
         
@@ -357,10 +475,23 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         }
     }
     
+    func sendBlessingMoveUsed(_ move:String) {
+        var messageDict = [String:String]()
+        messageDict = ["playerName":playerName,"moveUsed":move]
+        let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.init(rawValue: 0))
+        
+        do {
+            try appDelegate.mpcHandler.session.send(messageData, toPeers: appDelegate.mpcHandler.session.connectedPeers, with: MCSessionSendDataMode.reliable)
+            //print("Sent PlayerInfo")
+        } catch {
+            print("Error: Couldn't send PlayerInfo")
+        }
+    }
+    
     func confirmPlayerStats() {
         var messageDict = [String:String]()
         let player = gameScene?.playerNode!
-        messageDict = ["playerName":playerName,"playerCurrentHP":String(describing: (player?.currentHP)!),"playerMaxHP":String(describing: (player?.maxHP)!),"playerCurrentSpeed":String(describing: (player?.movespeed)!),"playerCurrentResistance":String(describing: (player?.resistance)!),"playerCurrentPower":String(describing: (player?.power)!),"playerCurrentRegen":String(describing: (player?.hpRegen)!)]
+        messageDict = ["playerName":playerName,"playerCurrentHP":String(describing: (player?.currentHP)!),"playerMaxHP":String(describing: (player?.maxHP)!),"playerCurrentSpeed":String(describing: (player?.movespeed)!),"playerCurrentResistance":String(describing: (player?.resistance)!),"playerCurrentPower":String(describing: (player?.power)!),"playerCurrentRegen":String(describing: (player?.hpRegen)!),"playerLives":String(describing: player!.lives),"playerFainted":String(describing: player!.isResting),"playerStunned":String(describing: player!.isStunned),"itemHeld":player!.itemHeld]
         let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.init(rawValue: 0))
         
         do {
@@ -395,20 +526,32 @@ class MPTrafficHandler:NSObject,MCBrowserViewControllerDelegate {
         }
     }
     
-    func syncChosenMap() {
-        let messageDict = ["chosenMap":chosenMap]
+    func backToModeSelect() {
+        let messageDict = ["backToModeSelect":"BACK"]
         
         let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.prettyPrinted)
         
         do {
             try appDelegate.mpcHandler.session.send(messageData, toPeers: appDelegate.mpcHandler.session.connectedPeers, with: MCSessionSendDataMode.reliable)
         } catch {
-            print("Error: Couldn't sync gamemode")
+            print("Error: Couldn't send Player#")
         }
     }
     
-    func backToModeSelect() {
-        let messageDict = ["backToModeSelect":"BACK"]
+    func spawnBlock(_ blockName:String, coord:Int) {
+        let messageDict = ["blockName":blockName, "blockCoord":coord] as [String : Any]
+        
+        let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.prettyPrinted)
+        
+        do {
+            try appDelegate.mpcHandler.session.send(messageData, toPeers: appDelegate.mpcHandler.session.connectedPeers, with: MCSessionSendDataMode.reliable)
+        } catch {
+            print("Error: Couldn't send BlockData")
+        }
+    }
+    
+    func syncTheme() {
+        let messageDict = ["chosenTheme":currentTheme]
         
         let messageData = try! JSONSerialization.data(withJSONObject: messageDict, options: JSONSerialization.WritingOptions.prettyPrinted)
         

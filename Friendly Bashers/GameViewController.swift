@@ -9,30 +9,76 @@
 import UIKit
 import SpriteKit
 import GameplayKit
+import GameKit
 
 class GameViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if MP_TRAFFIC_HANDLER == nil {
+            MP_TRAFFIC_HANDLER = MPTrafficHandler()
+        }
+        
+        if GK_TRAFFIC_HANDLER == nil {
+            GK_TRAFFIC_HANDLER = GKTrafficHandler()
+        }
+        
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
+            globalScaleMode = SKSceneScaleMode.aspectFit
+            gameScaleMode = SKSceneScaleMode.aspectFit
+        break
+        case .pad:
+            globalScaleMode = SKSceneScaleMode.fill
+            gameScaleMode = SKSceneScaleMode.resizeFill
+        break
+        case .unspecified:
+            globalScaleMode = SKSceneScaleMode.aspectFit
+            gameScaleMode = SKSceneScaleMode.aspectFit
+        break
+        default:
+            globalScaleMode = SKSceneScaleMode.aspectFit
+            gameScaleMode = SKSceneScaleMode.aspectFit
+        break
+        }
+        
+        NotificationCenter.default.addObserver(self,selector:#selector(GameViewController.AlertMessage(notification:)),name:NSNotification.Name(rawValue: "AlertMessage"),object:nil)
+        
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
-        if let scene = MainMenuScene(fileNamed: "MainMenuScene") {
-            // Get the SKScene from the loaded GKScene
-            if let sceneNode = scene as MainMenuScene? {
-                // Set the scale mode to scale to fit the window
-                sceneNode.scaleMode = globalScaleMode
-                
-                // Present the scene
-                if let view = self.view as! SKView? {
-                    view.presentScene(sceneNode)
+        SKTextureAtlas.preloadTextureAtlases([bgAtlas,charAtlas,tileAtlas,uiAtlas], withCompletionHandler: {
+            if let scene = MainMenuScene(fileNamed: "MainMenuScene") {
+                // Get the SKScene from the loaded GKScene
+                if let sceneNode = scene as MainMenuScene? {
+                    // Set the scale mode to scale to fit the window
+                    sceneNode.scaleMode = globalScaleMode
                     
-                    view.ignoresSiblingOrder = false
-                    
-                    view.showsFPS = false
-                    view.showsNodeCount = false
+                    // Present the scene
+                    if let view = self.view as! SKView? {
+                        view.presentScene(sceneNode)
+                        
+                        view.ignoresSiblingOrder = false
+                        
+                        view.showsFPS = false
+                        view.showsNodeCount = false
+                    }
                 }
             }
+        })
+    }
+    
+    func AlertMessage(notification:NSNotification) {
+        if let userInfo = notification.userInfo {
+            var title = userInfo["title"] as! String?
+            let message = userInfo["message"] as! String?
+            if title == "" {
+                title = "About this Mastery"
+            }
+            
+            let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            myAlert.addAction(UIAlertAction(title: "Thanks!", style: .default, handler: nil))
+            self.present(myAlert, animated: true, completion: nil)
         }
     }
 

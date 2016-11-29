@@ -1,0 +1,43 @@
+{
+  "properties" : {
+    "duration" : 11,
+    "duration-type" : "fps",
+    "repetitions" : 1
+  },
+  "info" : {
+    "version" : 1,
+    "author" : "xcode"
+  },
+  "frames" : [
+    {
+      "filename" : "Cat_Faint_1.png"
+    },
+    {
+      "filename" : "Cat_Faint_2.png"
+    },
+    {
+      "filename" : "Cat_Faint_3.png"
+    },
+    {
+      "filename" : "Cat_Faint_4.png"
+    },
+    {
+      "filename" : "Cat_Faint_5.png"
+    },
+    {
+      "filename" : "Cat_Faint_6.png"
+    },
+    {
+      "filename" : "Cat_Faint_7.png"
+    },
+    {
+      "filename" : "Cat_Faint_8.png"
+    },
+    {
+      "filename" : "Cat_Faint_9.png"
+    },
+    {
+      "filename" : "Cat_Faint_10.png"
+    }
+  ]
+}
