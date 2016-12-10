@@ -18,9 +18,9 @@ class BasherSelectScene:SKScene {
     var agreeButton:SKSpriteNode?
     var settingsButton:SKSpriteNode?
     var helpButton:SKSpriteNode?
-    var connectedCounter:SKSpriteNode?
-    var connectedCounterLabel:SKLabelNode?
-    
+    var leaveMatchButton:SKSpriteNode?
+    var mapNameLabel:SKLabelNode?
+    var mapView:SKSpriteNode?
     
     var jackButton:SKSpriteNode?
     var plumButton:SKSpriteNode?
@@ -37,6 +37,11 @@ class BasherSelectScene:SKScene {
     var p2ChosenView:SKSpriteNode?
     var p3ChosenView:SKSpriteNode?
     var p4ChosenView:SKSpriteNode?
+    
+    var playerDisplay1:SKLabelNode?
+    var playerDisplay2:SKLabelNode?
+    var playerDisplay3:SKLabelNode?
+    var playerDisplay4:SKLabelNode?
     
     var helpMode = false
     var readyForGame = false
@@ -63,10 +68,6 @@ class BasherSelectScene:SKScene {
             gameScene = nil
         }
         
-        if menuMusic.parent == nil && musicEnabled {
-            self.addChild(menuMusic)
-        }
-        
         if startSound == nil {
             let soundStart = SKAudioNode(fileNamed: "Gamestart_Plasterbrain.mp3")
             soundStart.autoplayLooped = false
@@ -75,15 +76,19 @@ class BasherSelectScene:SKScene {
             startSound = soundStart
         }
         
+        self.playerDisplay1 = self.childNode(withName: "//playerDisplay1") as? SKLabelNode
+        self.playerDisplay2 = self.childNode(withName: "//playerDisplay2") as? SKLabelNode
+        self.playerDisplay3 = self.childNode(withName: "//playerDisplay3") as? SKLabelNode
+        self.playerDisplay4 = self.childNode(withName: "//playerDisplay4") as? SKLabelNode
+        self.mapNameLabel = self.childNode(withName: "//mapTitle") as? SKLabelNode
+        self.mapView = self.childNode(withName: "//mapView") as? SKSpriteNode
         self.backButton = self.childNode(withName: "//backButton") as? SKSpriteNode
         self.agreeButton = self.childNode(withName: "//agreeButton") as? SKSpriteNode
         self.prevMapButton = self.childNode(withName: "//prevMapButton") as? SKSpriteNode
         self.nextMapButton = self.childNode(withName: "//nextMapButton") as? SKSpriteNode
         self.settingsButton = self.childNode(withName: "//settingsButton") as? SKSpriteNode
         self.helpButton = self.childNode(withName: "//helpButton") as? SKSpriteNode
-        self.connectedCounter = self.childNode(withName: "//connectedCounter") as? SKSpriteNode
-        self.connectedCounterLabel = SKLabelNode()
-        self.connectedCounter?.addChild(connectedCounterLabel!)
+        self.leaveMatchButton = self.childNode(withName: "//connectedCounter") as? SKSpriteNode
         
         self.p1ChosenView = self.childNode(withName: "//chosen1") as? SKSpriteNode
         self.p2ChosenView = self.childNode(withName: "//chosen2") as? SKSpriteNode
@@ -128,10 +133,6 @@ class BasherSelectScene:SKScene {
                 if sfxEnabled {
                     startSound.run(SKAction.play())
                 }
-                
-                menuMusic.run(SKAction.pause(),completion:{
-                    menuMusic.removeFromParent()
-                })
                 
                 self.run(SKAction.wait(forDuration: 1.0),completion:{
                     if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
@@ -180,14 +181,26 @@ class BasherSelectScene:SKScene {
                     mapIndex = 4
                 }
                 chosenMap = mapList[mapIndex]
-            } else if self.atPoint(pos) == self.backButton {
+            } else if self.atPoint(pos) == self.leaveMatchButton {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
                 
-                menuMusic.run(SKAction.pause(),completion:{
-                    menuMusic.removeFromParent()
-                })
+                if appDelegate.mpcHandler.session != nil {
+                    MP_TRAFFIC_HANDLER.disconnectFromPlayers()
+                    otherPlayers[0] = ""
+                    otherPlayers[1] = ""
+                    otherPlayers[2] = ""
+                } else if GK_TRAFFIC_HANDLER.match != nil {
+                    GK_TRAFFIC_HANDLER.disconnectFromPlayers()
+                    otherPlayers[0] = ""
+                    otherPlayers[1] = ""
+                    otherPlayers[2] = ""
+                }
+            } else if self.atPoint(pos) == self.backButton {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
                 
                 self.run(SKAction.wait(forDuration: 0.03),completion:{
                     if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
@@ -206,10 +219,6 @@ class BasherSelectScene:SKScene {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
-                
-                menuMusic.run(SKAction.pause(),completion:{
-                    menuMusic.removeFromParent()
-                })
                 
                 self.run(SKAction.wait(forDuration: 0.03),completion:{
                     if let sceneNode = GameOptionsScene(fileNamed: "GameOptionsScene") {
@@ -340,24 +349,13 @@ class BasherSelectScene:SKScene {
                     chosenBasher = "Sarah"
                 }
             } else {
-                if sfxEnabled {
-                    self.run(clickSound)
-                }
-                
                 if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
+                    chosenBasher2 = ""
+                    chosenBasher3 = ""
+                    chosenBasher4 = ""
                 }
                 
-                if helpMode {
-                    let message = "This Button is either empty or requires no description."
-                    let title = "About This Button "
-                    let userInfo = ["title":title,"message":message]
-                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
-                } else {
-                    chosenBasher = ""
-                }
+                chosenBasher = ""
             }
             
             if appDelegate.mpcHandler.session != nil {
@@ -381,7 +379,16 @@ class BasherSelectScene:SKScene {
             mapIndex = 3
         } else if chosenMap == "SkyDen" {
             mapIndex = 4
+        } else {
+            chosenMap = "Origins"
         }
+        
+        mapView?.run(SKAction.setTexture(SKTexture(imageNamed: chosenMap)))
+        
+        self.playerDisplay1?.text = "P1: " + playerName
+        self.playerDisplay2?.text = "P2: " + otherPlayers[0]
+        self.playerDisplay3?.text = "P3: " + otherPlayers[1]
+        self.playerDisplay4?.text = "P4: " + otherPlayers[2]
         
         if mapIndex == 0 {
             prevMapButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Left_Grey")))
@@ -536,6 +543,8 @@ class BasherSelectScene:SKScene {
         if readyForGame && gameScene != nil {
             gameScene = nil
         }
+        
+        mapNameLabel?.text = mapList[mapIndex]
     }
     
     func characterRoulette() -> String {
@@ -564,20 +573,18 @@ class BasherSelectScene:SKScene {
     }
     
     func headToGameScene() {
-        if let scene = GKScene(fileNamed: "GameScene") {
-            if let sceneNode = scene.rootNode as! GameScene? {
-                sceneNode.entities = scene.entities
-                sceneNode.graphs = scene.graphs
-                sceneNode.playerCharacter = chosenBasher
-                sceneNode.setUpAtlases()
-                sceneNode.scaleMode = gameScaleMode
-                
-                if let view = self.view {
-                    view.presentScene(sceneNode)
-                    view.ignoresSiblingOrder = false
-                    view.showsFPS = true
-                    view.showsNodeCount = true
-                }
+        SKTAudio.sharedInstance().backgroundMusicPlayer?.stop()
+        
+        if let sceneNode = GameScene(fileNamed: "GameScene") {
+            sceneNode.playerCharacter = chosenBasher
+            sceneNode.setUpAtlases()
+            sceneNode.scaleMode = gameScaleMode
+            
+            if let view = self.view {
+                view.presentScene(sceneNode)
+                view.ignoresSiblingOrder = false
+                view.showsFPS = false
+                view.showsNodeCount = false
             }
         }
     }
@@ -588,7 +595,7 @@ class BasherSelectScene:SKScene {
             view.presentScene(modeSelect)
             view.ignoresSiblingOrder = false
             
-            view.showsFPS = true
+            view.showsFPS = false
             view.showsNodeCount = false
         }
     }

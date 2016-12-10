@@ -9,15 +9,15 @@
 import SpriteKit
 import GameplayKit
 
-var CharacterCategory:UInt32 = 0x1 << 1
-var ProjectileCategory:UInt32 = 0x1 << 2
-var WorldCategory:UInt32 = 0x1 << 3
-var SummonedCategory:UInt32 = 0x1 << 4
-var ItemCategory:UInt32 = 0x1 << 5
+var AttackBoxCategory:UInt32 = 0x1 << 1
+var CharacterCategory:UInt32 = 0x1 << 2
+var ProjectileCategory:UInt32 = 0x1 << 3
+var WorldCategory:UInt32 = 0x1 << 4
+var SummonedCategory:UInt32 = 0x1 << 5
+var ItemCategory:UInt32 = 0x1 << 6
+
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
-    var entities = [GKEntity]()
-    var graphs = [String : GKGraph]()
     var playerCharacter = ""
     var timeSinceNoAction: TimeInterval = 0
     var lastSyncTime:TimeInterval = 0
@@ -28,6 +28,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var gamePaused = false
     var multiplayerType = 0
+    
+    var buttonSize:CGFloat = 150
+    var buttonMargin:CGFloat = 150
     
     var gameOver = false
     var lastItemSpawnTime:TimeInterval = 0
@@ -40,6 +43,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerNode3 : CPU!
     var playerNode4 : CPU!
     var tileMapNode : SKTileMapNode?
+    
+    var timePassedLabel:SKLabelNode?
+    var timePassed = 0
+    var timePassedCounter = 0
+    var timeMax = 0
     
     var pauseButton: SKSpriteNode?
     var pauseUI:SKSpriteNode?
@@ -104,6 +112,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var zombiegirlAtlas:SKTextureAtlas!
     var TileAtlas = tileAtlas
     var UIAtlas = uiAtlas
+    
+    var heart1:SKSpriteNode?
+    var heart2:SKSpriteNode?
+    var heart3:SKSpriteNode?
     
     override func sceneDidLoad() {
         self.lastUpdateTime = 0
@@ -353,23 +365,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         jumpButton = SKSpriteNode(imageNamed: "Button_Up")
-        jumpButton?.scale(to: CGSize(width: 135, height: 135))
+        jumpButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         skillButton_1 = SKSpriteNode(imageNamed: "Button_Teal")
-        skillButton_1?.scale(to: CGSize(width: 135, height: 135))
+        skillButton_1?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         skillButton_2 = SKSpriteNode(imageNamed: "Button_Beige")
-        skillButton_2?.scale(to: CGSize(width: 135, height: 135))
+        skillButton_2?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         runeButton = SKSpriteNode(imageNamed: "Button_Lime")
         runeOverlay = SKSpriteNode(imageNamed: "")
         runeOverlay?.scale(to: CGSize(width: 50, height: 50))
-        runeButton?.scale(to: CGSize(width: 135, height: 135))
+        runeButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         
         leftButton = SKSpriteNode(imageNamed: "Button_Left")
-        leftButton?.scale(to: CGSize(width: 135, height: 135))
+        leftButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         rightButton = SKSpriteNode(imageNamed: "Button_Right")
-        rightButton?.scale(to: CGSize(width: 135, height: 135))
+        rightButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         
         pauseButton = SKSpriteNode(imageNamed: "Button_Pause")
-        pauseButton?.scale(to: CGSize(width: 135, height: 135))
+        pauseButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
         
         pauseUI = SKSpriteNode(color: UIColor.black, size: CGSize(width: self.size.width, height: self.size.height))
         pauseUI?.alpha = 0.6
@@ -390,6 +402,23 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         exitButton?.scale(to: CGSize(width: 135, height: 135))
         exitButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 585)
         
+        timePassedLabel = SKLabelNode(text: "--/--")
+        timePassedLabel?.fontColor = SKColor.black
+        timePassedLabel?.fontSize = 60
+        timePassedLabel?.position = CGPoint(x: 0, y: -self.size.height/2 + 70)
+        
+        heart2 = SKSpriteNode(texture: UIAtlas.textureNamed("Heart"))
+        heart2?.position = timePassedLabel!.position
+        heart2?.position.y -= 50
+        
+        heart1 = SKSpriteNode(texture: UIAtlas.textureNamed("Heart"))
+        heart1?.position = heart2!.position
+        heart1?.position.x -= 50
+        
+        heart3 = SKSpriteNode(texture: UIAtlas.textureNamed("Heart"))
+        heart3?.position = heart2!.position
+        heart3?.position.x += 50
+        
         skillChargeDisplay_1 = SKLabelNode(text: "0")
         skillChargeDisplay_1?.fontColor = SKColor.black
         skillChargeDisplay_1?.fontSize = 40
@@ -404,10 +433,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //Right Side of Screen
         jumpButton?.position = CGPoint(x: self.size.width/2 - 75,y: -self.size.height/2 + 75) //Bottom Right
-        skillButton_1?.position = CGPoint(x: self.size.width/2 - 205,y: -self.size.height/2 + 75) //Bottom Left
+        skillButton_1?.position = CGPoint(x: self.size.width/2 - 75 - buttonMargin,y: -self.size.height/2 + 75) //Bottom Left
         skillChargeDisplay_1?.position = CGPoint(x: 0,y: 0)
-        runeButton?.position = CGPoint(x: self.size.width/2 - 205,y: -self.size.height/2 + 205) //Top Left
-        skillButton_2?.position = CGPoint(x: self.size.width/2 - 75,y: -self.size.height/2 + 205) // Top Right
+        runeButton?.position = CGPoint(x: self.size.width/2 - 75 - buttonMargin,y: -self.size.height/2 + 75 + buttonMargin) //Top Left
+        skillButton_2?.position = CGPoint(x: self.size.width/2 - 75,y: -self.size.height/2 + 75 + buttonMargin) // Top Right
         skillChargeDisplay_2?.position = CGPoint(x: 0,y: 0)
         skillChargeDisplay_3?.position = CGPoint(x: 0,y: 0)
         
@@ -415,7 +444,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         //Left Side of Screen
         leftButton?.position = CGPoint(x: -self.size.width/2 + 75,y: -self.size.height/2 + 75)
-        rightButton?.position = CGPoint(x: -self.size.width/2 + 205,y: -self.size.height/2 + 75)
+        rightButton?.position = CGPoint(x: -self.size.width/2 + 75 + buttonMargin,y: -self.size.height/2 + 75)
         
         player1Bubble = SKSpriteNode(imageNamed: "Button_Green")
         player1Bubble?.position = CGPoint(x: -self.size.width/2 + 120,y: self.size.height/2 - 75)
@@ -513,10 +542,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.CAMERA_NODE?.zPosition = playerNode!.zPosition + 10
         self.CAMERA_NODE?.addChild(snowEffect!)
-        snowEffect?.zPosition = -50
+        snowEffect?.zPosition = -5
         self.CAMERA_NODE?.addChild(pauseUI!)
         self.tileMapNode!.addChild(playerNode)
         self.CAMERA_NODE?.addChild(sfxButton!)
+        self.CAMERA_NODE?.addChild(timePassedLabel!)
+        
+        if deathMode == 1 {
+            self.CAMERA_NODE?.addChild(heart1!)
+            self.CAMERA_NODE?.addChild(heart2!)
+            self.CAMERA_NODE?.addChild(heart3!)
+        }
+        
         self.CAMERA_NODE?.addChild(musicButton!)
         self.CAMERA_NODE?.addChild(homeButton!)
         self.CAMERA_NODE?.addChild(exitButton!)
@@ -582,9 +619,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.exitButton?.isHidden = true
         
         if timeLimit != 0 {
-            self.run(SKAction.wait(forDuration: Double(timeLimit * 60)),completion:{
-                self.endScreen("Out of Time",receiving: false)
-            })
+            timeMax = timeLimit * 60
+            timePassedLabel?.text = "0/" + String(describing: timeLimit)
         }
         
         if primaryPlayer {
@@ -748,13 +784,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     playerNode?.playerAction = ""
                     playerNode?.playerMovement = ""
                     
-                    if playerNode!.usedLimbo {
+                    if playerNode!.usedLimbo && (abs(pos.x) < 1595 && pos.y < 2014 && pos.y > -1280) && playerNode!.returnBlock(pos) != "Dirt" {
                         playerNode?.usedLimbo = false
                         self.playerNode!.position = pos
                         self.playerNode!.physicsBody?.velocity.dy = 0
                         self.playerNode!.physicsBody?.velocity.dx = 0
-                    } else {
-                        //print(self.playerNode!.position)
                     }
                 }
                 
@@ -784,11 +818,16 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     }
                 } else if self.atPoint(pos) == self.homeButton {
                     self.gameOver = true
+                    
+                    if musicEnabled {
+                        SKTAudio.sharedInstance().playBackgroundMusic(filename: "Calamity_airwolf89.mp3")
+                    }
+                    
                     if let view = self.view {
                         view.presentScene(mainMenu)
                         view.ignoresSiblingOrder = false
                         
-                        view.showsFPS = true
+                        view.showsFPS = false
                         view.showsNodeCount = false
                         self.backgroundMusic.run(SKAction.stop())
                         
@@ -869,6 +908,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func updateUI(_ currentTime: TimeInterval) {
+        if timeLimit != 0 {
+            if timePassed > timeMax {
+                self.endScreen("Out of time!", receiving: false)
+            }
+            timePassedLabel?.text = String(describing: timePassed) + "/" + String(describing: timeMax)
+        }
+        
         if self.playerNode!.currentJumps >= self.playerNode!.maxJumps || self.playerNode!.isResting {
             self.jumpButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Up_Grey")))
         } else {
@@ -1225,6 +1271,25 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func update(_ currentTime: TimeInterval) {
+        if deathMode == 1 {
+            if playerNode!.lives == 2 {
+                heart3?.isHidden = false
+                heart2?.isHidden = false
+                heart1?.isHidden = false
+            } else if playerNode!.lives == 1 {
+                heart3?.isHidden = true
+                heart2?.isHidden = false
+                heart1?.isHidden = false
+            } else if playerNode!.lives == 0 {
+                heart3?.isHidden = true
+                heart2?.isHidden = true
+                heart1?.isHidden = false
+            } else {
+                heart3?.isHidden = true
+                heart2?.isHidden = true
+                heart1?.isHidden = true
+            }
+        }
         
         if someoneDied {
             if playerNode2?.brain != nil {
@@ -1263,7 +1328,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             playerNode4.checkBlockUnder()
         }
         
-        if multiplayerType == 0 || otherPlayersCount == 3 {
+        if multiplayerType == 0 {
             if playerNode!.isDead {
                 endScreen("Defeat", receiving: false)
             } else if self.playerNode2!.isDead && self.playerNode3!.isDead && self.playerNode4!.isDead {
@@ -1277,9 +1342,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                     endScreen("Victory", receiving: false)
                 }
             } else if otherPlayersCount == 2 {
-                if playerNode!.isDead {
-                    endScreen("Defeat", receiving: false)
-                } else if self.playerNode2!.isDead && self.playerNode3!.isDead {
+                if self.playerNode2!.isDead && self.playerNode3!.isDead {
+                    endScreen("Victory", receiving: false)
+                }
+            } else if otherPlayersCount == 3 {
+                if self.playerNode2!.isDead && self.playerNode3!.isDead && self.playerNode4!.isDead {
                     endScreen("Victory", receiving: false)
                 }
             }
@@ -1337,22 +1404,20 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.lastUpdateTime = currentTime
         }
         
-        // Calculate time since last update
-        let dt = currentTime - self.lastUpdateTime
-        
-        // Update entities
-        for entity in self.entities {
-            entity.update(deltaTime: dt)
-            
-        }
         self.lastUpdateTime = currentTime
         
         if currentTime - lastSyncTime >= 0.25 {
+            lastSyncTime = currentTime
             updateUI(currentTime)
             if multiplayerType == 1 {
                 MP_TRAFFIC_HANDLER.sendPlayerInfo()
             } else if multiplayerType == 2 {
                 GK_TRAFFIC_HANDLER.sendPlayerInfo()
+            }
+            timePassedCounter += 1
+            if timePassedCounter > 4 {
+                timePassedCounter = 0
+                timePassed += 1
             }
         }
         
@@ -1400,8 +1465,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.backgroundMusic.run(SKAction.stop())
         self.listener = nil
-        self.graphs.removeAll()
-        self.entities.removeAll()
         self.itemSpawnPoints.removeAll()
         self.removeAllActions()
         self.removeAllChildren()
@@ -1414,7 +1477,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             if let view = self.view {
                 view.ignoresSiblingOrder = false
                 view.showsFPS = false
-                view.showsNodeCount = true
+                view.showsNodeCount = false
                 sceneNode.outcome = stance
                 view.presentScene(sceneNode)
             }
@@ -1428,6 +1491,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             MP_TRAFFIC_HANDLER.sendQuitGameMessage()
         } else if multiplayerType == 2 && !receiving {
             GK_TRAFFIC_HANDLER.sendQuitGameMessage()
+        }
+        
+        if musicEnabled {
+            SKTAudio.sharedInstance().playBackgroundMusic(filename: "Calamity_airwolf89.mp3")
         }
         
         if multiplayerType == 0 {
@@ -1446,8 +1513,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         self.backgroundMusic.run(SKAction.stop())
         self.listener = nil
-        self.graphs.removeAll()
-        self.entities.removeAll()
         self.itemSpawnPoints.removeAll()
         self.removeAllActions()
         self.removeAllChildren()
@@ -1456,65 +1521,67 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if let view = self.view {
             view.presentScene(basherSelect)
             view.ignoresSiblingOrder = false
-            view.showsFPS = true
+            view.showsFPS = false
             view.showsNodeCount = false
         }
     }
     
     func spawnItem() {
-        if !(self.atPoint(itemSpawnPoints[0]) is Item) {
-            let itemName = self.itemRoulette()
-            let item = Item(imageNamed: itemName)
-            item.setUp(itemName)
-            item.position = itemSpawnPoints[0]
-            self.addChild(item)
-            
-            if multiplayerType == 1 {
-                MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 0)
-            } else if multiplayerType == 2 {
-                GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 0)
+        if itemSpawnPoints.count > 0 {
+            if !(self.atPoint(itemSpawnPoints[0]) is Item) {
+                let itemName = self.itemRoulette()
+                let item = Item(imageNamed: itemName)
+                item.setUp(itemName)
+                item.position = itemSpawnPoints[0]
+                self.addChild(item)
+                
+                if multiplayerType == 1 {
+                    MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 0)
+                } else if multiplayerType == 2 {
+                    GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 0)
+                }
             }
-        }
-        
-        if !(self.atPoint(itemSpawnPoints[1]) is Item) {
-            let itemName = self.itemRoulette()
-            let item = Item(imageNamed: itemName)
-            item.setUp(itemName)
-            item.position = itemSpawnPoints[1]
-            self.addChild(item)
             
-            if multiplayerType == 1 {
-                MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 1)
-            } else if multiplayerType == 2 {
-                GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 1)
+            if !(self.atPoint(itemSpawnPoints[1]) is Item) {
+                let itemName = self.itemRoulette()
+                let item = Item(imageNamed: itemName)
+                item.setUp(itemName)
+                item.position = itemSpawnPoints[1]
+                self.addChild(item)
+                
+                if multiplayerType == 1 {
+                    MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 1)
+                } else if multiplayerType == 2 {
+                    GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 1)
+                }
             }
-        }
-        
-        if !(self.atPoint(itemSpawnPoints[2]) is Item) {
-            let itemName = self.itemRoulette()
-            let item = Item(imageNamed: itemName)
-            item.setUp(itemName)
-            item.position = itemSpawnPoints[2]
-            self.addChild(item)
             
-            if multiplayerType == 1 {
-                MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 2)
-            } else if multiplayerType == 2 {
-                GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 2)
+            if !(self.atPoint(itemSpawnPoints[2]) is Item) {
+                let itemName = self.itemRoulette()
+                let item = Item(imageNamed: itemName)
+                item.setUp(itemName)
+                item.position = itemSpawnPoints[2]
+                self.addChild(item)
+                
+                if multiplayerType == 1 {
+                    MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 2)
+                } else if multiplayerType == 2 {
+                    GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 2)
+                }
             }
-        }
-        
-        if !(self.atPoint(itemSpawnPoints[3]) is Item) {
-            let itemName = self.itemRoulette()
-            let item = Item(imageNamed: itemName)
-            item.setUp(itemName)
-            item.position = itemSpawnPoints[3]
-            self.addChild(item)
             
-            if multiplayerType == 1 {
-                MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 3)
-            } else if multiplayerType == 2 {
-                GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 3)
+            if !(self.atPoint(itemSpawnPoints[3]) is Item) {
+                let itemName = self.itemRoulette()
+                let item = Item(imageNamed: itemName)
+                item.setUp(itemName)
+                item.position = itemSpawnPoints[3]
+                self.addChild(item)
+                
+                if multiplayerType == 1 {
+                    MP_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 3)
+                } else if multiplayerType == 2 {
+                    GK_TRAFFIC_HANDLER.spawnBlock(itemName, coord: 3)
+                }
             }
         }
     }

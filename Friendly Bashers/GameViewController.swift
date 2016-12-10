@@ -45,6 +45,8 @@ class GameViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self,selector:#selector(GameViewController.AlertMessage(notification:)),name:NSNotification.Name(rawValue: "AlertMessage"),object:nil)
         
+        NotificationCenter.default.addObserver(self,selector:#selector(GameViewController.LoginMessage),name:NSNotification.Name(rawValue: "LoginMessage"),object:nil)
+        
         // Load 'GameScene.sks' as a GKScene. This provides gameplay related content
         // including entities and graphs.
         SKTextureAtlas.preloadTextureAtlases([bgAtlas,charAtlas,tileAtlas,uiAtlas], withCompletionHandler: {
@@ -79,6 +81,12 @@ class GameViewController: UIViewController {
             let myAlert: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
             myAlert.addAction(UIAlertAction(title: "Thanks!", style: .default, handler: nil))
             self.present(myAlert, animated: true, completion: nil)
+        }
+    }
+    
+    func LoginMessage() {
+        if _authVC != nil {
+            self.present(_authVC!, animated: false, completion: {})
         }
     }
 

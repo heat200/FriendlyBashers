@@ -186,11 +186,11 @@ class Character:SKSpriteNode {
             BASE_MAX_JUMPS = 8
             
             BASE_SKILL_COOLDOWN_1 = 0
-            BASE_SKILL_COOLDOWN_2 = 12
+            BASE_SKILL_COOLDOWN_2 = 6
             BASE_SKILL_COOLDOWN_3 = 1.75
             
             BASE_SKILL_MAX_CHARGES_1 = 0
-            BASE_SKILL_MAX_CHARGES_2 = 2
+            BASE_SKILL_MAX_CHARGES_2 = 4
             BASE_SKILL_MAX_CHARGES_3 = 1
             
             if characterForm == "" {
@@ -613,7 +613,7 @@ class Character:SKSpriteNode {
         if characterForm == "Boy" {
             maxHP = 20 + (maxHP * 0.1)
             currentHP = maxHP
-            power = (power * 0.03)
+            power = (power * 0.01)
             resistance = (resistance * 0.6)
             movespeed = (movespeed * 0.5)
             
@@ -627,7 +627,7 @@ class Character:SKSpriteNode {
         } else if characterForm == "Girl" {
             maxHP = 20 + (maxHP * 0.05)
             currentHP = maxHP
-            power = (power * 0.015)
+            power = (power * 0.005)
             resistance = (resistance * 0.2)
             movespeed = (movespeed * 1.0)
             
@@ -1806,7 +1806,9 @@ class Character:SKSpriteNode {
     }
     
     func applyDamage(_ damage:CGFloat) {
-        let nodes = gameScene!.nodes(at: CGPoint(x: self.position.x + (45 + self.halfWidth!) * self.xScale, y: self.position.y))
+        let nodes = gameScene!.nodes(at: CGPoint(x: self.position.x + (self.halfWidth!) * self.xScale, y: self.position.y))
+        let nodes2 = gameScene!.nodes(at: CGPoint(x: self.position.x + (16 + self.halfWidth!) * self.xScale, y: self.position.y))
+        let nodes3 = gameScene!.nodes(at: CGPoint(x: self.position.x + (32 + self.halfWidth!) * self.xScale, y: self.position.y))
         if nodes.count == 1 {
             if nodes[0] is Item {
                 let item = nodes[0] as! Item
@@ -1884,7 +1886,189 @@ class Character:SKSpriteNode {
             }
         }
         
-        if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
+        if nodes2.count == 1 {
+            if nodes2[0] is Item {
+                let item = nodes2[0] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes2.count == 2 {
+            if nodes2[0] is Item {
+                let item = nodes2[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[1] is Item {
+                let item = nodes2[1] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes2.count == 3 {
+            if nodes2[0] is Item {
+                let item = nodes2[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[1] is Item {
+                let item = nodes2[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[2] is Item {
+                let item = nodes2[2] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes2.count == 4 {
+            if nodes2[0] is Item {
+                let item = nodes2[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[1] is Item {
+                let item = nodes2[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[2] is Item {
+                let item = nodes2[2] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[3] is Item {
+                let item = nodes2[3] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes2.count == 5 {
+            if nodes2[0] is Item {
+                let item = nodes2[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[1] is Item {
+                let item = nodes2[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[2] is Item {
+                let item = nodes2[2] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[3] is Item {
+                let item = nodes2[3] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[4] is Item {
+                let item = nodes2[4] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes2.count == 6 {
+            if nodes2[0] is Item {
+                let item = nodes2[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[1] is Item {
+                let item = nodes2[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[2] is Item {
+                let item = nodes2[2] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[3] is Item {
+                let item = nodes2[3] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[4] is Item {
+                let item = nodes2[4] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes2[5] is Item {
+                let item = nodes2[5] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        }
+        
+        if nodes3.count == 1 {
+            if nodes3[0] is Item {
+                let item = nodes3[0] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes3.count == 2 {
+            if nodes3[0] is Item {
+                let item = nodes3[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[1] is Item {
+                let item = nodes3[1] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes3.count == 3 {
+            if nodes3[0] is Item {
+                let item = nodes3[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[1] is Item {
+                let item = nodes3[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[2] is Item {
+                let item = nodes3[2] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes3.count == 4 {
+            if nodes3[0] is Item {
+                let item = nodes3[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[1] is Item {
+                let item = nodes3[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[2] is Item {
+                let item = nodes3[2] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[3] is Item {
+                let item = nodes3[3] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes3.count == 5 {
+            if nodes3[0] is Item {
+                let item = nodes3[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[1] is Item {
+                let item = nodes3[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[2] is Item {
+                let item = nodes3[2] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[3] is Item {
+                let item = nodes3[3] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[4] is Item {
+                let item = nodes3[4] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        } else if nodes3.count == 6 {
+            if nodes3[0] is Item {
+                let item = nodes3[0] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[1] is Item {
+                let item = nodes3[1] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[2] is Item {
+                let item = nodes3[2] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[3] is Item {
+                let item = nodes3[3] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[4] is Item {
+                let item = nodes3[4] as! Item
+                item.applyDamage(self, damage: damage)
+            } else if nodes3[5] is Item {
+                let item = nodes3[5] as! Item
+                item.applyDamage(self, damage: damage)
+            }
+        }
+        
+        if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
+            if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
+                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
+                self.applyLifeSteal(damage)
+                self.applyMovespeedSteal(gameScene!.playerNode)
+                self.applyPowerSteal(gameScene!.playerNode)
+                self.applyDebuff(gameScene!.playerNode, damage: damage)
+            } else if self.position.x < gameScene!.playerNode.position.x && self.xScale == 1 {
+                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
+                self.applyLifeSteal(damage)
+                self.applyMovespeedSteal(gameScene!.playerNode)
+                self.applyPowerSteal(gameScene!.playerNode)
+                self.applyDebuff(gameScene!.playerNode, damage: damage)
+            }
+        } else if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
+            if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
+                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
+                self.applyLifeSteal(damage)
+                self.applyMovespeedSteal(gameScene!.playerNode)
+                self.applyPowerSteal(gameScene!.playerNode)
+                self.applyDebuff(gameScene!.playerNode, damage: damage)
+            } else if self.position.x < gameScene!.playerNode.position.x && self.xScale == 1 {
+                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
+                self.applyLifeSteal(damage)
+                self.applyMovespeedSteal(gameScene!.playerNode)
+                self.applyPowerSteal(gameScene!.playerNode)
+                self.applyDebuff(gameScene!.playerNode, damage: damage)
+            }
+        } else if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
             if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
                 gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
                 self.applyLifeSteal(damage)
@@ -1901,7 +2085,35 @@ class Character:SKSpriteNode {
         }
         
         if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 1 {
-            if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
+            if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
+                if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
+                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode2)
+                    self.applyPowerSteal(gameScene!.playerNode2)
+                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
+                } else if self.position.x < gameScene!.playerNode2.position.x && self.xScale == 1 {
+                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode2)
+                    self.applyPowerSteal(gameScene!.playerNode2)
+                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
+                }
+            } else if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
+                if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
+                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode2)
+                    self.applyPowerSteal(gameScene!.playerNode2)
+                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
+                } else if self.position.x < gameScene!.playerNode2.position.x && self.xScale == 1 {
+                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode2)
+                    self.applyPowerSteal(gameScene!.playerNode2)
+                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
+                }
+            } else if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
                 if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
                     gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
                     self.applyLifeSteal(damage)
@@ -1919,7 +2131,35 @@ class Character:SKSpriteNode {
         }
         
         if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 2 {
-            if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! + 15 && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
+            if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
+                if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
+                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode3)
+                    self.applyPowerSteal(gameScene!.playerNode3)
+                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
+                } else if self.position.x < gameScene!.playerNode3.position.x && self.xScale == 1 {
+                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode3)
+                    self.applyPowerSteal(gameScene!.playerNode3)
+                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
+                }
+            } else if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
+                if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
+                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode3)
+                    self.applyPowerSteal(gameScene!.playerNode3)
+                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
+                } else if self.position.x < gameScene!.playerNode3.position.x && self.xScale == 1 {
+                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode3)
+                    self.applyPowerSteal(gameScene!.playerNode3)
+                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
+                }
+            } else if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
                 if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
                     gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
                     self.applyLifeSteal(damage)
@@ -1937,7 +2177,35 @@ class Character:SKSpriteNode {
         }
         
         if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 3 {
-            if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! + 5 && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
+            if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
+                if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
+                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode4)
+                    self.applyPowerSteal(gameScene!.playerNode4)
+                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
+                } else if self.position.x < gameScene!.playerNode4.position.x && self.xScale == 1 {
+                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode4)
+                    self.applyPowerSteal(gameScene!.playerNode4)
+                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
+                }
+            } else if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
+                if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
+                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode4)
+                    self.applyPowerSteal(gameScene!.playerNode4)
+                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
+                } else if self.position.x < gameScene!.playerNode4.position.x && self.xScale == 1 {
+                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
+                    self.applyLifeSteal(damage)
+                    self.applyMovespeedSteal(gameScene!.playerNode4)
+                    self.applyPowerSteal(gameScene!.playerNode4)
+                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
+                }
+            } else if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
                 if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
                     gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
                     self.applyLifeSteal(damage)
@@ -2165,13 +2433,13 @@ class Character:SKSpriteNode {
             let distance4:CGFloat = distance/4
             
             if self.position.x + distance < 1560 && self.position.x + distance > -1560 {
-                self.run(SKAction.moveTo(x: self.position.x + distance, duration: 0.6))
+                self.physicsBody?.applyImpulse(CGVector(dx: distance, dy: 0))
             } else if self.position.x + distance2 < 1560 && self.position.x + distance2 > -1560 {
-                self.run(SKAction.moveTo(x: self.position.x + distance2, duration: 0.6))
+                self.physicsBody?.applyImpulse(CGVector(dx: distance2, dy: 0))
             } else if self.position.x + distance3 < 1560 && self.position.x + distance3 > -1560 {
-                self.run(SKAction.moveTo(x: self.position.x + distance3, duration: 0.6))
+                self.physicsBody?.applyImpulse(CGVector(dx: distance3, dy: 0))
             } else if self.position.x + distance4 < 1560 && self.position.x + distance4 > -1560 {
-                self.run(SKAction.moveTo(x: self.position.x + distance4, duration: 0.6))
+                self.physicsBody?.applyImpulse(CGVector(dx: distance4, dy: 0))
             }
             
             applyDamage(damage)
@@ -2238,39 +2506,48 @@ class Character:SKSpriteNode {
     func summon(_ damage:CGFloat) {
         if !(self is AI) {
             if characterName == "Jack-O" {
-                let zombie_boy = AI(imageNamed: characterName + "_Zombie_Boy_Idle_1")
-                zombie_boy.name = self.player + "_Girl" + String(childCount)
-                zombie_boy.characterForm = "Boy"
-                zombie_boy.player = self.player
-                zombie_boy.CharAtlas = gameScene!.zombieboyAtlas
-                zombie_boy.setUp(characterName)
-                zombie_boy.startAI()
-                zombie_boy.xScale = self.xScale
-                zombie_boy.position.x = self.position.x + (150 * self.xScale)
-                zombie_boy.position.y = self.position.y
-                zombie_boy.physicsBody = SKPhysicsBody(texture: zombie_boy.texture!, size: zombie_boy.texture!.size())
-                zombie_boy.physicsBody?.allowsRotation = false
-                zombie_boy.physicsBody!.categoryBitMask = SummonedCategory
-                zombie_boy.physicsBody!.collisionBitMask = WorldCategory
-                self.parent!.addChild(zombie_boy)
+                let pos1 = CGPoint(x: self.position.x + (150 * self.xScale), y: self.position.y)
+                let pos2 = CGPoint(x: self.position.x + (100 * self.xScale), y: self.position.y)
                 
-                let zombie_girl = AI(imageNamed: characterName + "_Zombie_Girl_Idle_1")
-                zombie_girl.name = self.player + "_Girl" + String(childCount)
-                zombie_girl.characterForm = "Girl"
-                zombie_girl.player = self.player
-                zombie_girl.CharAtlas = gameScene!.zombiegirlAtlas
-                zombie_girl.setUp(characterName)
-                zombie_girl.startAI()
-                zombie_girl.xScale = self.xScale
-                zombie_girl.position.x = self.position.x + (100 * self.xScale)
-                zombie_girl.position.y = self.position.y
-                zombie_girl.physicsBody = SKPhysicsBody(texture: zombie_girl.texture!, size: zombie_girl.texture!.size())
-                zombie_girl.physicsBody?.allowsRotation = false
-                zombie_girl.physicsBody!.categoryBitMask = SummonedCategory
-                zombie_girl.physicsBody!.collisionBitMask = WorldCategory
-                self.parent!.addChild(zombie_girl)
+                if self.returnBlock(pos1) != "Dirt" && skillCurrentCharges_2 > 0 && (abs(pos1.x) < 1595 && pos1.y < 2014 && pos1.y > -1280) {
+                    let zombie_boy = AI(imageNamed: characterName + "_Zombie_Boy_Idle_1")
+                    zombie_boy.name = self.player + "_Girl" + String(childCount)
+                    zombie_boy.characterForm = "Boy"
+                    zombie_boy.player = self.player
+                    zombie_boy.CharAtlas = gameScene!.zombieboyAtlas
+                    zombie_boy.setUp(characterName)
+                    zombie_boy.startAI()
+                    zombie_boy.xScale = self.xScale
+                    zombie_boy.position = pos1
+                    zombie_boy.physicsBody = SKPhysicsBody(texture: zombie_boy.texture!, size: zombie_boy.texture!.size())
+                    zombie_boy.physicsBody?.allowsRotation = false
+                    zombie_boy.physicsBody!.categoryBitMask = SummonedCategory
+                    zombie_boy.physicsBody!.collisionBitMask = WorldCategory
+                    self.parent!.addChild(zombie_boy)
+                    skillCurrentCharges_2 -= 1
+                }
                 
-                childCount += 1
+                if self.returnBlock(pos2) != "Dirt" && skillCurrentCharges_2 > 0 && (abs(pos2.x) < 1595 && pos2.y < 2014 && pos2.y > -1280) {
+                    let zombie_girl = AI(imageNamed: characterName + "_Zombie_Girl_Idle_1")
+                    zombie_girl.name = self.player + "_Girl" + String(childCount)
+                    zombie_girl.characterForm = "Girl"
+                    zombie_girl.player = self.player
+                    zombie_girl.CharAtlas = gameScene!.zombiegirlAtlas
+                    zombie_girl.setUp(characterName)
+                    zombie_girl.startAI()
+                    zombie_girl.xScale = self.xScale
+                    zombie_girl.position = pos2
+                    zombie_girl.physicsBody = SKPhysicsBody(texture: zombie_girl.texture!, size: zombie_girl.texture!.size())
+                    zombie_girl.physicsBody?.allowsRotation = false
+                    zombie_girl.physicsBody!.categoryBitMask = SummonedCategory
+                    zombie_girl.physicsBody!.collisionBitMask = WorldCategory
+                    self.parent!.addChild(zombie_girl)
+                    skillCurrentCharges_2 -= 1
+                }
+                
+                if ((self.returnBlock(pos1) != "Dirt" && (abs(pos1.x) < 1595 && pos1.y < 2014 && pos1.y > -1280)) || ((self.returnBlock(pos2)) != "Dirt" && (abs(pos2.x) < 1595 && pos2.y < 2014 && pos2.y > -1280))) && skillCurrentCharges_2 > 0 {
+                    childCount += 1
+                }
             } else if characterName == "Plum" {
                 let kunai = Projectile(imageNamed: "Kunai")
                 kunai.setUp(damage, direction: self.xScale, owner: self.player)
@@ -2356,9 +2633,21 @@ class Character:SKSpriteNode {
                 self.run(SKAction.setTexture(new))
                 self.size = new.size()
             }
+        } else if !self.isStunned && !self.isResting && damageModified > 0 {
+            var new = [self.CharAtlas.textureNamed(self.characterName + "_Faint_1"),self.CharAtlas.textureNamed(self.characterName + "_Faint_2"),self.CharAtlas.textureNamed(self.characterName + "_Faint_3"),self.CharAtlas.textureNamed(self.characterName + "_Faint_2"),self.CharAtlas.textureNamed(self.characterName + "_Faint_1")]
+            if self.characterName == "Cog" {
+                new = [self.CharAtlas.textureNamed(self.characterForm + "_Faint_1"),self.CharAtlas.textureNamed(self.characterForm + "_Faint_2"),self.CharAtlas.textureNamed(self.characterForm + "_Faint_3"),self.CharAtlas.textureNamed(self.characterForm + "_Faint_2"),self.CharAtlas.textureNamed(self.characterForm + "_Faint_1")]
+            }
+            self.playerAction = ""
+            self.playerMovement = ""
+            self.isStunned = true
+            self.run(SKAction.animate(with: new, timePerFrame: 0.07, resize: true, restore: false),completion:{
+                self.isStunned = false
+            })
         }
-        let X_MOD:CGFloat = (1 - (currentHP/maxHP)) * 10
-        let Y_MOD:CGFloat = (1 - (currentHP/maxHP)) * 8
+        
+        let X_MOD:CGFloat = (1 - (currentHP/maxHP)) * 7
+        let Y_MOD:CGFloat = (1 - (currentHP/maxHP)) * 5.6
         let impX:CGFloat = (damageToTake * direction) * X_MOD
         let impY:CGFloat = damageToTake * Y_MOD
         
@@ -2372,7 +2661,7 @@ class Character:SKSpriteNode {
     }
     
     func playerMovement(_ mod:CGFloat) {
-        if playerMovement == "Move_Left"  && !self.isResting && !self.isStunned && !self.isDead {
+        if playerMovement == "Move_Left" && !self.isResting && !self.isStunned && !self.isDead {
             self.physicsBody?.velocity = CGVector(dx: -self.movespeed * mod, dy: (self.physicsBody?.velocity.dy)!)
             
             if appDelegate.mpcHandler.session != nil {
@@ -2438,6 +2727,22 @@ class Character:SKSpriteNode {
             self.currentHP = 0
             gameScene!.someoneDied = true
         }
+    }
+    
+    func returnBlock(_ at:CGPoint) -> String {
+        let position = at
+        let column = gameScene?.tileMapNode?.tileColumnIndex(fromPosition: position)
+        let row = gameScene?.tileMapNode?.tileRowIndex(fromPosition: position)
+        let tile = gameScene?.tileMapNode?.tileGroup(atColumn: column!, row: row!)
+        var block = ""
+        
+        if tile?.name == "Water" {
+            block = "Water"
+        } else if tile?.name == "Dirt" {
+            block = "Dirt"
+        }
+        
+        return block
     }
     
     func returnBlockBelow() -> String {
@@ -2543,7 +2848,11 @@ class Character:SKSpriteNode {
                 self.doSkill_1()
             } else if self.playerAction == "Skill_2" && self.isSkillReady_2(currentTime) {
                 self.skill_2_Last_Used = currentTime
-                self.skillCurrentCharges_2 -= 1
+                if self.characterName == "Jack-O" {
+                    self.skillCurrentCharges_2 -= 0
+                } else {
+                    self.skillCurrentCharges_2 -= 1
+                }
                 self.doSkill_2()
             } else if self.playerAction == "Skill_3" && self.isSkillReady_3(currentTime) {
                 self.skill_3_Last_Used = currentTime
@@ -2650,6 +2959,7 @@ class Character:SKSpriteNode {
     func recovered() {
         self.isResting = false
         self.allowedToRecover = false
+        self.isStunned = false
         var new = self.CharAtlas.textureNamed(self.characterName + "_Idle_1")
         if self.characterName == "Cog" {
             new = self.CharAtlas.textureNamed( self.characterForm + "_Idle_10")
@@ -2679,7 +2989,7 @@ class Character:SKSpriteNode {
             })
         } else if item == "Golems_Curse" || item == "Air_Blast" {
             itemInUse = ""
-            if  gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 3 {
+            if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 3 {
                 if self == gameScene?.playerNode {
                     if (gameScene?.playerNode2.position.x)! >= self.position.x - 250 && (gameScene?.playerNode2.position.x)! <= self.position.x + 250 && (gameScene?.playerNode2.position.y)! >= self.position.y - 250 && (gameScene?.playerNode2.position.y)! <= self.position.y + 250 {
                         if item == "Air_Blast" {
@@ -2698,14 +3008,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -2729,14 +3039,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode3.movespeed
-                            let oldResist = gameScene!.playerNode3.resistance
-                            gameScene!.playerNode3.movespeed = 0
-                            gameScene!.playerNode3.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode3.resistance * 0.25
+                            gameScene!.playerNode3.movespeed -= oldMS
+                            gameScene!.playerNode3.resistance += oldResist
                             gameScene!.playerNode3.physicsBody?.pinned = true
                             gameScene!.playerNode3.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode3.movespeed = oldMS
-                                gameScene!.playerNode3.resistance = oldResist
+                                gameScene!.playerNode3.movespeed += oldMS
+                                gameScene!.playerNode3.resistance -= oldResist
                                 gameScene!.playerNode3.physicsBody?.pinned = false
                                 gameScene!.playerNode3.isStunned = false
                             })
@@ -2760,14 +3070,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode4.movespeed
-                            let oldResist = gameScene!.playerNode4.resistance
-                            gameScene!.playerNode4.movespeed = 0
-                            gameScene!.playerNode4.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode4.resistance * 0.25
+                            gameScene!.playerNode4.movespeed -= oldMS
+                            gameScene!.playerNode4.resistance += oldResist
                             gameScene!.playerNode4.physicsBody?.pinned = true
                             gameScene!.playerNode4.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode4.movespeed = oldMS
-                                gameScene!.playerNode4.resistance = oldResist
+                                gameScene!.playerNode4.movespeed += oldMS
+                                gameScene!.playerNode4.resistance -= oldResist
                                 gameScene!.playerNode4.physicsBody?.pinned = false
                                 gameScene!.playerNode4.isStunned = false
                             })
@@ -2791,14 +3101,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode.movespeed
-                            let oldResist = gameScene!.playerNode.resistance
-                            gameScene!.playerNode.movespeed = 0
-                            gameScene!.playerNode.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode.resistance * 0.25
+                            gameScene!.playerNode.movespeed -= oldMS
+                            gameScene!.playerNode.resistance += oldResist
                             gameScene!.playerNode.physicsBody?.pinned = true
                             gameScene!.playerNode.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode.movespeed = oldMS
-                                gameScene!.playerNode.resistance = oldResist
+                                gameScene!.playerNode.movespeed += oldMS
+                                gameScene!.playerNode.resistance -= oldResist
                                 gameScene!.playerNode.physicsBody?.pinned = false
                                 gameScene!.playerNode.isStunned = false
                             })
@@ -2822,14 +3132,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode3.movespeed
-                            let oldResist = gameScene!.playerNode3.resistance
-                            gameScene!.playerNode3.movespeed = 0
-                            gameScene!.playerNode3.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode3.resistance * 0.25
+                            gameScene!.playerNode3.movespeed -= oldMS
+                            gameScene!.playerNode3.resistance += oldResist
                             gameScene!.playerNode3.physicsBody?.pinned = true
                             gameScene!.playerNode3.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode3.movespeed = oldMS
-                                gameScene!.playerNode3.resistance = oldResist
+                                gameScene!.playerNode3.movespeed += oldMS
+                                gameScene!.playerNode3.resistance -= oldResist
                                 gameScene!.playerNode3.physicsBody?.pinned = false
                                 gameScene!.playerNode3.isStunned = false
                             })
@@ -2853,14 +3163,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode4.movespeed
-                            let oldResist = gameScene!.playerNode4.resistance
-                            gameScene!.playerNode4.movespeed = 0
-                            gameScene!.playerNode4.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode4.resistance * 0.25
+                            gameScene!.playerNode4.movespeed -= oldMS
+                            gameScene!.playerNode4.resistance += oldResist
                             gameScene!.playerNode4.physicsBody?.pinned = true
                             gameScene!.playerNode4.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode4.movespeed = oldMS
-                                gameScene!.playerNode4.resistance = oldResist
+                                gameScene!.playerNode4.movespeed += oldMS
+                                gameScene!.playerNode4.resistance -= oldResist
                                 gameScene!.playerNode4.physicsBody?.pinned = false
                                 gameScene!.playerNode4.isStunned = false
                             })
@@ -2884,14 +3194,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode.movespeed
-                            let oldResist = gameScene!.playerNode.resistance
-                            gameScene!.playerNode.movespeed = 0
-                            gameScene!.playerNode.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode.resistance * 0.25
+                            gameScene!.playerNode.movespeed -= oldMS
+                            gameScene!.playerNode.resistance += oldResist
                             gameScene!.playerNode.physicsBody?.pinned = true
                             gameScene!.playerNode.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode.movespeed = oldMS
-                                gameScene!.playerNode.resistance = oldResist
+                                gameScene!.playerNode.movespeed += oldMS
+                                gameScene!.playerNode.resistance -= oldResist
                                 gameScene!.playerNode.physicsBody?.pinned = false
                                 gameScene!.playerNode.isStunned = false
                             })
@@ -2915,14 +3225,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -2946,14 +3256,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode4.movespeed
-                            let oldResist = gameScene!.playerNode4.resistance
-                            gameScene!.playerNode4.movespeed = 0
-                            gameScene!.playerNode4.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode4.resistance * 0.25
+                            gameScene!.playerNode4.movespeed -= oldMS
+                            gameScene!.playerNode4.resistance += oldResist
                             gameScene!.playerNode4.physicsBody?.pinned = true
                             gameScene!.playerNode4.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode4.movespeed = oldMS
-                                gameScene!.playerNode4.resistance = oldResist
+                                gameScene!.playerNode4.movespeed += oldMS
+                                gameScene!.playerNode4.resistance -= oldResist
                                 gameScene!.playerNode4.physicsBody?.pinned = false
                                 gameScene!.playerNode4.isStunned = false
                             })
@@ -2977,14 +3287,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode.movespeed
-                            let oldResist = gameScene!.playerNode.resistance
-                            gameScene!.playerNode.movespeed = 0
-                            gameScene!.playerNode.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode.resistance * 0.25
+                            gameScene!.playerNode.movespeed -= oldMS
+                            gameScene!.playerNode.resistance += oldResist
                             gameScene!.playerNode.physicsBody?.pinned = true
                             gameScene!.playerNode.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode.movespeed = oldMS
-                                gameScene!.playerNode.resistance = oldResist
+                                gameScene!.playerNode.movespeed += oldMS
+                                gameScene!.playerNode.resistance -= oldResist
                                 gameScene!.playerNode.physicsBody?.pinned = false
                                 gameScene!.playerNode.isStunned = false
                             })
@@ -3008,14 +3318,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -3039,14 +3349,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode3.movespeed
-                            let oldResist = gameScene!.playerNode3.resistance
-                            gameScene!.playerNode3.movespeed = 0
-                            gameScene!.playerNode3.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode3.resistance * 0.25
+                            gameScene!.playerNode3.movespeed -= oldMS
+                            gameScene!.playerNode3.resistance += oldResist
                             gameScene!.playerNode3.physicsBody?.pinned = true
                             gameScene!.playerNode3.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode3.movespeed = oldMS
-                                gameScene!.playerNode3.resistance = oldResist
+                                gameScene!.playerNode3.movespeed += oldMS
+                                gameScene!.playerNode3.resistance -= oldResist
                                 gameScene!.playerNode3.physicsBody?.pinned = false
                                 gameScene!.playerNode3.isStunned = false
                             })
@@ -3072,14 +3382,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -3103,14 +3413,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode3.movespeed
-                            let oldResist = gameScene!.playerNode3.resistance
-                            gameScene!.playerNode3.movespeed = 0
-                            gameScene!.playerNode3.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode3.resistance * 0.25
+                            gameScene!.playerNode3.movespeed -= oldMS
+                            gameScene!.playerNode3.resistance += oldResist
                             gameScene!.playerNode3.physicsBody?.pinned = true
                             gameScene!.playerNode3.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode3.movespeed = oldMS
-                                gameScene!.playerNode3.resistance = oldResist
+                                gameScene!.playerNode3.movespeed += oldMS
+                                gameScene!.playerNode3.resistance -= oldResist
                                 gameScene!.playerNode3.physicsBody?.pinned = false
                                 gameScene!.playerNode3.isStunned = false
                             })
@@ -3134,14 +3444,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -3165,14 +3475,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode3.movespeed
-                            let oldResist = gameScene!.playerNode3.resistance
-                            gameScene!.playerNode3.movespeed = 0
-                            gameScene!.playerNode3.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode3.resistance * 0.25
+                            gameScene!.playerNode3.movespeed -= oldMS
+                            gameScene!.playerNode3.resistance += oldResist
                             gameScene!.playerNode3.physicsBody?.pinned = true
                             gameScene!.playerNode3.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode3.movespeed = oldMS
-                                gameScene!.playerNode3.resistance = oldResist
+                                gameScene!.playerNode3.movespeed += oldMS
+                                gameScene!.playerNode3.resistance -= oldResist
                                 gameScene!.playerNode3.physicsBody?.pinned = false
                                 gameScene!.playerNode3.isStunned = false
                             })
@@ -3195,15 +3505,15 @@ class Character:SKSpriteNode {
                                 }
                             }
                         } else {
-                            let oldMS = gameScene!.playerNode.movespeed
-                            let oldResist = gameScene!.playerNode.resistance
-                            gameScene!.playerNode.movespeed = 0
-                            gameScene!.playerNode.resistance = oldResist * 1.25
+                            let oldMS = gameScene!.playerNode2.movespeed
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode.movespeed -= oldMS
+                            gameScene!.playerNode.resistance += oldResist
                             gameScene!.playerNode.physicsBody?.pinned = true
                             gameScene!.playerNode.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode.movespeed = oldMS
-                                gameScene!.playerNode.resistance = oldResist
+                                gameScene!.playerNode.movespeed += oldMS
+                                gameScene!.playerNode.resistance -= oldResist
                                 gameScene!.playerNode.physicsBody?.pinned = false
                                 gameScene!.playerNode.isStunned = false
                             })
@@ -3227,14 +3537,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -3260,14 +3570,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode2.movespeed
-                            let oldResist = gameScene!.playerNode2.resistance
-                            gameScene!.playerNode2.movespeed = 0
-                            gameScene!.playerNode2.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode2.resistance * 0.25
+                            gameScene!.playerNode2.movespeed -= oldMS
+                            gameScene!.playerNode2.resistance += oldResist
                             gameScene!.playerNode2.physicsBody?.pinned = true
                             gameScene!.playerNode2.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode2.movespeed = oldMS
-                                gameScene!.playerNode2.resistance = oldResist
+                                gameScene!.playerNode2.movespeed += oldMS
+                                gameScene!.playerNode2.resistance -= oldResist
                                 gameScene!.playerNode2.physicsBody?.pinned = false
                                 gameScene!.playerNode2.isStunned = false
                             })
@@ -3291,14 +3601,14 @@ class Character:SKSpriteNode {
                             }
                         } else {
                             let oldMS = gameScene!.playerNode.movespeed
-                            let oldResist = gameScene!.playerNode.resistance
-                            gameScene!.playerNode.movespeed = 0
-                            gameScene!.playerNode.resistance = oldResist * 1.25
+                            let oldResist:CGFloat = gameScene!.playerNode.resistance * 0.25
+                            gameScene!.playerNode.movespeed -= oldMS
+                            gameScene!.playerNode.resistance += oldResist
                             gameScene!.playerNode.physicsBody?.pinned = true
                             gameScene!.playerNode.isStunned = true
                             gameScene!.run(SKAction.wait(forDuration: 3),completion:{
-                                gameScene!.playerNode.movespeed = oldMS
-                                gameScene!.playerNode.resistance = oldResist
+                                gameScene!.playerNode.movespeed += oldMS
+                                gameScene!.playerNode.resistance -= oldResist
                                 gameScene!.playerNode.physicsBody?.pinned = false
                                 gameScene!.playerNode.isStunned = false
                             })
@@ -3359,7 +3669,7 @@ class Character:SKSpriteNode {
             })
         } else if item == "Fairys_Heart" {
             itemInUse = item
-            let hpToHeal:CGFloat = maxHP * 0.15
+            let hpToHeal:CGFloat = maxHP * 0.25
             applyHealing(hpToHeal)
             itemInUse = ""
             
@@ -3411,13 +3721,23 @@ class Character:SKSpriteNode {
     
     func applyDebuff(_ player:Character, damage:CGFloat) {
         if itemInUse == "Icy_Grasp" {
-            let speedChange = player.movespeed * 0.05
+            let speedChange = player.movespeed * 0.20
             player.movespeed -= speedChange
             gameScene?.run(SKAction.wait(forDuration: 1.5),completion:{
                 player.movespeed += speedChange
             })
+            let colorize = SKAction.colorize(with: .cyan, colorBlendFactor: 0.6, duration: 0.75)
+            let colorize2 = SKAction.colorize(with: .white, colorBlendFactor: 0.25, duration: 0.75)
+            player.run(colorize,completion:{
+                player.run(colorize2)
+            })
         } else if itemInUse == "Fires_Passion" {
-            let damageModded = damage/6
+            let colorize = SKAction.colorize(with: .red, colorBlendFactor: 0.6, duration: 1.5)
+            let colorize2 = SKAction.colorize(with: .white, colorBlendFactor: 0.25, duration: 1.5)
+            player.run(colorize,completion:{
+                player.run(colorize2)
+            })
+            let damageModded = damage/3
             gameScene?.run(SKAction.wait(forDuration: 0.5),completion:{
                 player.takeDamage(damageModded, direction: 0)
                 gameScene?.run(SKAction.wait(forDuration: 0.5),completion:{
@@ -3454,9 +3774,9 @@ class Character:SKSpriteNode {
                     self.skillCooldown_3 -= cdChange3
                 })
             } else if currentTheme == "FALL" {
-                let powerChange = power * 0.5
-                let resistChange = resistance * 0.5
-                let speedChange = movespeed * 0.5
+                let powerChange = power * 0.4
+                let resistChange = resistance * 0.4
+                let speedChange = movespeed * 0.4
                 power += powerChange
                 resistance += resistChange
                 movespeed += speedChange
@@ -3474,9 +3794,9 @@ class Character:SKSpriteNode {
             }
         } else if characterName == "Plum" || characterName == "Rosetta" {
             if currentTheme == "SUMMER" {
-                let cdChange1 = skillCooldown_1 * 0.25
-                let cdChange2 = skillCooldown_2 * 0.25
-                let cdChange3 = skillCooldown_3 * 0.25
+                let cdChange1 = skillCooldown_1 * 0.3
+                let cdChange2 = skillCooldown_2 * 0.3
+                let cdChange3 = skillCooldown_3 * 0.3
                 skillCooldown_1 += cdChange1
                 skillCooldown_2 += cdChange2
                 skillCooldown_3 += cdChange3
@@ -3486,8 +3806,8 @@ class Character:SKSpriteNode {
                     self.skillCooldown_3 -= cdChange3
                 })
             } else if currentTheme == "FALL" {
-                let resistChange = resistance * 0.5
-                let speedChange = movespeed * 0.25
+                let resistChange = resistance * 0.4
+                let speedChange = movespeed * 0.20
                 resistance -= resistChange
                 movespeed += speedChange
                 self.parent?.run(SKAction.wait(forDuration: 44.5),completion:{
@@ -3495,7 +3815,7 @@ class Character:SKSpriteNode {
                     self.movespeed -= speedChange
                 })
             } else if currentTheme == "WINTER" {
-                let speedChange = movespeed * 0.5
+                let speedChange = movespeed * 0.35
                 movespeed -= speedChange
                 self.parent?.run(SKAction.wait(forDuration: 44.5),completion:{
                     self.movespeed += speedChange
@@ -3517,7 +3837,7 @@ class Character:SKSpriteNode {
 
             } else if currentTheme == "FALL" {
                 let resistChange = resistance * 0.2
-                let speedChange = movespeed * 0.5
+                let speedChange = movespeed * 0.35
                 resistance -= resistChange
                 movespeed += speedChange
                 self.parent?.run(SKAction.wait(forDuration: 44.5),completion:{
@@ -3525,9 +3845,9 @@ class Character:SKSpriteNode {
                     self.movespeed -= speedChange
                 })
             } else if currentTheme == "WINTER" {
-                let cdChange1 = skillCooldown_1 * 0.1
-                let cdChange2 = skillCooldown_2 * 0.1
-                let cdChange3 = skillCooldown_3 * 0.1
+                let cdChange1 = skillCooldown_1 * 0.15
+                let cdChange2 = skillCooldown_2 * 0.15
+                let cdChange3 = skillCooldown_3 * 0.15
                 let speedChange = movespeed * 0.1
                 skillCooldown_1 += cdChange1
                 skillCooldown_2 += cdChange2
@@ -3558,7 +3878,7 @@ class Character:SKSpriteNode {
                         self.movespeed += speedChange
                     })
                 } else if currentTheme == "FALL" {
-                    let resistChange = resistance * 0.5
+                    let resistChange = resistance * 0.4
                     let speedChange = movespeed * 0.25
                     resistance -= resistChange
                     movespeed += speedChange
@@ -3570,7 +3890,7 @@ class Character:SKSpriteNode {
                     let cdChange1 = skillCooldown_1 * 0.1
                     let cdChange2 = skillCooldown_2 * 0.1
                     let cdChange3 = skillCooldown_3 * 0.1
-                    let speedChange = movespeed * 0.4
+                    let speedChange = movespeed * 0.35
                     skillCooldown_1 += cdChange1
                     skillCooldown_2 += cdChange2
                     skillCooldown_3 += cdChange3
@@ -3599,8 +3919,8 @@ class Character:SKSpriteNode {
                         self.movespeed += speedChange
                     })
                 } else if currentTheme == "FALL" {
-                    let resistChange = resistance * 0.5
-                    let speedChange = movespeed * 0.4
+                    let resistChange = resistance * 0.4
+                    let speedChange = movespeed * 0.35
                     resistance -= resistChange
                     movespeed -= speedChange
                     self.parent?.run(SKAction.wait(forDuration: 44.5),completion:{
@@ -3611,7 +3931,7 @@ class Character:SKSpriteNode {
                     let cdChange1 = skillCooldown_1 * 0.1
                     let cdChange2 = skillCooldown_2 * 0.1
                     let cdChange3 = skillCooldown_3 * 0.1
-                    let speedChange = movespeed * 0.15
+                    let speedChange = movespeed * 0.1
                     skillCooldown_1 += cdChange1
                     skillCooldown_2 += cdChange2
                     skillCooldown_3 += cdChange3
@@ -3626,7 +3946,7 @@ class Character:SKSpriteNode {
             }
         } else if characterName == "Sarah" {
             if currentTheme == "SUMMER" {
-                let powerChange = power * 0.5
+                let powerChange = power * 0.3
                 let speedChange = movespeed * 0.3
                 power += powerChange
                 movespeed += speedChange
@@ -3647,7 +3967,7 @@ class Character:SKSpriteNode {
                 let cdChange1 = skillCooldown_1 * 0.25
                 let cdChange2 = skillCooldown_2 * 0.25
                 let cdChange3 = skillCooldown_3 * 0.25
-                let powerChange = power * 0.1
+                let powerChange = power * 0.15
                 let speedChange = movespeed * 0.15
                 skillCooldown_1 -= cdChange1
                 skillCooldown_2 -= cdChange2
@@ -3662,6 +3982,30 @@ class Character:SKSpriteNode {
                     self.movespeed -= speedChange
                 })
             }
+        }
+    }
+    
+    func setUpAttackBoxes() {
+        if characterName == "Jack-O" {
+            let attackBox3 = AttackBox(color: .clear, size: CGSize(width: 50, height: 30))
+            attackBox3.position.x = 30
+            attackBox3.position.y = -20
+            attackBox3.setUp(owner: self.player)
+            attackBox3.name = "Skill3_Box"
+            self.addChild(attackBox3)
+        } else if characterName == "Cog" {
+            
+        } else if characterName == "Plum" || characterName == "Rosetta" {
+            
+        } else if characterName == "Silva" {
+            let attackBox1 = AttackBox(color: .clear, size: CGSize(width: 30, height: 50))
+            attackBox1.position.x = 20
+            attackBox1.position.y = 20
+            attackBox1.setUp(owner: self.player)
+            attackBox1.name = "Skill1_Box"
+            self.addChild(attackBox1)
+        } else if characterName == "Sarah" {
+            
         }
     }
     

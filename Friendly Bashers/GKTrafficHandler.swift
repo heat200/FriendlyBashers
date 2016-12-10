@@ -16,6 +16,7 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
     var sentBlessings = false
     var match:GKMatch!
     var request:GKMatchRequest!
+    var invite:GKInvite?
     
     func startGKTH() {
         connectWithPlayer()
@@ -25,6 +26,7 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
         if !started {
             self.match = nil
             self.request = nil
+            
             let matchRequest = GKMatchRequest.init()
             matchRequest.maxPlayers = 4
             matchRequest.minPlayers = 2
@@ -35,10 +37,12 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
             let mmvc = GKMatchmakerViewController(matchRequest: matchRequest)
             mmvc?.matchmakerDelegate = self
             appDelegate.window?.rootViewController?.present(mmvc!, animated: true, completion: {})
+            
             let matchMaker = GKMatchmaker.shared()
             matchMaker.findMatch(for: matchRequest, withCompletionHandler: { (match, error) in
                 
             })
+            
         }
     }
     
@@ -55,6 +59,8 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
                     self.setAuthVC(viewController)
                 } else if localPlayer.isAuthenticated {
                     _enableGameCenter = true
+                    playerName = GKLocalPlayer.localPlayer().alias!
+                    self.checkForInvites()
                 } else {
                     _enableGameCenter = false
                 }
@@ -66,18 +72,20 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
     }
     
     func setAuthVC(_ vc:UIViewController?) {
-        _authVC = vc
-        if _authVC != nil {
+        if vc != nil {
+            _authVC = vc
             print("Should Present AuthVC")
-            appDelegate.window?.rootViewController?.present(_authVC!, animated: true, completion: {})
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "LoginMessage"), object: nil,userInfo: nil)
         } else {
             print("AuthVC nil")
         }
     }
     
     func disconnectFromPlayers() {
+        self.started = false
         self.match.disconnect()
         self.match = nil
+        connected = false
     }
     
     func sendPlayerSetupInfo() {
@@ -573,14 +581,16 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
     }
     
     func match(_ match: GKMatch, player: GKPlayer, didChange state: GKPlayerConnectionState) {
-        if match == self.match {
-            if state == .stateConnected {
-                print("Player Connected")
-                if match.expectedPlayerCount == 0 {
-                    print("Ready to start")
+        if self.match != nil {
+            if match == self.match {
+                if state == .stateConnected {
+                    print("Player Connected")
+                    if match.expectedPlayerCount == 0 {
+                        print("Ready to start")
+                    }
+                } else if state == .stateDisconnected {
+                    print("Player DCed")
                 }
-            } else if state == .stateDisconnected {
-                print("Player DCed")
             }
         }
     }
@@ -602,6 +612,7 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
             self.sendPlayerSetupInfo()
             appDelegate.window?.rootViewController?.dismiss(animated: true, completion: {
                 modeSelect?.dismissMultiplayerSelect()
+                modeSelect?.updateUI()
             })
             started = true
         }
@@ -610,12 +621,12 @@ class GKTrafficHandler:NSObject, GKMatchDelegate, GKMatchmakerViewControllerDele
     func player(_ player: GKPlayer, didAccept invite: GKInvite) {
         print("Accepted Invite")
         let matchMaker = GKMatchmaker.shared()
-        matchMaker.addPlayers(to: self.match, matchRequest: request) { (error) in
-            
+        matchMaker.match(for: invite) { (player, error) in
+            self.invite = invite
         }
     }
     
-    func player(_ player: GKPlayer, didRequestMatchWithOtherPlayers playersToInvite: [GKPlayer]) {
-        
+    func checkForInvites() {
+        GKLocalPlayer.localPlayer().register(self)
     }
 }

@@ -14,8 +14,7 @@ class ModeSelectScene:SKScene {
     var backButton:SKSpriteNode?
     var agreeButton:SKSpriteNode?
     var createPartyButton:SKSpriteNode?
-    var connectedCounter:SKSpriteNode?
-    var connectedCounterLabel:SKLabelNode?
+    var leaveMatchButton:SKSpriteNode?
     
     var regularModeButton:SKSpriteNode?
     var gemRushModeButton:SKSpriteNode?
@@ -27,6 +26,11 @@ class ModeSelectScene:SKScene {
     var netplaySelect:SKSpriteNode?
     var cancelMultiplayerSelect:SKSpriteNode?
     
+    var playerDisplay1:SKLabelNode?
+    var playerDisplay2:SKLabelNode?
+    var playerDisplay3:SKLabelNode?
+    var playerDisplay4:SKLabelNode?
+    
     var backgroundAtlas = bgAtlas
     var UIAtlas = uiAtlas
     
@@ -36,14 +40,14 @@ class ModeSelectScene:SKScene {
     }
     
     override func didMove(to view: SKView) {
-        if menuMusic.parent == nil && musicEnabled {
-            self.addChild(menuMusic)
-        }
-        
         if appDelegate == nil {
             appDelegate = UIApplication.shared.delegate as! AppDelegate
         }
         
+        self.playerDisplay1 = self.childNode(withName: "//playerDisplay1") as? SKLabelNode
+        self.playerDisplay2 = self.childNode(withName: "//playerDisplay2") as? SKLabelNode
+        self.playerDisplay3 = self.childNode(withName: "//playerDisplay3") as? SKLabelNode
+        self.playerDisplay4 = self.childNode(withName: "//playerDisplay4") as? SKLabelNode
         self.multiplayerSelect = self.childNode(withName: "//multiPlaySelect") as? SKSpriteNode
         self.localplaySelect = self.childNode(withName: "//localPlay") as? SKSpriteNode
         self.netplaySelect = self.childNode(withName: "//netPlay") as? SKSpriteNode
@@ -51,9 +55,7 @@ class ModeSelectScene:SKScene {
         self.backButton = self.childNode(withName: "//backButton") as? SKSpriteNode
         self.agreeButton = self.childNode(withName: "//agreeButton") as? SKSpriteNode
         self.createPartyButton = self.childNode(withName: "//createPartyButton") as? SKSpriteNode
-        self.connectedCounter = self.childNode(withName: "//connectedCounter") as? SKSpriteNode
-        self.connectedCounterLabel = SKLabelNode()
-        self.connectedCounter?.addChild(connectedCounterLabel!)
+        self.leaveMatchButton = self.childNode(withName: "//quitMatch") as? SKSpriteNode
         
         self.regularModeButton = self.childNode(withName: "//regularModeButton") as? SKSpriteNode
         self.gemRushModeButton = self.childNode(withName: "//gemBashButton") as? SKSpriteNode
@@ -73,38 +75,22 @@ class ModeSelectScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                menuMusic.run(SKAction.pause(),completion:{
-                    menuMusic.removeFromParent()
-                })
-                
                 self.run(SKAction.wait(forDuration: 0.03),completion:{
                     self.testForConnections()
                 })
-            } else if self.atPoint(pos) == self.backButton {
-                if sfxEnabled {
-                    self.run(clickSound)
-                }
-                
-                menuMusic.run(SKAction.pause(),completion:{
-                    menuMusic.removeFromParent()
-                })
-                
-                self.run(SKAction.wait(forDuration: 0.03),completion:{
-                    self.backToMainMenu()
-                })
-            } else if self.atPoint(pos) == self.localplaySelect {
+            } else if self.localplaySelect!.contains(pos) && !self.multiplayerSelect!.isHidden {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
                 
                 MP_TRAFFIC_HANDLER.startMPC()
-            } else if self.atPoint(pos) == self.netplaySelect {
+            } else if self.netplaySelect!.contains(pos) && !self.multiplayerSelect!.isHidden {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
                 
                 GK_TRAFFIC_HANDLER.startGKTH()
-            } else if self.atPoint(pos) == self.cancelMultiplayerSelect {
+            } else if self.cancelMultiplayerSelect!.contains(pos) && !self.multiplayerSelect!.isHidden {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -113,6 +99,30 @@ class ModeSelectScene:SKScene {
                 GK_TRAFFIC_HANDLER.match = nil
                 
                 self.dismissMultiplayerSelect()
+            } else if self.atPoint(pos) == self.backButton {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
+                self.run(SKAction.wait(forDuration: 0.03),completion:{
+                    self.backToMainMenu()
+                })
+            } else if self.atPoint(pos) == self.leaveMatchButton {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
+                if appDelegate.mpcHandler.session != nil {
+                    MP_TRAFFIC_HANDLER.disconnectFromPlayers()
+                    otherPlayers[0] = ""
+                    otherPlayers[1] = ""
+                    otherPlayers[2] = ""
+                } else if GK_TRAFFIC_HANDLER.match != nil {
+                    GK_TRAFFIC_HANDLER.disconnectFromPlayers()
+                    otherPlayers[0] = ""
+                    otherPlayers[1] = ""
+                    otherPlayers[2] = ""
+                }
             } else if self.atPoint(pos) == self.createPartyButton {
                 if sfxEnabled {
                     self.run(clickSound)
@@ -212,27 +222,28 @@ class ModeSelectScene:SKScene {
             self.agreeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Agree")))
         }
         
+        self.playerDisplay1?.text = "P1: " + playerName
+        self.playerDisplay2?.text = "P2: " + otherPlayers[0]
+        self.playerDisplay3?.text = "P3: " + otherPlayers[1]
+        self.playerDisplay4?.text = "P4: " + otherPlayers[2]
+        
         if chosenMode == "Regular" {
             regularModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Selected")))
-            
             masterModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             doomHolesModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             gemRushModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
         } else if chosenMode == "Chaos" {
             masterModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Selected")))
-            
             regularModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             doomHolesModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             gemRushModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
         } else if chosenMode == "GemBash" {
             gemRushModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Selected")))
-            
             regularModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             doomHolesModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             masterModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
         } else if chosenMode == "DoomHoles" {
             doomHolesModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Selected")))
-            
             regularModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             masterModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))
             gemRushModeButton!.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Enabled")))

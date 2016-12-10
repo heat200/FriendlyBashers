@@ -40,6 +40,46 @@
 		7D4D2D341DBB6F7900384FD6 /* EndScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D4D2D331DBB6F7900384FD6 /* EndScene.sks */; };
 		7D6D78A91DB87EA500D23629 /* Projectile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6D78A81DB87EA500D23629 /* Projectile.swift */; };
 		7D6D78AB1DB8913B00D23629 /* AI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D6D78AA1DB8913B00D23629 /* AI.swift */; };
+		7D79352E1DF5D865004CD315 /* AI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79350B1DF5D865004CD315 /* AI.swift */; };
+		7D79352F1DF5D865004CD315 /* BasherSelectScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79350C1DF5D865004CD315 /* BasherSelectScene.sks */; };
+		7D7935301DF5D865004CD315 /* BasherSelectScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79350D1DF5D865004CD315 /* BasherSelectScene.swift */; };
+		7D7935311DF5D865004CD315 /* BlessingsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79350E1DF5D865004CD315 /* BlessingsScene.swift */; };
+		7D7935321DF5D865004CD315 /* Character.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79350F1DF5D865004CD315 /* Character.swift */; };
+		7D7935331DF5D865004CD315 /* CoolParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935101DF5D865004CD315 /* CoolParticle.sks */; };
+		7D7935341DF5D865004CD315 /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935111DF5D865004CD315 /* CPU.swift */; };
+		7D7935351DF5D865004CD315 /* EndScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935121DF5D865004CD315 /* EndScene.sks */; };
+		7D7935361DF5D865004CD315 /* EndScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935131DF5D865004CD315 /* EndScene.swift */; };
+		7D7935371DF5D865004CD315 /* GameOptionsScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935141DF5D865004CD315 /* GameOptionsScene.sks */; };
+		7D7935381DF5D865004CD315 /* GameOptionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935151DF5D865004CD315 /* GameOptionsScene.swift */; };
+		7D7935391DF5D865004CD315 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935161DF5D865004CD315 /* GameScene.sks */; };
+		7D79353A1DF5D865004CD315 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935171DF5D865004CD315 /* GameScene.swift */; };
+		7D79353B1DF5D865004CD315 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935181DF5D865004CD315 /* GameViewController.swift */; };
+		7D79353C1DF5D865004CD315 /* GKTrafficHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935191DF5D865004CD315 /* GKTrafficHandler.swift */; };
+		7D79353D1DF5D865004CD315 /* HealParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79351A1DF5D865004CD315 /* HealParticle.sks */; };
+		7D79353E1DF5D865004CD315 /* HeatParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79351B1DF5D865004CD315 /* HeatParticle.sks */; };
+		7D79353F1DF5D865004CD315 /* HelpScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79351C1DF5D865004CD315 /* HelpScene.sks */; };
+		7D7935401DF5D865004CD315 /* HelpScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79351D1DF5D865004CD315 /* HelpScene.swift */; };
+		7D7935411DF5D865004CD315 /* HyperParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79351E1DF5D865004CD315 /* HyperParticle.sks */; };
+		7D7935421DF5D865004CD315 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79351F1DF5D865004CD315 /* Item.swift */; };
+		7D7935431DF5D865004CD315 /* MainMenuScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935201DF5D865004CD315 /* MainMenuScene.sks */; };
+		7D7935441DF5D865004CD315 /* MainMenuScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935211DF5D865004CD315 /* MainMenuScene.swift */; };
+		7D7935451DF5D865004CD315 /* MapSnowEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935221DF5D865004CD315 /* MapSnowEffect.sks */; };
+		7D7935461DF5D865004CD315 /* ModeSelectScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935231DF5D865004CD315 /* ModeSelectScene.sks */; };
+		7D7935471DF5D865004CD315 /* ModeSelectScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935241DF5D865004CD315 /* ModeSelectScene.swift */; };
+		7D7935481DF5D865004CD315 /* MPCHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935251DF5D865004CD315 /* MPCHandler.swift */; };
+		7D7935491DF5D865004CD315 /* MPTrafficHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935261DF5D865004CD315 /* MPTrafficHandler.swift */; };
+		7D79354A1DF5D865004CD315 /* OptionsScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935271DF5D865004CD315 /* OptionsScene.sks */; };
+		7D79354B1DF5D865004CD315 /* OptionsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7935281DF5D865004CD315 /* OptionsScene.swift */; };
+		7D79354C1DF5D865004CD315 /* PetrifyParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7935291DF5D865004CD315 /* PetrifyParticle.sks */; };
+		7D79354D1DF5D865004CD315 /* Projectile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79352A1DF5D865004CD315 /* Projectile.swift */; };
+		7D79354E1DF5D865004CD315 /* PushParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79352B1DF5D865004CD315 /* PushParticle.sks */; };
+		7D79354F1DF5D865004CD315 /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79352C1DF5D865004CD315 /* SKTAudio.swift */; };
+		7D7935501DF5D865004CD315 /* Tiles.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D79352D1DF5D865004CD315 /* Tiles.sks */; };
+		7D79420F1DF4FD88000E4EDA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D79420E1DF4FD88000E4EDA /* AppDelegate.swift */; };
+		7D7942151DF4FD88000E4EDA /* Game.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D7942141DF4FD88000E4EDA /* Game.xcassets */; };
+		7D79421C1DF4FD88000E4EDA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7D79421A1DF4FD88000E4EDA /* Main.storyboard */; };
+		7D79421E1DF4FD88000E4EDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7D79421D1DF4FD88000E4EDA /* Assets.xcassets */; };
+		7D7942261DF4FDA4000E4EDA /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7D7942251DF4FDA4000E4EDA /* GameKit.framework */; };
 		7D7D0AB81DE0CA54006F7753 /* HealParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D7D0AB71DE0CA54006F7753 /* HealParticle.sks */; };
 		7D7D0ABA1DE11EB5006F7753 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D7D0AB91DE11EB5006F7753 /* Item.swift */; };
 		7D832A851DB93EDE006A38D5 /* CPU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D832A841DB93EDE006A38D5 /* CPU.swift */; };
@@ -47,6 +87,7 @@
 		7D832A891DB94767006A38D5 /* ModeSelectScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D832A881DB94767006A38D5 /* ModeSelectScene.sks */; };
 		7D92A3681DBF1AFA006005FD /* BlessingsScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7D92A3671DBF1AFA006005FD /* BlessingsScene.sks */; };
 		7D92A36A1DBF1B14006005FD /* BlessingsScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D92A3691DBF1B14006005FD /* BlessingsScene.swift */; };
+		7D9D35911DFA319000722C72 /* AttackBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9D35901DFA319000722C72 /* AttackBox.swift */; };
 		7D9DBB621DED46DA00CACD0A /* SKTAudio.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9DBB611DED46DA00CACD0A /* SKTAudio.swift */; };
 		7DD39D171DB5C94300569D45 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD39D161DB5C94300569D45 /* AppDelegate.swift */; };
 		7DD39D191DB5C94300569D45 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7DD39D181DB5C94300569D45 /* GameScene.sks */; };
@@ -59,7 +100,6 @@
 		7DDCB93C1DE9612B003EE52F /* MapSnowEffect.sks in Resources */ = {isa = PBXBuildFile; fileRef = 7DDCB93B1DE9612B003EE52F /* MapSnowEffect.sks */; };
 		7DDCB93F1DE98FF0003EE52F /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7DDCB93E1DE98FF0003EE52F /* GameKit.framework */; };
 		7DDCB9431DE9923D003EE52F /* GKTrafficHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DDCB9421DE9923D003EE52F /* GKTrafficHandler.swift */; };
-		7DEFDF5D1DE4BA4000DB5183 /* EpicOrchestra_joshuaempyre.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7DEFDF5C1DE4BA4000DB5183 /* EpicOrchestra_joshuaempyre.wav */; };
 		7DEFDF5F1DE4BCD700DB5183 /* Calamity_airwolf89.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 7DEFDF5E1DE4BCD700DB5183 /* Calamity_airwolf89.mp3 */; };
 		7DEFDF611DE4CBC900DB5183 /* Shoot2_fins.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7DEFDF601DE4CBC900DB5183 /* Shoot2_fins.wav */; };
 		7DEFDF631DE4CDDB00DB5183 /* Slash_fins.wav in Resources */ = {isa = PBXBuildFile; fileRef = 7DEFDF621DE4CDDB00DB5183 /* Slash_fins.wav */; };
@@ -130,6 +170,48 @@
 		7D4D2D331DBB6F7900384FD6 /* EndScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EndScene.sks; sourceTree = "<group>"; };
 		7D6D78A81DB87EA500D23629 /* Projectile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projectile.swift; sourceTree = "<group>"; };
 		7D6D78AA1DB8913B00D23629 /* AI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AI.swift; sourceTree = "<group>"; };
+		7D79350B1DF5D865004CD315 /* AI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AI.swift; sourceTree = "<group>"; };
+		7D79350C1DF5D865004CD315 /* BasherSelectScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = BasherSelectScene.sks; sourceTree = "<group>"; };
+		7D79350D1DF5D865004CD315 /* BasherSelectScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BasherSelectScene.swift; sourceTree = "<group>"; };
+		7D79350E1DF5D865004CD315 /* BlessingsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlessingsScene.swift; sourceTree = "<group>"; };
+		7D79350F1DF5D865004CD315 /* Character.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Character.swift; sourceTree = "<group>"; };
+		7D7935101DF5D865004CD315 /* CoolParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CoolParticle.sks; sourceTree = "<group>"; };
+		7D7935111DF5D865004CD315 /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
+		7D7935121DF5D865004CD315 /* EndScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = EndScene.sks; sourceTree = "<group>"; };
+		7D7935131DF5D865004CD315 /* EndScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndScene.swift; sourceTree = "<group>"; };
+		7D7935141DF5D865004CD315 /* GameOptionsScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameOptionsScene.sks; sourceTree = "<group>"; };
+		7D7935151DF5D865004CD315 /* GameOptionsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameOptionsScene.swift; sourceTree = "<group>"; };
+		7D7935161DF5D865004CD315 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
+		7D7935171DF5D865004CD315 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		7D7935181DF5D865004CD315 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		7D7935191DF5D865004CD315 /* GKTrafficHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GKTrafficHandler.swift; sourceTree = "<group>"; };
+		7D79351A1DF5D865004CD315 /* HealParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = HealParticle.sks; sourceTree = "<group>"; };
+		7D79351B1DF5D865004CD315 /* HeatParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = HeatParticle.sks; sourceTree = "<group>"; };
+		7D79351C1DF5D865004CD315 /* HelpScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = HelpScene.sks; sourceTree = "<group>"; };
+		7D79351D1DF5D865004CD315 /* HelpScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpScene.swift; sourceTree = "<group>"; };
+		7D79351E1DF5D865004CD315 /* HyperParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = HyperParticle.sks; sourceTree = "<group>"; };
+		7D79351F1DF5D865004CD315 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		7D7935201DF5D865004CD315 /* MainMenuScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MainMenuScene.sks; sourceTree = "<group>"; };
+		7D7935211DF5D865004CD315 /* MainMenuScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainMenuScene.swift; sourceTree = "<group>"; };
+		7D7935221DF5D865004CD315 /* MapSnowEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MapSnowEffect.sks; sourceTree = "<group>"; };
+		7D7935231DF5D865004CD315 /* ModeSelectScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ModeSelectScene.sks; sourceTree = "<group>"; };
+		7D7935241DF5D865004CD315 /* ModeSelectScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModeSelectScene.swift; sourceTree = "<group>"; };
+		7D7935251DF5D865004CD315 /* MPCHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPCHandler.swift; sourceTree = "<group>"; };
+		7D7935261DF5D865004CD315 /* MPTrafficHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPTrafficHandler.swift; sourceTree = "<group>"; };
+		7D7935271DF5D865004CD315 /* OptionsScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = OptionsScene.sks; sourceTree = "<group>"; };
+		7D7935281DF5D865004CD315 /* OptionsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OptionsScene.swift; sourceTree = "<group>"; };
+		7D7935291DF5D865004CD315 /* PetrifyParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PetrifyParticle.sks; sourceTree = "<group>"; };
+		7D79352A1DF5D865004CD315 /* Projectile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Projectile.swift; sourceTree = "<group>"; };
+		7D79352B1DF5D865004CD315 /* PushParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = PushParticle.sks; sourceTree = "<group>"; };
+		7D79352C1DF5D865004CD315 /* SKTAudio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
+		7D79352D1DF5D865004CD315 /* Tiles.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Tiles.sks; sourceTree = "<group>"; };
+		7D79420C1DF4FD88000E4EDA /* Friendly Bashers TV.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Friendly Bashers TV.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7D79420E1DF4FD88000E4EDA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		7D7942141DF4FD88000E4EDA /* Game.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Game.xcassets; sourceTree = "<group>"; };
+		7D79421B1DF4FD88000E4EDA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		7D79421D1DF4FD88000E4EDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		7D79421F1DF4FD88000E4EDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7D7942251DF4FDA4000E4EDA /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.1.sdk/System/Library/Frameworks/GameKit.framework; sourceTree = DEVELOPER_DIR; };
 		7D7D0AB71DE0CA54006F7753 /* HealParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = HealParticle.sks; sourceTree = "<group>"; };
 		7D7D0AB91DE11EB5006F7753 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		7D832A841DB93EDE006A38D5 /* CPU.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CPU.swift; sourceTree = "<group>"; };
@@ -137,6 +219,7 @@
 		7D832A881DB94767006A38D5 /* ModeSelectScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = ModeSelectScene.sks; sourceTree = "<group>"; };
 		7D92A3671DBF1AFA006005FD /* BlessingsScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BlessingsScene.sks; path = ../BlessingsScene.sks; sourceTree = "<group>"; };
 		7D92A3691DBF1B14006005FD /* BlessingsScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlessingsScene.swift; sourceTree = "<group>"; };
+		7D9D35901DFA319000722C72 /* AttackBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AttackBox.swift; path = ../AttackBox.swift; sourceTree = "<group>"; };
 		7D9DBB611DED46DA00CACD0A /* SKTAudio.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SKTAudio.swift; sourceTree = "<group>"; };
 		7DD39D131DB5C94300569D45 /* Friendly Bashers.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Friendly Bashers.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DD39D161DB5C94300569D45 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -151,7 +234,6 @@
 		7DDCB93B1DE9612B003EE52F /* MapSnowEffect.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MapSnowEffect.sks; sourceTree = "<group>"; };
 		7DDCB93E1DE98FF0003EE52F /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		7DDCB9421DE9923D003EE52F /* GKTrafficHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GKTrafficHandler.swift; sourceTree = "<group>"; };
-		7DEFDF5C1DE4BA4000DB5183 /* EpicOrchestra_joshuaempyre.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = EpicOrchestra_joshuaempyre.wav; path = ../../../../Downloads/EpicOrchestra_joshuaempyre.wav; sourceTree = "<group>"; };
 		7DEFDF5E1DE4BCD700DB5183 /* Calamity_airwolf89.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = Calamity_airwolf89.mp3; path = ../../../../Downloads/Calamity_airwolf89.mp3; sourceTree = "<group>"; };
 		7DEFDF601DE4CBC900DB5183 /* Shoot2_fins.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Shoot2_fins.wav; path = ../../../../Downloads/Shoot2_fins.wav; sourceTree = "<group>"; };
 		7DEFDF621DE4CDDB00DB5183 /* Slash_fins.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = Slash_fins.wav; path = ../../../../Downloads/Slash_fins.wav; sourceTree = "<group>"; };
@@ -164,6 +246,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7D7942091DF4FD88000E4EDA /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D7942261DF4FDA4000E4EDA /* GameKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7DD39D101DB5C94300569D45 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -184,11 +274,59 @@
 			path = "Friendly Bashers Stickers";
 			sourceTree = "<group>";
 		};
+		7D79420D1DF4FD88000E4EDA /* Friendly Bashers TV */ = {
+			isa = PBXGroup;
+			children = (
+				7D79420E1DF4FD88000E4EDA /* AppDelegate.swift */,
+				7D79350B1DF5D865004CD315 /* AI.swift */,
+				7D79350C1DF5D865004CD315 /* BasherSelectScene.sks */,
+				7D79350D1DF5D865004CD315 /* BasherSelectScene.swift */,
+				7D79350E1DF5D865004CD315 /* BlessingsScene.swift */,
+				7D79350F1DF5D865004CD315 /* Character.swift */,
+				7D7935101DF5D865004CD315 /* CoolParticle.sks */,
+				7D7935111DF5D865004CD315 /* CPU.swift */,
+				7D7935121DF5D865004CD315 /* EndScene.sks */,
+				7D7935131DF5D865004CD315 /* EndScene.swift */,
+				7D7935141DF5D865004CD315 /* GameOptionsScene.sks */,
+				7D7935151DF5D865004CD315 /* GameOptionsScene.swift */,
+				7D7935161DF5D865004CD315 /* GameScene.sks */,
+				7D7935171DF5D865004CD315 /* GameScene.swift */,
+				7D7935181DF5D865004CD315 /* GameViewController.swift */,
+				7D7935191DF5D865004CD315 /* GKTrafficHandler.swift */,
+				7D79351A1DF5D865004CD315 /* HealParticle.sks */,
+				7D79351B1DF5D865004CD315 /* HeatParticle.sks */,
+				7D79351C1DF5D865004CD315 /* HelpScene.sks */,
+				7D79351D1DF5D865004CD315 /* HelpScene.swift */,
+				7D79351E1DF5D865004CD315 /* HyperParticle.sks */,
+				7D79351F1DF5D865004CD315 /* Item.swift */,
+				7D7935201DF5D865004CD315 /* MainMenuScene.sks */,
+				7D7935211DF5D865004CD315 /* MainMenuScene.swift */,
+				7D7935221DF5D865004CD315 /* MapSnowEffect.sks */,
+				7D7935231DF5D865004CD315 /* ModeSelectScene.sks */,
+				7D7935241DF5D865004CD315 /* ModeSelectScene.swift */,
+				7D7935251DF5D865004CD315 /* MPCHandler.swift */,
+				7D7935261DF5D865004CD315 /* MPTrafficHandler.swift */,
+				7D7935271DF5D865004CD315 /* OptionsScene.sks */,
+				7D7935281DF5D865004CD315 /* OptionsScene.swift */,
+				7D7935291DF5D865004CD315 /* PetrifyParticle.sks */,
+				7D79352A1DF5D865004CD315 /* Projectile.swift */,
+				7D79352B1DF5D865004CD315 /* PushParticle.sks */,
+				7D79352C1DF5D865004CD315 /* SKTAudio.swift */,
+				7D79352D1DF5D865004CD315 /* Tiles.sks */,
+				7D7942141DF4FD88000E4EDA /* Game.xcassets */,
+				7D79421A1DF4FD88000E4EDA /* Main.storyboard */,
+				7D79421D1DF4FD88000E4EDA /* Assets.xcassets */,
+				7D79421F1DF4FD88000E4EDA /* Info.plist */,
+			);
+			path = "Friendly Bashers TV";
+			sourceTree = "<group>";
+		};
 		7DD39D0A1DB5C94300569D45 = {
 			isa = PBXGroup;
 			children = (
 				7DD39D151DB5C94300569D45 /* Friendly Bashers */,
 				7D0ED1071DE181CC005E3F42 /* Friendly Bashers Stickers */,
+				7D79420D1DF4FD88000E4EDA /* Friendly Bashers TV */,
 				7DD39D141DB5C94300569D45 /* Products */,
 				7DDCB93D1DE98FF0003EE52F /* Frameworks */,
 			);
@@ -199,6 +337,7 @@
 			children = (
 				7DD39D131DB5C94300569D45 /* Friendly Bashers.app */,
 				7D0ED1061DE181CC005E3F42 /* Friendly Bashers Stickers.appex */,
+				7D79420C1DF4FD88000E4EDA /* Friendly Bashers TV.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -239,6 +378,7 @@
 				7D6D78AA1DB8913B00D23629 /* AI.swift */,
 				7D6D78A81DB87EA500D23629 /* Projectile.swift */,
 				7D7D0AB91DE11EB5006F7753 /* Item.swift */,
+				7D9D35901DFA319000722C72 /* AttackBox.swift */,
 				7D1BF0CC1DC49AA200266D1B /* MPTrafficHandler.swift */,
 				7D1BF0CA1DC494CA00266D1B /* MPCHandler.swift */,
 				7DDCB9421DE9923D003EE52F /* GKTrafficHandler.swift */,
@@ -256,7 +396,6 @@
 				7D1D955A1DE407FD0067C328 /* Gewonnen_Kasenfrosch.mp3 */,
 				7D1D95521DE3FDAE0067C328 /* RisingTension_Cheesepuff.mp3 */,
 				7D1D95531DE3FDAE0067C328 /* Suspence_Cheesepuff.mp3 */,
-				7DEFDF5C1DE4BA4000DB5183 /* EpicOrchestra_joshuaempyre.wav */,
 				7DEFDF5E1DE4BCD700DB5183 /* Calamity_airwolf89.mp3 */,
 				7D1D95561DE401C80067C328 /* WahWah_Kirbydx.wav */,
 				7D1D95581DE403540067C328 /* Jumping_fins.wav */,
@@ -273,6 +412,7 @@
 		7DDCB93D1DE98FF0003EE52F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7D7942251DF4FDA4000E4EDA /* GameKit.framework */,
 				7DDCB93E1DE98FF0003EE52F /* GameKit.framework */,
 			);
 			name = Frameworks;
@@ -295,6 +435,23 @@
 			productName = "Friendly Bashers Stickers";
 			productReference = 7D0ED1061DE181CC005E3F42 /* Friendly Bashers Stickers.appex */;
 			productType = "com.apple.product-type.app-extension.messages-sticker-pack";
+		};
+		7D79420B1DF4FD88000E4EDA /* Friendly Bashers TV */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7D7942221DF4FD88000E4EDA /* Build configuration list for PBXNativeTarget "Friendly Bashers TV" */;
+			buildPhases = (
+				7D7942081DF4FD88000E4EDA /* Sources */,
+				7D7942091DF4FD88000E4EDA /* Frameworks */,
+				7D79420A1DF4FD88000E4EDA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Friendly Bashers TV";
+			productName = "Friendly Bashers TV";
+			productReference = 7D79420C1DF4FD88000E4EDA /* Friendly Bashers TV.app */;
+			productType = "com.apple.product-type.application";
 		};
 		7DD39D121DB5C94300569D45 /* Friendly Bashers */ = {
 			isa = PBXNativeTarget;
@@ -321,7 +478,7 @@
 		7DD39D0B1DB5C94300569D45 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0800;
+				LastSwiftUpdateCheck = 0820;
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Bryan Mazariegos";
 				TargetAttributes = {
@@ -329,6 +486,19 @@
 						CreatedOnToolsVersion = 8.1;
 						DevelopmentTeam = N4MWNVQDSJ;
 						ProvisioningStyle = Automatic;
+					};
+					7D79420B1DF4FD88000E4EDA = {
+						CreatedOnToolsVersion = 8.2;
+						DevelopmentTeam = N4MWNVQDSJ;
+						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+							com.apple.GameControllers.appletvos = {
+								enabled = 0;
+							};
+						};
 					};
 					7DD39D121DB5C94300569D45 = {
 						CreatedOnToolsVersion = 8.0;
@@ -358,6 +528,7 @@
 			targets = (
 				7DD39D121DB5C94300569D45 /* Friendly Bashers */,
 				7D0ED1051DE181CC005E3F42 /* Friendly Bashers Stickers */,
+				7D79420B1DF4FD88000E4EDA /* Friendly Bashers TV */,
 			);
 		};
 /* End PBXProject section */
@@ -371,6 +542,32 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7D79420A1DF4FD88000E4EDA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D79354E1DF5D865004CD315 /* PushParticle.sks in Resources */,
+				7D7942151DF4FD88000E4EDA /* Game.xcassets in Resources */,
+				7D79353D1DF5D865004CD315 /* HealParticle.sks in Resources */,
+				7D79353E1DF5D865004CD315 /* HeatParticle.sks in Resources */,
+				7D79354C1DF5D865004CD315 /* PetrifyParticle.sks in Resources */,
+				7D7935411DF5D865004CD315 /* HyperParticle.sks in Resources */,
+				7D7935461DF5D865004CD315 /* ModeSelectScene.sks in Resources */,
+				7D79354A1DF5D865004CD315 /* OptionsScene.sks in Resources */,
+				7D79352F1DF5D865004CD315 /* BasherSelectScene.sks in Resources */,
+				7D7935451DF5D865004CD315 /* MapSnowEffect.sks in Resources */,
+				7D79421C1DF4FD88000E4EDA /* Main.storyboard in Resources */,
+				7D7935351DF5D865004CD315 /* EndScene.sks in Resources */,
+				7D7935431DF5D865004CD315 /* MainMenuScene.sks in Resources */,
+				7D7935331DF5D865004CD315 /* CoolParticle.sks in Resources */,
+				7D79421E1DF4FD88000E4EDA /* Assets.xcassets in Resources */,
+				7D7935391DF5D865004CD315 /* GameScene.sks in Resources */,
+				7D7935501DF5D865004CD315 /* Tiles.sks in Resources */,
+				7D7935371DF5D865004CD315 /* GameOptionsScene.sks in Resources */,
+				7D79353F1DF5D865004CD315 /* HelpScene.sks in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7DD39D111DB5C94300569D45 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -381,7 +578,6 @@
 				7DEFDF6B1DE4D29C00DB5183 /* Summon_fins.wav in Resources */,
 				7D1D955F1DE408310067C328 /* Click_fins.wav in Resources */,
 				7D1D95591DE403540067C328 /* Jumping_fins.wav in Resources */,
-				7DEFDF5D1DE4BA4000DB5183 /* EpicOrchestra_joshuaempyre.wav in Resources */,
 				7D0ED1171DE19A72005E3F42 /* CoolParticle.sks in Resources */,
 				7D92A3681DBF1AFA006005FD /* BlessingsScene.sks in Resources */,
 				7DDCB93C1DE9612B003EE52F /* MapSnowEffect.sks in Resources */,
@@ -420,6 +616,33 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		7D7942081DF4FD88000E4EDA /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D79353B1DF5D865004CD315 /* GameViewController.swift in Sources */,
+				7D79354F1DF5D865004CD315 /* SKTAudio.swift in Sources */,
+				7D7935401DF5D865004CD315 /* HelpScene.swift in Sources */,
+				7D7935491DF5D865004CD315 /* MPTrafficHandler.swift in Sources */,
+				7D79420F1DF4FD88000E4EDA /* AppDelegate.swift in Sources */,
+				7D7935361DF5D865004CD315 /* EndScene.swift in Sources */,
+				7D79354B1DF5D865004CD315 /* OptionsScene.swift in Sources */,
+				7D7935301DF5D865004CD315 /* BasherSelectScene.swift in Sources */,
+				7D79353A1DF5D865004CD315 /* GameScene.swift in Sources */,
+				7D7935341DF5D865004CD315 /* CPU.swift in Sources */,
+				7D79354D1DF5D865004CD315 /* Projectile.swift in Sources */,
+				7D7935421DF5D865004CD315 /* Item.swift in Sources */,
+				7D79353C1DF5D865004CD315 /* GKTrafficHandler.swift in Sources */,
+				7D7935481DF5D865004CD315 /* MPCHandler.swift in Sources */,
+				7D7935321DF5D865004CD315 /* Character.swift in Sources */,
+				7D7935381DF5D865004CD315 /* GameOptionsScene.swift in Sources */,
+				7D79352E1DF5D865004CD315 /* AI.swift in Sources */,
+				7D7935471DF5D865004CD315 /* ModeSelectScene.swift in Sources */,
+				7D7935441DF5D865004CD315 /* MainMenuScene.swift in Sources */,
+				7D7935311DF5D865004CD315 /* BlessingsScene.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7DD39D0F1DB5C94300569D45 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -443,6 +666,7 @@
 				7DDCB9431DE9923D003EE52F /* GKTrafficHandler.swift in Sources */,
 				7D4D2D321DBB6E9A00384FD6 /* EndScene.swift in Sources */,
 				7D1A76421DB6CDDC000BB295 /* Character.swift in Sources */,
+				7D9D35911DFA319000722C72 /* AttackBox.swift in Sources */,
 				7D6D78AB1DB8913B00D23629 /* AI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -458,6 +682,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		7D79421A1DF4FD88000E4EDA /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				7D79421B1DF4FD88000E4EDA /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
 		7DD39D201DB5C94300569D45 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -500,6 +732,40 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.Mazariegos.FriendlyBashers.Friendly-Bashers-Stickers";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		7D7942201DF4FD88000E4EDA /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = N4MWNVQDSJ;
+				INFOPLIST_FILE = "Friendly Bashers TV/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mazariegos.Friendly-Bashers-TV";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		7D7942211DF4FD88000E4EDA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "App Icon & Top Shelf Image";
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				DEVELOPMENT_TEAM = N4MWNVQDSJ;
+				INFOPLIST_FILE = "Friendly Bashers TV/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mazariegos.Friendly-Bashers-TV";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = appletvos;
+				SWIFT_VERSION = 3.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = Release;
 		};
@@ -642,6 +908,15 @@
 			buildConfigurations = (
 				7D0ED10E1DE181CC005E3F42 /* Debug */,
 				7D0ED10F1DE181CC005E3F42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		7D7942221DF4FD88000E4EDA /* Build configuration list for PBXNativeTarget "Friendly Bashers TV" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7D7942201DF4FD88000E4EDA /* Debug */,
+				7D7942211DF4FD88000E4EDA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

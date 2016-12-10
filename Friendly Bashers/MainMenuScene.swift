@@ -9,7 +9,7 @@
 import SpriteKit
 import GameKit
 
-var APP_VERSION = "0.7 b3"
+var APP_VERSION = "0.8.1"
 
 var playerName = "heat200"
 var chosenMode = ""
@@ -34,6 +34,7 @@ var otherPlayerBlessings = [[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]
 
 var musicEnabled = false
 var sfxEnabled = false
+var _dontShowTutorial = true
 var _enableGameCenter = true
 var _authVC:UIViewController?
 
@@ -62,7 +63,6 @@ var globalScaleMode = SKSceneScaleMode.aspectFill
 var gameScaleMode = SKSceneScaleMode.resizeFill
 
 var clickSound = SKAction.playSoundFileNamed("Click_fins.wav", waitForCompletion: false)
-var menuMusic = SKAudioNode(fileNamed: "Calamity_airwolf89.mp3")
 
 let defaults = UserDefaults.standard
 
@@ -74,16 +74,21 @@ let uiAtlas = SKTextureAtlas(named: "UI")
 class MainMenuScene:SKScene {
     fileprivate var lastUpdateTime : TimeInterval = 0
     
-    var titleLabel: SKLabelNode?
-    var playButton: SKSpriteNode?
-    var optionsButton: SKSpriteNode?
-    var blessingsButton: SKSpriteNode?
-    var infoButton: SKSpriteNode?
+    var titleLabel:SKLabelNode?
+    var playButton:SKSpriteNode?
+    var optionsButton:SKSpriteNode?
+    var blessingsButton:SKSpriteNode?
+    var infoButton:SKSpriteNode?
+    var tutorialButton:SKSpriteNode?
+    
+    var tutorialView:SKSpriteNode?
     
     var appVersionLabel:SKLabelNode?
     
     var backgroundAtlas = bgAtlas
     var UIAtlas = uiAtlas
+    
+    var tutorialPage = 1
     
     override func sceneDidLoad() {
         mainMenu = self
@@ -100,7 +105,6 @@ class MainMenuScene:SKScene {
             titleLabel?.fontColor = TEXT_COLOR
             titleLabel?.fontSize = 65
             self.addChild(titleLabel!)
-            self.addChild(menuMusic)
         }
         
         if playButton == nil {
@@ -144,6 +148,11 @@ class MainMenuScene:SKScene {
             infoButton!.size = CGSize(width: 100, height: 100)
             infoButton?.position = CGPoint(x: -self.size.width/2 + 60, y: -self.size.height/2 + 60)
             self.addChild(infoButton!)
+            
+            tutorialButton = SKSpriteNode(texture: UIAtlas.textureNamed("Button_Help"))
+            tutorialButton!.size = CGSize(width: 100, height: 100)
+            tutorialButton?.position = CGPoint(x: infoButton!.position.x + 100, y: infoButton!.position.y)
+            self.addChild(tutorialButton!)
         }
         
         if appVersionLabel == nil {
@@ -165,13 +174,17 @@ class MainMenuScene:SKScene {
             self.addChild(appVersionLabel!)
         }
         
-        if musicEnabled {
-            menuMusic.run(SKAction.play())
-        }
-        
         if !attemptedAuth {
             attemptedAuth = true
             GK_TRAFFIC_HANDLER.authLocalPlayer()
+            
+            if musicEnabled {
+                SKTAudio.sharedInstance().playBackgroundMusic(filename: "Calamity_airwolf89.mp3")
+            }
+        }
+        
+        if !_dontShowTutorial {
+            self.showTutorialUI()
         }
     }
     
@@ -179,7 +192,13 @@ class MainMenuScene:SKScene {
         for t in touches {
             let pos = t.location(in: self)
             
-            if self.playButton!.contains(pos) {
+            if self.atPoint(pos) == self.tutorialView {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
+                self.changeTutorialPage()
+            } else if self.playButton!.contains(pos) {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -238,7 +257,76 @@ class MainMenuScene:SKScene {
                         }
                     }
                 })
+            } else if self.tutorialButton!.contains(pos) {
+                if sfxEnabled {
+                    self.run(clickSound)
+                }
+                
+                self.showTutorialUI()
             }
+        }
+    }
+    
+    func showTutorialUI() {
+        self.tutorialView = SKSpriteNode(imageNamed: "Tut_1-1")
+        self.tutorialView?.size = self.size
+        self.addChild(tutorialView!)
+    }
+    
+    func changeTutorialPage() {
+        tutorialPage += 1
+        
+        if tutorialPage == 2 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_1-2")))
+        } else if tutorialPage == 3 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_1-3")))
+        } else if tutorialPage == 4 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_1-4")))
+        } else if tutorialPage == 5 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_2-1")))
+        } else if tutorialPage == 6 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_2-2")))
+        } else if tutorialPage == 7 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_2-3")))
+        } else if tutorialPage == 8 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_3-1")))
+        } else if tutorialPage == 9 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_4-1")))
+        } else if tutorialPage == 10 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_4-2")))
+        } else if tutorialPage == 11 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_4-3")))
+        } else if tutorialPage == 12 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_4-4")))
+        } else if tutorialPage == 13 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_5-1")))
+        } else if tutorialPage == 14 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_6-1")))
+        } else if tutorialPage == 15 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_6-2")))
+        } else if tutorialPage == 16 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_6-3")))
+        } else if tutorialPage == 17 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_6-4")))
+        } else if tutorialPage == 18 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_7-1")))
+        } else if tutorialPage == 19 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_7-2")))
+        } else if tutorialPage == 20 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_7-3")))
+        } else if tutorialPage == 21 {
+            tutorialView?.run(SKAction.setTexture(SKTexture(imageNamed: "Tut_7-4")))
+        } else {
+            self.hideTutorialUI()
+        }
+    }
+    
+    func hideTutorialUI() {
+        tutorialView?.removeFromParent()
+        tutorialPage = 1
+        if !_dontShowTutorial {
+            _dontShowTutorial = true
+            defaults.setValue(true, forKey: "DontShowTutorialOnStart")
         }
     }
     
@@ -250,16 +338,19 @@ class MainMenuScene:SKScene {
                 if let view = self.view {
                     view.presentScene(sceneNode)
                     view.ignoresSiblingOrder = false
-                    view.showsFPS = true
+                    view.showsFPS = false
                     view.showsNodeCount = false
                 }
             }
+            
+            
+            
         } else {
             if let view = self.view {
                 view.presentScene(modeSelect)
                 view.ignoresSiblingOrder = false
                 
-                view.showsFPS = true
+                view.showsFPS = false
                 view.showsNodeCount = false
             }
         }

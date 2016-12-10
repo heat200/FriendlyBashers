@@ -18,13 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         let musicSetting = defaults.bool(forKey: "MUSIC")
         let sfxSetting = defaults.bool(forKey: "SFX")
+        let DontShowTut = defaults.bool(forKey: "DontShowTutorialOnStart")
         
         if let pName = defaults.object(forKey: "PLAYERNAME") {
             playerName = pName as! String
         }
         
+        
+        
         musicEnabled = musicSetting
         sfxEnabled = sfxSetting
+        _dontShowTutorial = DontShowTut
         
         if let blessingSelected = defaults.object(forKey: "CHOSEN_BLESSING") {
             chosenBlessing = (blessingSelected as? Int)!
@@ -118,4 +122,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 }
-
