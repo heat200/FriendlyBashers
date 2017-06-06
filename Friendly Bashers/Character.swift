@@ -108,6 +108,8 @@ class Character:SKSpriteNode {
     var CharAtlas:SKTextureAtlas!
     
     func setUp(_ name:String) {
+        self.zPosition = charLayer
+        
         let jumpSound = SKAudioNode(fileNamed: "Jumping_fins.wav")
         jumpSound.autoplayLooped = false
         jumpSound.isPositional = true
@@ -181,7 +183,7 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 400
             BASE_POWER = 20
-            BASE_RESISTANCE = 20
+            BASE_RESISTANCE = 40
             BASE_MOVESPEED = 375
             BASE_MAX_JUMPS = 8
             
@@ -209,7 +211,7 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 225
             BASE_POWER = 50
-            BASE_RESISTANCE = 20
+            BASE_RESISTANCE = 35
             BASE_MOVESPEED = 400
             BASE_MAX_JUMPS = 2
             
@@ -236,7 +238,7 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 120
             BASE_POWER = 60
-            BASE_RESISTANCE = 20
+            BASE_RESISTANCE = 35
             BASE_MOVESPEED = 525
             BASE_MAX_JUMPS = 2
             
@@ -263,7 +265,7 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 750
             BASE_POWER = 10
-            BASE_RESISTANCE = 35
+            BASE_RESISTANCE = 50
             BASE_MOVESPEED = 375
             BASE_MAX_JUMPS = 2
             
@@ -290,7 +292,7 @@ class Character:SKSpriteNode {
             characterName = name
             BASE_MAX_HP = 300
             BASE_POWER = 30
-            BASE_RESISTANCE = 30
+            BASE_RESISTANCE = 35
             BASE_MOVESPEED = 395
             BASE_MAX_JUMPS = 2
             
@@ -320,8 +322,8 @@ class Character:SKSpriteNode {
             BASE_MAX_HP_2 = 240
             BASE_POWER = 5
             BASE_POWER_2 = 15
-            BASE_RESISTANCE = 15
-            BASE_RESISTANCE_2 = 15
+            BASE_RESISTANCE = 20
+            BASE_RESISTANCE_2 = 20
             BASE_MOVESPEED = 420
             BASE_MOVESPEED_2 = 360
             BASE_MAX_JUMPS = 2
@@ -1039,6 +1041,8 @@ class Character:SKSpriteNode {
             skillMaxCharges_1 += Int(power/10)
             skillMaxCharges_2 += Int(power/10)
         }
+        
+        self.setUpAttackBoxes()
     }
     
     func applyChargeTimerReductions() {
@@ -1309,7 +1313,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.15
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1317,7 +1321,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.125
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1325,7 +1329,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.1
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1333,7 +1337,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.05
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1343,7 +1347,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.15
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1351,7 +1355,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.125
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1359,7 +1363,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.1
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1367,7 +1371,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.05
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1377,7 +1381,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.15
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1385,7 +1389,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.125
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1393,7 +1397,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.1
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1401,7 +1405,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.05
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1411,7 +1415,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.15
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1419,7 +1423,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.125
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1427,7 +1431,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.1
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1435,7 +1439,7 @@ class Character:SKSpriteNode {
                 let change = player.power * 0.05
                 self.power += change
                 player.power -= change
-                self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                     self.power -= change
                     player.power += change
                 })
@@ -1446,7 +1450,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.15
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1454,7 +1458,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.125
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1462,7 +1466,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.1
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1470,7 +1474,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.05
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1480,7 +1484,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.15
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1488,7 +1492,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.125
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1496,7 +1500,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.1
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1504,7 +1508,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.05
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1514,7 +1518,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.15
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1522,7 +1526,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.125
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1530,7 +1534,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.1
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1538,7 +1542,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.05
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1548,7 +1552,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.15
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1556,7 +1560,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.125
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1564,7 +1568,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.1
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1572,7 +1576,7 @@ class Character:SKSpriteNode {
                     let change = player.power * 0.05
                     self.power += change
                     player.power -= change
-                    self.parent?.run(SKAction.wait(forDuration: 1),completion:{
+                    self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.power -= change
                         player.power += change
                     })
@@ -1658,7 +1662,7 @@ class Character:SKSpriteNode {
     func applyMovespeedSteal(_ player:Character) {
         if self == gameScene?.playerNode {
             if blessingList[chosenBlessing][0] >= 7 {
-                let change = player.movespeed * 0.3
+                let change = player.movespeed * 0.12
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1666,7 +1670,7 @@ class Character:SKSpriteNode {
                     player.movespeed += change
                 })
             } else if blessingList[chosenBlessing][0] >= 6 {
-                let change = player.movespeed * 0.15
+                let change = player.movespeed * 0.06
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1676,7 +1680,7 @@ class Character:SKSpriteNode {
             }
         } else if self == gameScene?.playerNode2 {
             if otherPlayerBlessings[0][0] >= 7 {
-                let change = player.movespeed * 0.3
+                let change = player.movespeed * 0.12
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1684,7 +1688,7 @@ class Character:SKSpriteNode {
                     player.movespeed += change
                 })
             } else if otherPlayerBlessings[0][0] >= 6 {
-                let change = player.movespeed * 0.15
+                let change = player.movespeed * 0.06
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1694,7 +1698,7 @@ class Character:SKSpriteNode {
             }
         } else if self == gameScene?.playerNode3 {
             if otherPlayerBlessings[1][0] >= 7 {
-                let change = player.movespeed * 0.3
+                let change = player.movespeed * 0.12
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1702,7 +1706,7 @@ class Character:SKSpriteNode {
                     player.movespeed += change
                 })
             } else if otherPlayerBlessings[1][0] >= 6 {
-                let change = player.movespeed * 0.15
+                let change = player.movespeed * 0.06
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1712,7 +1716,7 @@ class Character:SKSpriteNode {
             }
         } else if self == gameScene?.playerNode4 {
             if otherPlayerBlessings[2][0] >= 7 {
-                let change = player.movespeed * 0.3
+                let change = player.movespeed * 0.12
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1720,7 +1724,7 @@ class Character:SKSpriteNode {
                     player.movespeed += change
                 })
             } else if otherPlayerBlessings[2][0] >= 6 {
-                let change = player.movespeed * 0.15
+                let change = player.movespeed * 0.06
                 self.movespeed += change
                 player.movespeed -= change
                 self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1731,7 +1735,7 @@ class Character:SKSpriteNode {
         } else {
             if self.player == gameScene?.playerNode.player {
                 if blessingList[chosenBlessing][0] >= 7 {
-                    let change = player.movespeed * 0.3
+                    let change = player.movespeed * 0.12
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1739,7 +1743,7 @@ class Character:SKSpriteNode {
                         player.movespeed += change
                     })
                 } else if blessingList[chosenBlessing][0] >= 6 {
-                    let change = player.movespeed * 0.15
+                    let change = player.movespeed * 0.06
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1749,7 +1753,7 @@ class Character:SKSpriteNode {
                 }
             } else if self.player == gameScene?.playerNode2.player {
                 if otherPlayerBlessings[0][0] >= 7 {
-                    let change = player.movespeed * 0.3
+                    let change = player.movespeed * 0.12
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1757,7 +1761,7 @@ class Character:SKSpriteNode {
                         player.movespeed += change
                     })
                 } else if otherPlayerBlessings[0][0] >= 6 {
-                    let change = player.movespeed * 0.15
+                    let change = player.movespeed * 0.06
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1767,7 +1771,7 @@ class Character:SKSpriteNode {
                 }
             } else if self.player == gameScene?.playerNode3.player {
                 if otherPlayerBlessings[1][0] >= 7 {
-                    let change = player.movespeed * 0.3
+                    let change = player.movespeed * 0.12
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1775,7 +1779,7 @@ class Character:SKSpriteNode {
                         player.movespeed += change
                     })
                 } else if otherPlayerBlessings[1][0] >= 6 {
-                    let change = player.movespeed * 0.15
+                    let change = player.movespeed * 0.06
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1785,7 +1789,7 @@ class Character:SKSpriteNode {
                 }
             } else if self.player == gameScene?.playerNode4.player {
                 if otherPlayerBlessings[2][0] >= 7 {
-                    let change = player.movespeed * 0.3
+                    let change = player.movespeed * 0.12
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
@@ -1793,431 +1797,13 @@ class Character:SKSpriteNode {
                         player.movespeed += change
                     })
                 } else if otherPlayerBlessings[2][0] >= 6 {
-                    let change = player.movespeed * 0.15
+                    let change = player.movespeed * 0.06
                     self.movespeed += change
                     player.movespeed -= change
                     self.parent?.run(SKAction.wait(forDuration: 2.5),completion:{
                         self.movespeed -= change
                         player.movespeed += change
                     })
-                }
-            }
-        }
-    }
-    
-    func applyDamage(_ damage:CGFloat) {
-        let nodes = gameScene!.nodes(at: CGPoint(x: self.position.x + (self.halfWidth!) * self.xScale, y: self.position.y))
-        let nodes2 = gameScene!.nodes(at: CGPoint(x: self.position.x + (16 + self.halfWidth!) * self.xScale, y: self.position.y))
-        let nodes3 = gameScene!.nodes(at: CGPoint(x: self.position.x + (32 + self.halfWidth!) * self.xScale, y: self.position.y))
-        if nodes.count == 1 {
-            if nodes[0] is Item {
-                let item = nodes[0] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes.count == 2 {
-            if nodes[0] is Item {
-                let item = nodes[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[1] is Item {
-                let item = nodes[1] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes.count == 3 {
-            if nodes[0] is Item {
-                let item = nodes[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[1] is Item {
-                let item = nodes[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[2] is Item {
-                let item = nodes[2] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes.count == 4 {
-            if nodes[0] is Item {
-                let item = nodes[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[1] is Item {
-                let item = nodes[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[2] is Item {
-                let item = nodes[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[3] is Item {
-                let item = nodes[3] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes.count == 5 {
-            if nodes[0] is Item {
-                let item = nodes[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[1] is Item {
-                let item = nodes[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[2] is Item {
-                let item = nodes[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[3] is Item {
-                let item = nodes[3] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[4] is Item {
-                let item = nodes[4] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes.count == 6 {
-            if nodes[0] is Item {
-                let item = nodes[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[1] is Item {
-                let item = nodes[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[2] is Item {
-                let item = nodes[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[3] is Item {
-                let item = nodes[3] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[4] is Item {
-                let item = nodes[4] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes[5] is Item {
-                let item = nodes[5] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        }
-        
-        if nodes2.count == 1 {
-            if nodes2[0] is Item {
-                let item = nodes2[0] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes2.count == 2 {
-            if nodes2[0] is Item {
-                let item = nodes2[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[1] is Item {
-                let item = nodes2[1] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes2.count == 3 {
-            if nodes2[0] is Item {
-                let item = nodes2[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[1] is Item {
-                let item = nodes2[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[2] is Item {
-                let item = nodes2[2] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes2.count == 4 {
-            if nodes2[0] is Item {
-                let item = nodes2[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[1] is Item {
-                let item = nodes2[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[2] is Item {
-                let item = nodes2[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[3] is Item {
-                let item = nodes2[3] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes2.count == 5 {
-            if nodes2[0] is Item {
-                let item = nodes2[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[1] is Item {
-                let item = nodes2[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[2] is Item {
-                let item = nodes2[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[3] is Item {
-                let item = nodes2[3] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[4] is Item {
-                let item = nodes2[4] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes2.count == 6 {
-            if nodes2[0] is Item {
-                let item = nodes2[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[1] is Item {
-                let item = nodes2[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[2] is Item {
-                let item = nodes2[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[3] is Item {
-                let item = nodes2[3] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[4] is Item {
-                let item = nodes2[4] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes2[5] is Item {
-                let item = nodes2[5] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        }
-        
-        if nodes3.count == 1 {
-            if nodes3[0] is Item {
-                let item = nodes3[0] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes3.count == 2 {
-            if nodes3[0] is Item {
-                let item = nodes3[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[1] is Item {
-                let item = nodes3[1] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes3.count == 3 {
-            if nodes3[0] is Item {
-                let item = nodes3[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[1] is Item {
-                let item = nodes3[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[2] is Item {
-                let item = nodes3[2] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes3.count == 4 {
-            if nodes3[0] is Item {
-                let item = nodes3[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[1] is Item {
-                let item = nodes3[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[2] is Item {
-                let item = nodes3[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[3] is Item {
-                let item = nodes3[3] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes3.count == 5 {
-            if nodes3[0] is Item {
-                let item = nodes3[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[1] is Item {
-                let item = nodes3[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[2] is Item {
-                let item = nodes3[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[3] is Item {
-                let item = nodes3[3] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[4] is Item {
-                let item = nodes3[4] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        } else if nodes3.count == 6 {
-            if nodes3[0] is Item {
-                let item = nodes3[0] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[1] is Item {
-                let item = nodes3[1] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[2] is Item {
-                let item = nodes3[2] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[3] is Item {
-                let item = nodes3[3] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[4] is Item {
-                let item = nodes3[4] as! Item
-                item.applyDamage(self, damage: damage)
-            } else if nodes3[5] is Item {
-                let item = nodes3[5] as! Item
-                item.applyDamage(self, damage: damage)
-            }
-        }
-        
-        if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
-            if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
-                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
-                self.applyLifeSteal(damage)
-                self.applyMovespeedSteal(gameScene!.playerNode)
-                self.applyPowerSteal(gameScene!.playerNode)
-                self.applyDebuff(gameScene!.playerNode, damage: damage)
-            } else if self.position.x < gameScene!.playerNode.position.x && self.xScale == 1 {
-                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
-                self.applyLifeSteal(damage)
-                self.applyMovespeedSteal(gameScene!.playerNode)
-                self.applyPowerSteal(gameScene!.playerNode)
-                self.applyDebuff(gameScene!.playerNode, damage: damage)
-            }
-        } else if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
-            if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
-                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
-                self.applyLifeSteal(damage)
-                self.applyMovespeedSteal(gameScene!.playerNode)
-                self.applyPowerSteal(gameScene!.playerNode)
-                self.applyDebuff(gameScene!.playerNode, damage: damage)
-            } else if self.position.x < gameScene!.playerNode.position.x && self.xScale == 1 {
-                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
-                self.applyLifeSteal(damage)
-                self.applyMovespeedSteal(gameScene!.playerNode)
-                self.applyPowerSteal(gameScene!.playerNode)
-                self.applyDebuff(gameScene!.playerNode, damage: damage)
-            }
-        } else if abs(self.position.x - gameScene!.playerNode.position.x) <= gameScene!.playerNode.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode.position.y) <= gameScene!.playerNode.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode.player != self.player {
-            if self.position.x > gameScene!.playerNode.position.x && self.xScale == -1 {
-                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
-                self.applyLifeSteal(damage)
-                self.applyMovespeedSteal(gameScene!.playerNode)
-                self.applyPowerSteal(gameScene!.playerNode)
-                self.applyDebuff(gameScene!.playerNode, damage: damage)
-            } else if self.position.x < gameScene!.playerNode.position.x && self.xScale == 1 {
-                gameScene!.playerNode.takeDamage(damage, direction: self.xScale)
-                self.applyLifeSteal(damage)
-                self.applyMovespeedSteal(gameScene!.playerNode)
-                self.applyPowerSteal(gameScene!.playerNode)
-                self.applyDebuff(gameScene!.playerNode, damage: damage)
-            }
-        }
-        
-        if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 1 {
-            if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
-                if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
-                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode2)
-                    self.applyPowerSteal(gameScene!.playerNode2)
-                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
-                } else if self.position.x < gameScene!.playerNode2.position.x && self.xScale == 1 {
-                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode2)
-                    self.applyPowerSteal(gameScene!.playerNode2)
-                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
-                }
-            } else if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
-                if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
-                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode2)
-                    self.applyPowerSteal(gameScene!.playerNode2)
-                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
-                } else if self.position.x < gameScene!.playerNode2.position.x && self.xScale == 1 {
-                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode2)
-                    self.applyPowerSteal(gameScene!.playerNode2)
-                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
-                }
-            } else if abs(self.position.x - gameScene!.playerNode2.position.x) <= gameScene!.playerNode2.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode2.position.y) <= gameScene!.playerNode2.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode2.player != self.player {
-                if self.position.x > gameScene!.playerNode2.position.x && self.xScale == -1 {
-                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode2)
-                    self.applyPowerSteal(gameScene!.playerNode2)
-                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
-                } else if self.position.x < gameScene!.playerNode2.position.x && self.xScale == 1 {
-                    gameScene!.playerNode2.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode2)
-                    self.applyPowerSteal(gameScene!.playerNode2)
-                    self.applyDebuff(gameScene!.playerNode2, damage: damage)
-                }
-            }
-        }
-        
-        if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 2 {
-            if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
-                if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
-                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode3)
-                    self.applyPowerSteal(gameScene!.playerNode3)
-                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
-                } else if self.position.x < gameScene!.playerNode3.position.x && self.xScale == 1 {
-                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode3)
-                    self.applyPowerSteal(gameScene!.playerNode3)
-                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
-                }
-            } else if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
-                if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
-                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode3)
-                    self.applyPowerSteal(gameScene!.playerNode3)
-                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
-                } else if self.position.x < gameScene!.playerNode3.position.x && self.xScale == 1 {
-                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode3)
-                    self.applyPowerSteal(gameScene!.playerNode3)
-                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
-                }
-            } else if abs(self.position.x - gameScene!.playerNode3.position.x) <= gameScene!.playerNode3.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode3.position.y) <= gameScene!.playerNode3.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode3.player != self.player {
-                if self.position.x > gameScene!.playerNode3.position.x && self.xScale == -1 {
-                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode3)
-                    self.applyPowerSteal(gameScene!.playerNode3)
-                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
-                } else if self.position.x < gameScene!.playerNode3.position.x && self.xScale == 1 {
-                    gameScene!.playerNode3.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode3)
-                    self.applyPowerSteal(gameScene!.playerNode3)
-                    self.applyDebuff(gameScene!.playerNode3, damage: damage)
-                }
-            }
-        }
-        
-        if gameScene!.multiplayerType == 0 || gameScene!.otherPlayersCount == 3 {
-            if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
-                if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
-                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode4)
-                    self.applyPowerSteal(gameScene!.playerNode4)
-                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
-                } else if self.position.x < gameScene!.playerNode4.position.x && self.xScale == 1 {
-                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode4)
-                    self.applyPowerSteal(gameScene!.playerNode4)
-                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
-                }
-            } else if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! + 16 && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
-                if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
-                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode4)
-                    self.applyPowerSteal(gameScene!.playerNode4)
-                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
-                } else if self.position.x < gameScene!.playerNode4.position.x && self.xScale == 1 {
-                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode4)
-                    self.applyPowerSteal(gameScene!.playerNode4)
-                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
-                }
-            } else if abs(self.position.x - gameScene!.playerNode4.position.x) <= gameScene!.playerNode4.halfWidth! + self.halfWidth! + 32 && abs(self.position.y - gameScene!.playerNode4.position.y) <= gameScene!.playerNode4.halfHeight! + 5 + self.halfHeight! && gameScene!.playerNode4.player != self.player {
-                if self.position.x > gameScene!.playerNode4.position.x && self.xScale == -1 {
-                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode4)
-                    self.applyPowerSteal(gameScene!.playerNode4)
-                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
-                } else if self.position.x < gameScene!.playerNode4.position.x && self.xScale == 1 {
-                    gameScene!.playerNode4.takeDamage(damage, direction: self.xScale)
-                    self.applyLifeSteal(damage)
-                    self.applyMovespeedSteal(gameScene!.playerNode4)
-                    self.applyPowerSteal(gameScene!.playerNode4)
-                    self.applyDebuff(gameScene!.playerNode4, damage: damage)
                 }
             }
         }
@@ -2227,7 +1813,8 @@ class Character:SKSpriteNode {
         doSkillAnimation("Skill_1")
         if characterName == "Jack-O" {            
             let damage:CGFloat = 0 + (power * 1.0)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill1_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.5, damage: damage)
         } else if characterName == "Plum" {
             if sfxEnabled && self.parent != nil {
                 self.soundShoot?.run(SKAction.stop())
@@ -2251,7 +1838,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 5 + (power * 0.05)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill1_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.5, damage: damage)
         } else if characterName == "Sarah" {
             if sfxEnabled && self.parent != nil {
                 self.soundSlash?.run(SKAction.stop())
@@ -2259,7 +1847,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 5 + (power * 0.5)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill1_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.5, damage: damage)
         } else if characterName == "Cog" {
             if sfxEnabled && self.parent != nil {
                 self.soundSummon?.run(SKAction.stop())
@@ -2390,7 +1979,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = (power * 1) - 25
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill2_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.5, damage: damage)
         } else if characterName == "Rosetta" {
             if sfxEnabled && self.parent != nil {
                 self.soundSlash?.run(SKAction.stop())
@@ -2398,7 +1988,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = (power * 1) - 25
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill2_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.5, damage: damage)
         } else if characterName == "Silva" {
             if sfxEnabled && self.parent != nil {
                 self.soundBuff?.run(SKAction.stop())
@@ -2427,7 +2018,7 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 15 + (power * 0.5)
-            let distance:CGFloat = 250 * (currentHP/maxHP) * self.xScale
+            let distance:CGFloat = 65 * self.xScale
             let distance2:CGFloat = distance/2
             let distance3:CGFloat = distance/3
             let distance4:CGFloat = distance/4
@@ -2442,7 +2033,9 @@ class Character:SKSpriteNode {
                 self.physicsBody?.applyImpulse(CGVector(dx: distance4, dy: 0))
             }
             
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill2_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.75, damage: damage)
+            //print("Cog did: " + String(describing: damage))
             summon(damage)
         }
     }
@@ -2456,7 +2049,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 15 + (power * 0.5)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill3_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.75, damage: damage)
         } else if characterName == "Plum" {
             if sfxEnabled && self.parent != nil {
                 self.soundSlide?.run(SKAction.stop())
@@ -2464,7 +2058,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 15 + (power * 0.5)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill3_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.75, damage: damage)
         } else if characterName == "Rosetta" {
             if sfxEnabled && self.parent != nil {
                 self.soundSlide?.run(SKAction.stop())
@@ -2472,7 +2067,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 15 + (power * 0.5)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill3_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.75, damage: damage)
         } else if characterName == "Silva" {
             if sfxEnabled && self.parent != nil {
                 self.soundBuff?.run(SKAction.stop())
@@ -2491,7 +2087,8 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 15 + (power * 0.5)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill3_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.75, damage: damage)
         } else if characterName == "Cog" {
             if sfxEnabled && self.parent != nil {
                 self.soundSlide?.run(SKAction.stop())
@@ -2499,8 +2096,24 @@ class Character:SKSpriteNode {
             }
             
             let damage:CGFloat = 15 + (power * 0.5)
-            applyDamage(damage)
+            let attackBox = (self.childNode(withName: "Skill3_Box") as! AttackBox)
+            attackBox.activateFor(time: 0.75, damage: damage)
         }
+    }
+    
+    func checkIfUnderMaxSummonedAI() -> Bool {
+        var returnBool = false
+        if self == gameScene?.playerNode && gameScene!.p1SummonCount < 4 {
+            returnBool = true
+        } else if self == gameScene?.playerNode2 && gameScene!.p2SummonCount < 4 {
+            returnBool = true
+        } else if self == gameScene?.playerNode3 && gameScene!.p3SummonCount < 4 {
+            returnBool = true
+        } else if self == gameScene?.playerNode4 && gameScene!.p4SummonCount < 4 {
+            returnBool = true
+        }
+        
+        return returnBool
     }
     
     func summon(_ damage:CGFloat) {
@@ -2509,7 +2122,7 @@ class Character:SKSpriteNode {
                 let pos1 = CGPoint(x: self.position.x + (150 * self.xScale), y: self.position.y)
                 let pos2 = CGPoint(x: self.position.x + (100 * self.xScale), y: self.position.y)
                 
-                if self.returnBlock(pos1) != "Dirt" && skillCurrentCharges_2 > 0 && (abs(pos1.x) < 1595 && pos1.y < 2014 && pos1.y > -1280) {
+                if self.returnBlock(pos1) != "Dirt" && checkIfUnderMaxSummonedAI() && skillCurrentCharges_2 > 0 && (abs(pos1.x) < 1595 && pos1.y < 2014 && pos1.y > -1280) {
                     let zombie_boy = AI(imageNamed: characterName + "_Zombie_Boy_Idle_1")
                     zombie_boy.name = self.player + "_Girl" + String(childCount)
                     zombie_boy.characterForm = "Boy"
@@ -2527,7 +2140,7 @@ class Character:SKSpriteNode {
                     skillCurrentCharges_2 -= 1
                 }
                 
-                if self.returnBlock(pos2) != "Dirt" && skillCurrentCharges_2 > 0 && (abs(pos2.x) < 1595 && pos2.y < 2014 && pos2.y > -1280) {
+                if self.returnBlock(pos2) != "Dirt" && checkIfUnderMaxSummonedAI() && skillCurrentCharges_2 > 0 && (abs(pos2.x) < 1595 && pos2.y < 2014 && pos2.y > -1280) {
                     let zombie_girl = AI(imageNamed: characterName + "_Zombie_Girl_Idle_1")
                     zombie_girl.name = self.player + "_Girl" + String(childCount)
                     zombie_girl.characterForm = "Girl"
@@ -2547,6 +2160,15 @@ class Character:SKSpriteNode {
                 
                 if ((self.returnBlock(pos1) != "Dirt" && (abs(pos1.x) < 1595 && pos1.y < 2014 && pos1.y > -1280)) || ((self.returnBlock(pos2)) != "Dirt" && (abs(pos2.x) < 1595 && pos2.y < 2014 && pos2.y > -1280))) && skillCurrentCharges_2 > 0 {
                     childCount += 1
+                    if self == gameScene?.playerNode {
+                        gameScene?.p1SummonCount += 1
+                    } else if self == gameScene?.playerNode2 {
+                        gameScene?.p2SummonCount += 1
+                    } else if self == gameScene?.playerNode3 {
+                        gameScene?.p3SummonCount += 1
+                    } else if self == gameScene?.playerNode4 {
+                        gameScene?.p4SummonCount += 1
+                    }
                 }
             } else if characterName == "Plum" {
                 let kunai = Projectile(imageNamed: "Kunai")
@@ -2570,38 +2192,45 @@ class Character:SKSpriteNode {
                 self.parent!.addChild(bullet)
                 bullet.physicsBody!.applyImpulse(CGVector(dx: (40 * self.xScale), dy: 0))
             } else if characterName == "Cog" {
-                if characterForm == "Cat" {
-                    let dog = AI(imageNamed: "Dog_Idle_1")
-                    dog.characterForm = "Dog"
-                    dog.player = self.player
-                    dog.CharAtlas = self.CharAtlas
-                    dog.setUp(characterName)
-                    dog.startAI()
-                    dog.xScale = self.xScale * -1
-                    dog.position.x = self.position.x + (530 * self.xScale)
-                    dog.position.y = self.position.y
-                    dog.physicsBody = SKPhysicsBody(texture: dog.texture!, size: dog.texture!.size())
-                    dog.physicsBody?.allowsRotation = false
-                    dog.physicsBody!.categoryBitMask = SummonedCategory
-                    dog.physicsBody!.collisionBitMask = WorldCategory
-                    dog.physicsBody!.contactTestBitMask = CharacterCategory
-                    self.parent!.addChild(dog)
-                } else {
-                    let cat = AI(imageNamed: "Cat_Idle_1")
-                    cat.characterForm = "Cat"
-                    cat.player = self.player
-                    cat.CharAtlas = self.CharAtlas
-                    cat.setUp(characterName)
-                    cat.startAI()
-                    cat.xScale = self.xScale * -1
-                    cat.position.x = self.position.x + (530 * self.xScale)
-                    cat.position.y = self.position.y
-                    cat.physicsBody = SKPhysicsBody(texture: cat.texture!, size: cat.texture!.size())
-                    cat.physicsBody?.allowsRotation = false
-                    cat.physicsBody!.categoryBitMask = SummonedCategory
-                    cat.physicsBody!.collisionBitMask = WorldCategory
-                    cat.physicsBody!.contactTestBitMask = CharacterCategory
-                    self.parent!.addChild(cat)
+                let pos = CGPoint(x: self.position.x + (530 * self.xScale), y: self.position.y)
+                if self.returnBlock(pos) != "Dirt" && checkIfUnderMaxSummonedAI() && skillCurrentCharges_2 > 0 && (abs(pos.x) < 1595 && pos.y < 2014 && pos.y > -1280) {
+                    if characterForm == "Cat" {
+                        let dog = AI(imageNamed: "Dog_Idle_1")
+                        dog.characterForm = "Dog"
+                        dog.player = self.player
+                        dog.CharAtlas = self.CharAtlas
+                        dog.setUp(characterName)
+                        dog.startAI()
+                        dog.xScale = self.xScale * -1
+                        dog.position.x = self.position.x + (530 * self.xScale)
+                        dog.position.y = self.position.y
+                        self.parent!.addChild(dog)
+                        skillCurrentCharges_2 -= 1
+                    } else {
+                        let cat = AI(imageNamed: "Cat_Idle_1")
+                        cat.characterForm = "Cat"
+                        cat.player = self.player
+                        cat.CharAtlas = self.CharAtlas
+                        cat.setUp(characterName)
+                        cat.startAI()
+                        cat.xScale = self.xScale * -1
+                        cat.position.x = self.position.x + (530 * self.xScale)
+                        cat.position.y = self.position.y
+                        self.parent!.addChild(cat)
+                        skillCurrentCharges_2 -= 1
+                    }
+                }
+                
+                if (self.returnBlock(pos) != "Dirt" && checkIfUnderMaxSummonedAI() && (abs(pos.x) < 1595 && pos.y < 2014 && pos.y > -1280)) && skillCurrentCharges_2 > 0 {
+                    if self == gameScene?.playerNode {
+                        gameScene?.p1SummonCount += 1
+                    } else if self == gameScene?.playerNode2 {
+                        gameScene?.p2SummonCount += 1
+                    } else if self == gameScene?.playerNode3 {
+                        gameScene?.p3SummonCount += 1
+                    } else if self == gameScene?.playerNode4 {
+                        gameScene?.p4SummonCount += 1
+                    }
                 }
             }
         }
@@ -2640,18 +2269,51 @@ class Character:SKSpriteNode {
             }
             self.playerAction = ""
             self.playerMovement = ""
+            if self.childNode(withName: "Skill1_Box") != nil {
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill2_Box") != nil {
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill3_Box") != nil {
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).damage = 0
+            }
             self.isStunned = true
             self.run(SKAction.animate(with: new, timePerFrame: 0.07, resize: true, restore: false),completion:{
                 self.isStunned = false
             })
         }
         
-        let X_MOD:CGFloat = (1 - (currentHP/maxHP)) * 7
-        let Y_MOD:CGFloat = (1 - (currentHP/maxHP)) * 5.6
-        let impX:CGFloat = (damageToTake * direction) * X_MOD
-        let impY:CGFloat = damageToTake * Y_MOD
+        var X_MOD:CGFloat = 0
+        var Y_MOD:CGFloat = 0
         
-        self.physicsBody?.applyImpulse(CGVector(dx: impX, dy: impY))
+        if damageToTake < 11 {
+            X_MOD = 0.75
+            Y_MOD = 0.75
+        } else if damageToTake < 21 && damageToTake > 10 {
+            X_MOD = 1.5
+            Y_MOD = 1.5
+        } else if damageToTake < 31 && damageToTake > 20 {
+            X_MOD = 2.25
+            Y_MOD = 2.25
+        } else if damageToTake < 41 && damageToTake > 30 {
+            X_MOD = 3
+            Y_MOD = 3
+        } else {
+            X_MOD = 3.75
+            Y_MOD = 3.75
+        }
+        
+        
+        let impX:CGFloat = (1 - (currentHP/maxHP)) * 30 * X_MOD
+        let impY:CGFloat = (1 - (currentHP/maxHP)) * 15 * Y_MOD
+        
+        self.physicsBody?.applyImpulse(CGVector(dx: impX * direction, dy: impY))
         
         if appDelegate.mpcHandler.session != nil {
             MP_TRAFFIC_HANDLER.confirmPlayerStats()
@@ -2686,7 +2348,7 @@ class Character:SKSpriteNode {
         if tile == "Dirt" {
             self.playerMovement(1.0)
             self.resetJumpsCount()
-            if playerMovement == "" {
+            if self.action(forKey: "Skill_2") == nil && self.action(forKey: "Skill_3") == nil && self.action(forKey: "Jump") == nil && self.playerMovement == "" && !isStunned && !isDead && !isResting {
                 self.physicsBody?.velocity.dx = 0
             }
             
@@ -2848,7 +2510,7 @@ class Character:SKSpriteNode {
                 self.doSkill_1()
             } else if self.playerAction == "Skill_2" && self.isSkillReady_2(currentTime) {
                 self.skill_2_Last_Used = currentTime
-                if self.characterName == "Jack-O" {
+                if self.characterName == "Jack-O" || self.characterName == "Cog" {
                     self.skillCurrentCharges_2 -= 0
                 } else {
                     self.skillCurrentCharges_2 -= 1
@@ -2868,15 +2530,56 @@ class Character:SKSpriteNode {
         if skill == "Skill_1" {
             self.removeAction(forKey: skill)
             self.run(self.animateSkill_1!,withKey:skill)
+            if self.childNode(withName: "Skill2_Box") != nil {
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill3_Box") != nil {
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).damage = 0
+            }
         } else if skill == "Skill_2" {
             self.removeAction(forKey: skill)
             self.run(self.animateSkill_2!,withKey:skill)
+            if self.childNode(withName: "Skill1_Box") != nil {
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill3_Box") != nil {
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).damage = 0
+            }
         } else if skill == "Skill_3" {
             self.removeAction(forKey: skill)
             self.run(self.animateSkill_3!,withKey:skill)
+            if self.childNode(withName: "Skill1_Box") != nil {
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill2_Box") != nil {
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).damage = 0
+            }
         } else if skill == "Jump" {
             self.removeAction(forKey: skill)
             self.run(self.animateJump!,withKey:skill)
+            if self.childNode(withName: "Skill1_Box") != nil {
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill1_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill2_Box") != nil {
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill2_Box") as! AttackBox).damage = 0
+            }
+            
+            if self.childNode(withName: "Skill3_Box") != nil {
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).active = false
+                (self.childNode(withName: "Skill3_Box") as! AttackBox).damage = 0
+            }
         }
         
         playerAction = ""
@@ -2913,10 +2616,10 @@ class Character:SKSpriteNode {
     }
     
     func useBlessingPower(_ move:String) {
-        if move == "Limbo" && self.currentTimeCopy - self.lastBlessingTime >= 20 {
+        if move == "Limbo" && self.currentTimeCopy - self.lastBlessingTime >= 3 {
             self.usedLimbo = true
             lastBlessingTime = currentTimeCopy
-        } else if move == "Enrage" && self.currentTimeCopy - self.lastBlessingTime >= 40 {
+        } else if move == "Enrage" && self.currentTimeCopy - self.lastBlessingTime >= 12 {
             let skill1Old:Double = skillCooldown_1
             let skill2Old:Double = skillCooldown_2
             let skill3Old:Double = skillCooldown_3
@@ -2931,11 +2634,11 @@ class Character:SKSpriteNode {
                 self.skillCooldown_3 = skill3Old
             })
             lastBlessingTime = currentTimeCopy
-        } else if move == "Survival" && self.currentTimeCopy - self.lastBlessingTime >= 45 {
+        } else if move == "Survival" && self.currentTimeCopy - self.lastBlessingTime >= 18 {
             let hpToAdd = (self.maxHP - self.currentHP) * 0.3
             self.applyHealing(hpToAdd)
             lastBlessingTime = currentTimeCopy
-        } else if move == "Lucky_Soul" && self.currentTimeCopy - self.lastBlessingTime >= 45 {
+        } else if move == "Lucky_Soul" && self.currentTimeCopy - self.lastBlessingTime >= 18 {
             let oldRegen:CGFloat = self.hpRegen
             self.hpRegen = self.hpRegen * 1.75
             
@@ -2943,7 +2646,7 @@ class Character:SKSpriteNode {
                 self.hpRegen = oldRegen
             })
             lastBlessingTime = currentTimeCopy
-        } else if move == "Hoarder" && self.currentTimeCopy - self.lastBlessingTime >= 5 && itemHeld != "" {
+        } else if move == "Hoarder" && self.currentTimeCopy - self.lastBlessingTime >= 3 && itemHeld != "" {
             self.useItem(self.itemHeld)
             self.itemHeld = ""
             lastBlessingTime = currentTimeCopy
@@ -3693,28 +3396,28 @@ class Character:SKSpriteNode {
                 itemHeld = item
             } else {
                 useItem(item)
-                print("Using item: " + item)
+                //print("Using item: " + item)
             }
         } else if self == gameScene?.playerNode2 {
             if otherPlayerBlessings[0][4] == 10 && itemHeld == "" {
                 itemHeld = item
             } else {
                 useItem(item)
-                print("Using item: " + item)
+                //print("Using item: " + item)
             }
         } else if self == gameScene?.playerNode3 {
             if otherPlayerBlessings[1][4] == 10 && itemHeld == "" {
                 itemHeld = item
             } else {
                 useItem(item)
-                print("Using item: " + item)
+                //print("Using item: " + item)
             }
         } else if self == gameScene?.playerNode4 {
             if otherPlayerBlessings[2][4] == 10 && itemHeld == "" {
                 itemHeld = item
             } else {
                 useItem(item)
-                print("Using item: " + item)
+                //print("Using item: " + item)
             }
         }
     }
@@ -3987,26 +3690,46 @@ class Character:SKSpriteNode {
     
     func setUpAttackBoxes() {
         if characterName == "Jack-O" {
-            let attackBox3 = AttackBox(color: .clear, size: CGSize(width: 50, height: 30))
-            attackBox3.position.x = 30
-            attackBox3.position.y = -20
+            let attackBox1 = AttackBox(color: .clear, size: CGSize(width: 40, height: 40))
+            attackBox1.setUp(owner: self.player)
+            attackBox1.name = "Skill1_Box"
+            self.addChild(attackBox1)
+            let attackBox3 = AttackBox(color: .clear, size: CGSize(width: 50, height: 40))
             attackBox3.setUp(owner: self.player)
             attackBox3.name = "Skill3_Box"
             self.addChild(attackBox3)
         } else if characterName == "Cog" {
-            
+            let attackBox2 = AttackBox(color: .clear, size: CGSize(width: 50, height: 30))
+            attackBox2.setUp(owner: self.player)
+            attackBox2.name = "Skill2_Box"
+            self.addChild(attackBox2)
+            let attackBox3 = AttackBox(color: .clear, size: CGSize(width: 50, height: 30))
+            attackBox3.setUp(owner: self.player)
+            attackBox3.name = "Skill3_Box"
+            self.addChild(attackBox3)
         } else if characterName == "Plum" || characterName == "Rosetta" {
-            
+            let attackBox2 = AttackBox(color: .clear, size: CGSize(width: 40, height: 80))
+            attackBox2.setUp(owner: self.player)
+            attackBox2.name = "Skill2_Box"
+            self.addChild(attackBox2)
+            let attackBox3 = AttackBox(color: .clear, size: CGSize(width: 80, height: 45))
+            attackBox3.setUp(owner: self.player)
+            attackBox3.name = "Skill3_Box"
+            self.addChild(attackBox3)
         } else if characterName == "Silva" {
-            let attackBox1 = AttackBox(color: .clear, size: CGSize(width: 30, height: 50))
-            attackBox1.position.x = 20
-            attackBox1.position.y = 20
+            let attackBox1 = AttackBox(color: .clear, size: CGSize(width: 40, height: 65))
             attackBox1.setUp(owner: self.player)
             attackBox1.name = "Skill1_Box"
             self.addChild(attackBox1)
         } else if characterName == "Sarah" {
-            
+            let attackBox1 = AttackBox(color: .clear, size: CGSize(width: 40, height: 55))
+            attackBox1.setUp(owner: self.player)
+            attackBox1.name = "Skill1_Box"
+            self.addChild(attackBox1)
+            let attackBox3 = AttackBox(color: .clear, size: CGSize(width: 80, height: 35))
+            attackBox3.setUp(owner: self.player)
+            attackBox3.name = "Skill3_Box"
+            self.addChild(attackBox3)
         }
     }
-    
 }

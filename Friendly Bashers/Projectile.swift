@@ -17,6 +17,7 @@ class Projectile:SKSpriteNode {
         self.damage = damage
         self.owner = owner
         self.direction = direction
+        self.zPosition = charLayer
         let width = self.texture?.size().width
         let height = self.texture?.size().height
         self.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: width!, height: height!))

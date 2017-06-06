@@ -45,6 +45,7 @@ class BasherSelectScene:SKScene {
     
     var helpMode = false
     var readyForGame = false
+    var inputAllowed = true
     
     var mapList = ["Origins","Buckets","Tunnels","Caves","SkyDen"]
     var mapIndex = 0
@@ -61,7 +62,7 @@ class BasherSelectScene:SKScene {
     
     override func didMove(to view: SKView) {
         currentTheme = "SPRING"
-        
+        inputAllowed = true
         if gameScene != nil {
             gameScene?.removeAllActions()
             gameScene?.removeAllChildren()
@@ -128,7 +129,8 @@ class BasherSelectScene:SKScene {
         for t in touches {
             let pos = t.location(in: self)
             
-            if self.atPoint(pos) == self.agreeButton && readyForGame && !helpMode {
+            if self.atPoint(pos) == self.agreeButton && readyForGame && !helpMode && inputAllowed {
+                inputAllowed = false
                 chosenMap = mapList[mapIndex]
                 if sfxEnabled {
                     startSound.run(SKAction.play())
@@ -151,7 +153,7 @@ class BasherSelectScene:SKScene {
                         })
                     }
                 })
-            } else if (self.helpButton?.contains(pos))! {
+            } else if (self.helpButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -161,7 +163,7 @@ class BasherSelectScene:SKScene {
                 } else {
                     helpMode = true
                 }
-            } else if (self.prevMapButton?.contains(pos))! {
+            } else if (self.prevMapButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -171,7 +173,7 @@ class BasherSelectScene:SKScene {
                     mapIndex = 0
                 }
                 chosenMap = mapList[mapIndex]
-            } else if (self.nextMapButton?.contains(pos))! {
+            } else if (self.nextMapButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -181,7 +183,7 @@ class BasherSelectScene:SKScene {
                     mapIndex = 4
                 }
                 chosenMap = mapList[mapIndex]
-            } else if self.atPoint(pos) == self.leaveMatchButton {
+            } else if self.atPoint(pos) == self.leaveMatchButton && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -197,7 +199,7 @@ class BasherSelectScene:SKScene {
                     otherPlayers[1] = ""
                     otherPlayers[2] = ""
                 }
-            } else if self.atPoint(pos) == self.backButton {
+            } else if self.atPoint(pos) == self.backButton && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -215,7 +217,7 @@ class BasherSelectScene:SKScene {
                         }
                     }
                 })
-            } else if self.atPoint(pos) == self.settingsButton {
+            } else if self.atPoint(pos) == self.settingsButton && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
                 }
@@ -234,15 +236,9 @@ class BasherSelectScene:SKScene {
                         
                     }
                 })
-            } else if (self.jackButton?.contains(pos))! {
+            } else if (self.jackButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
-                }
-                
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
                 }
                 
                 if helpMode {
@@ -253,15 +249,9 @@ class BasherSelectScene:SKScene {
                 } else {
                     chosenBasher = "Jack-O"
                 }
-            } else if (self.plumButton?.contains(pos))! {
+            } else if (self.plumButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
-                }
-                
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
                 }
                 
                 if helpMode {
@@ -272,15 +262,9 @@ class BasherSelectScene:SKScene {
                 } else {
                     chosenBasher = "Plum"
                 }
-            } else if (self.rosettaButton?.contains(pos))! {
+            } else if (self.rosettaButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
-                }
-                
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
                 }
                 
                 if helpMode {
@@ -291,15 +275,9 @@ class BasherSelectScene:SKScene {
                 } else {
                     chosenBasher = "Rosetta"
                 }
-            } else if (self.silvaButton?.contains(pos))! {
+            } else if (self.silvaButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
-                }
-                
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
                 }
                 
                 if helpMode {
@@ -310,15 +288,9 @@ class BasherSelectScene:SKScene {
                 } else {
                     chosenBasher = "Silva"
                 }
-            } else if (self.cogButton?.contains(pos))! {
+            } else if (self.cogButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
-                }
-                
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
                 }
                 
                 if helpMode {
@@ -329,15 +301,9 @@ class BasherSelectScene:SKScene {
                 } else {
                     chosenBasher = "Cog"
                 }
-            } else if (self.sarahButton?.contains(pos))! {
+            } else if (self.sarahButton?.contains(pos))! && inputAllowed {
                 if sfxEnabled {
                     self.run(clickSound)
-                }
-                
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = characterRoulette()
-                    chosenBasher3 = characterRoulette()
-                    chosenBasher4 = characterRoulette()
                 }
                 
                 if helpMode {
@@ -349,13 +315,21 @@ class BasherSelectScene:SKScene {
                     chosenBasher = "Sarah"
                 }
             } else {
-                if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
-                    chosenBasher2 = ""
-                    chosenBasher3 = ""
-                    chosenBasher4 = ""
+                if inputAllowed {
+                    if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
+                        chosenBasher2 = ""
+                        chosenBasher3 = ""
+                        chosenBasher4 = ""
+                    }
+                    
+                    chosenBasher = ""
                 }
-                
-                chosenBasher = ""
+            }
+            
+            if appDelegate.mpcHandler.session == nil && GK_TRAFFIC_HANDLER.match == nil {
+                chosenBasher2 = characterRoulette()
+                chosenBasher3 = characterRoulette()
+                chosenBasher4 = characterRoulette()
             }
             
             if appDelegate.mpcHandler.session != nil {
@@ -554,16 +528,34 @@ class BasherSelectScene:SKScene {
         switch randomNum {
         case 1:
             chosenOne = "Jack-O"
+            if chosenOne == chosenBasher || chosenOne == chosenBasher2 || chosenOne == chosenBasher3 || chosenOne == chosenBasher4 {
+                chosenOne = characterRoulette()
+            }
         case 2:
             chosenOne = "Plum"
+            if chosenOne == chosenBasher || chosenOne == chosenBasher2 || chosenOne == chosenBasher3 || chosenOne == chosenBasher4 {
+                chosenOne = characterRoulette()
+            }
         case 3:
             chosenOne = "Rosetta"
+            if chosenOne == chosenBasher || chosenOne == chosenBasher2 || chosenOne == chosenBasher3 || chosenOne == chosenBasher4 {
+                chosenOne = characterRoulette()
+            }
         case 4:
             chosenOne = "Silva"
+            if chosenOne == chosenBasher || chosenOne == chosenBasher2 || chosenOne == chosenBasher3 || chosenOne == chosenBasher4 {
+                chosenOne = characterRoulette()
+            }
         case 5:
             chosenOne = "Cog"
+            if chosenOne == chosenBasher || chosenOne == chosenBasher2 || chosenOne == chosenBasher3 || chosenOne == chosenBasher4 {
+                chosenOne = characterRoulette()
+            }
         case 6:
             chosenOne = "Sarah"
+            if chosenOne == chosenBasher || chosenOne == chosenBasher2 || chosenOne == chosenBasher3 || chosenOne == chosenBasher4 {
+                chosenOne = characterRoulette()
+            }
         default:
             chosenOne = ""
             break;
@@ -582,9 +574,14 @@ class BasherSelectScene:SKScene {
             
             if let view = self.view {
                 view.presentScene(sceneNode)
-                view.ignoresSiblingOrder = false
-                view.showsFPS = false
-                view.showsNodeCount = false
+                view.ignoresSiblingOrder = true
+                if _devMode {
+                    view.showsFPS = true
+                    view.showsNodeCount = true
+                } else {
+                    view.showsFPS = true
+                    view.showsNodeCount = false
+                }
             }
         }
     }

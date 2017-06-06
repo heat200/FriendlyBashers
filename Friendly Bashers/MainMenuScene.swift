@@ -9,7 +9,7 @@
 import SpriteKit
 import GameKit
 
-var APP_VERSION = "0.8.1"
+var APP_VERSION = "0.9"
 
 var playerName = "heat200"
 var chosenMode = ""

@@ -262,7 +262,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player1!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -270,7 +270,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player1!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -296,7 +296,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+                if (self.withinSight(player1!.position) && abs(self.position.x - player1!.position.x) <= 600) {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -321,7 +321,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player2!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -329,7 +329,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player2!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -355,7 +355,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+                if (self.withinSight(player2!.position) && abs(self.position.x - player2!.position.x) <= 600)  {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -380,7 +380,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player3!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -388,7 +388,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player3!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -414,7 +414,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+                if (self.withinSight(player3!.position) && abs(self.position.x - player3!.position.x) <= 600) {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -454,7 +454,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player1!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -462,7 +462,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player1!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -488,7 +488,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+                if (self.withinSight(player1!.position) && abs(self.position.x - player1!.position.x) <= 600) {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -513,7 +513,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player2!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -521,7 +521,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player2!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -547,7 +547,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+                if (self.withinSight(player2!.position) && abs(self.position.x - player2!.position.x) <= 600)  {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -587,7 +587,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player2!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -595,7 +595,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player2!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -621,7 +621,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+                if (self.withinSight(player2!.position) && abs(self.position.x - player2!.position.x) <= 600)  {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -646,7 +646,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player3!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -654,7 +654,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player3!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -680,7 +680,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+                if (self.withinSight(player3!.position) && abs(self.position.x - player3!.position.x) <= 600) {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -720,7 +720,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player1!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -728,7 +728,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player1!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -754,7 +754,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+                if (self.withinSight(player1!.position) && abs(self.position.x - player1!.position.x) <= 600) {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -779,7 +779,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 2 {
                     playerMovement = "Move_Right"
                     self.xScale = 1
-                } else {
+                } else if self.withinSight(player3!.position) && !self.isLowHP() {
                     playerMovement = "Move_Left"
                     self.xScale = -1
                 }
@@ -787,7 +787,7 @@ class CPU:Character {
                 if self.isLowHP() && innateDirection == 1 {
                     playerMovement = "Move_Left"
                     self.xScale = -1
-                } else {
+                } else if self.withinSight(player3!.position) && !self.isLowHP() {
                     playerMovement = "Move_Right"
                     self.xScale = 1
                 }
@@ -813,7 +813,7 @@ class CPU:Character {
             }
             
             if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
-                if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+                if (self.withinSight(player3!.position) && abs(self.position.x - player3!.position.x) <= 600) {
                     if attackTypeAvailable("Ranged") {
                         self.playerMovement = ""
                         useAttack("Ranged")
@@ -852,7 +852,7 @@ class CPU:Character {
             if self.isLowHP() && innateDirection == 2 {
                 playerMovement = "Move_Right"
                 self.xScale = 1
-            } else {
+            } else if self.withinSight(player1!.position) && !self.isLowHP() {
                 playerMovement = "Move_Left"
                 self.xScale = -1
             }
@@ -860,7 +860,7 @@ class CPU:Character {
             if self.isLowHP() && innateDirection == 1 {
                 playerMovement = "Move_Left"
                 self.xScale = -1
-            } else {
+            } else if self.withinSight(player1!.position) && !self.isLowHP() {
                 playerMovement = "Move_Right"
                 self.xScale = 1
             }
@@ -886,7 +886,7 @@ class CPU:Character {
         }
         
         if abs(self.position.y - player1!.position.y) <= player1!.size.height/2 + halfHeight! + 5 {
-            if (abs(self.position.x - player1!.position.x) > player1!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player1!.position.x) <= 600) {
+            if (self.withinSight(player1!.position) && abs(self.position.x - player1!.position.x) <= 600) {
                 if attackTypeAvailable("Ranged") {
                     self.playerMovement = ""
                     useAttack("Ranged")
@@ -924,7 +924,7 @@ class CPU:Character {
             if self.isLowHP() && innateDirection == 2 {
                 playerMovement = "Move_Right"
                 self.xScale = 1
-            } else {
+            } else if self.withinSight(player2!.position) && !self.isLowHP() {
                 playerMovement = "Move_Left"
                 self.xScale = -1
             }
@@ -932,7 +932,7 @@ class CPU:Character {
             if self.isLowHP() && innateDirection == 1 {
                 playerMovement = "Move_Left"
                 self.xScale = -1
-            } else {
+            } else if self.withinSight(player2!.position) && !self.isLowHP() {
                 playerMovement = "Move_Right"
                 self.xScale = 1
             }
@@ -958,7 +958,7 @@ class CPU:Character {
         }
         
         if abs(self.position.y - player2!.position.y) <= player2!.size.height/2 + halfHeight! + 5 {
-            if (abs(self.position.x - player2!.position.x) > player2!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player2!.position.x) <= 600)  {
+            if (self.withinSight(player2!.position) && abs(self.position.x - player2!.position.x) <= 600)  {
                 if attackTypeAvailable("Ranged") {
                     self.playerMovement = ""
                     useAttack("Ranged")
@@ -996,7 +996,7 @@ class CPU:Character {
             if self.isLowHP() && innateDirection == 2 {
                 playerMovement = "Move_Right"
                 self.xScale = 1
-            } else {
+            } else if self.withinSight(player3!.position) && !self.isLowHP() {
                 playerMovement = "Move_Left"
                 self.xScale = -1
             }
@@ -1004,7 +1004,7 @@ class CPU:Character {
             if self.isLowHP() && innateDirection == 1 {
                 playerMovement = "Move_Left"
                 self.xScale = -1
-            } else {
+            } else if self.withinSight(player3!.position) && !self.isLowHP() {
                 playerMovement = "Move_Right"
                 self.xScale = 1
             }
@@ -1030,7 +1030,7 @@ class CPU:Character {
         }
         
         if abs(self.position.y - player3!.position.y) <= player3!.size.height/2 + halfHeight! + 5 {
-            if (abs(self.position.x - player3!.position.x) > player3!.size.width/2 + halfWidth! + 10 && abs(self.position.x - player3!.position.x) <= 600) {
+            if (self.withinSight(player3!.position) && abs(self.position.x - player3!.position.x) <= 600) {
                 if attackTypeAvailable("Ranged") {
                     self.playerMovement = ""
                     useAttack("Ranged")
@@ -1043,6 +1043,16 @@ class CPU:Character {
                 }
             }
         }
+    }
+    
+    func withinSight(_ point:CGPoint) -> Bool {
+        var returnBool = false
+        
+        if distanceFrom(point) <= 600 {
+            returnBool = true
+        }
+        
+        return returnBool
     }
     
     func distanceFrom(_ point:CGPoint) -> CGFloat {

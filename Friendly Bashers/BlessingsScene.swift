@@ -474,7 +474,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/2: +15% Movespeed Steal.\n 2/2: +30% Movespeed Steal. \n (Applies to melee attacks only; Lasts 2.5 Seconds)"
+                    let message = "1/2: +6% Movespeed Steal.\n 2/2: +12% Movespeed Steal. \n (Applies to melee attacks only; Lasts 2.5 Seconds)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -506,7 +506,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/1: Unlocks Move 'Limbo', a short ranged blink ability. \n Tap the mastery ability button and then tap the screen to blink \n (20 Second Cooldown)"
+                    let message = "1/1: Unlocks Move 'Limbo', a short ranged blink ability. \n Tap the mastery ability button and then tap the screen to blink \n (3 Second Cooldown)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -586,7 +586,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/1: Unlocks Move 'Enrage', a self-casted buff that lowers all other cooldowns by 75%. \n (40 Second Cooldown)"
+                    let message = "1/1: Unlocks Move 'Enrage', a self-casted buff that lowers all other cooldowns by 75%. \n (12 Second Cooldown)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -666,7 +666,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/1: Unlocks Move 'Survivalist', a self-casted ability that heals you by 30% of missing HP. \n (45 Second Cooldown)"
+                    let message = "1/1: Unlocks Move 'Survivalist', a self-casted ability that heals you by 30% of missing HP. \n (18 Second Cooldown)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -746,7 +746,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/1: Unlocks Move 'Lucky Soul', a self-casted buff that increase all healing by 75% for 4 seconds. \n (45 Second Cooldown)"
+                    let message = "1/1: Unlocks Move 'Lucky Soul', a self-casted buff that increase all healing by 75% for 4 seconds. \n (18 Second Cooldown)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -778,7 +778,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/2: +2.5% Power Steal. \n 2/2: +5% Power Steal. \n (Applies to melee attacks only; Lasts for 1 Second)"
+                    let message = "1/2: +5% Power Steal. \n 2/2: +10% Power Steal. \n (Applies to melee attacks only; Lasts for 2.5 Seconds)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -794,7 +794,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/2: +7.5% Power Steal.\n 2/2: +10% Power Steal. \n (Applies to melee attacks only; Lasts for 1 Second)"
+                    let message = "1/2: +12.5% Power Steal.\n 2/2: +15% Power Steal. \n (Applies to melee attacks only; Lasts for 2.5 Seconds)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -826,7 +826,7 @@ class BlessingsScene:SKScene, UITextFieldDelegate {
                 }
                 
                 if helpMode {
-                    let message = "1/1: Unlocks Move 'Hoarder', allows user to hold an item which is then used on press. \n (5 Second Cooldown)"
+                    let message = "1/1: Unlocks Move 'Hoarder', allows user to hold an item which is then used on press. \n (3 Second Cooldown)"
                     let title = ""
                     let userInfo = ["title":title,"message":message]
                     NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)

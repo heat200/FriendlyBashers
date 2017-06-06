@@ -10,11 +10,12 @@ import SpriteKit
 
 class Item:SKSpriteNode {
     var itemName:String = ""
-    var hp:CGFloat = 10
+    var hp:CGFloat = 5
     var removeCounter = 0
     
     func setUp(_ nameOfItem:String) {
         self.name = "Item"
+        self.zPosition = charLayer
         self.itemName = nameOfItem
         let width = self.texture?.size().width
         let height = self.texture?.size().height
@@ -72,12 +73,9 @@ class Item:SKSpriteNode {
     
     func applyDamage(_ player:Character, damage:CGFloat) {
         self.hp -=  damage
-        //print("Crate took damage. Type: " + itemName)
         
         if self.hp <= 0 {
-            //print("Picked up Power Crate: " + itemName)
             player.pickUpItem(self.itemName)
-            
             if player == gameScene!.playerNode {
                 gameScene?.setMasteryButtonOverlay()
             }

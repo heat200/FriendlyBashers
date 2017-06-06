@@ -98,7 +98,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 160HP. \n 5 Power. \n 15 Resistance. \n 0.1 HP Regen. \n 420 MS. \n \n Move Stats: \n Tag: +25 (+ 100% of  HP) MS & +20 (+20% New MS) Power. \n (Duration: 5s, CD: 9s) \n Double Slide Tackle: 15 (+50% Power) Damage (up to 2x). \n (Duration: 0s, CD: 3s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
+                let message = "Base Stats: \n 160HP. \n 5 Power. \n 20 Resistance. \n 0.1 HP Regen. \n 420 MS. \n \n Move Stats: \n Tag: +25 (+ 100% of  HP) MS & +20 (+20% New MS) Power. \n (Duration: 5s, CD: 9s) \n Double Slide Tackle: 15 (+50% Power) Damage (up to 2x). \n (Duration: 0s, CD: 3s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
                 let title = "About Cog: \n The (Cat)/Dog Duo"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -107,7 +107,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 240HP. \n 10 Power. \n 15 Resistance. \n 0.1 HP Regen. \n 360 MS. \n \n Move Stats: \n Tag: +25 (+ 100% of  HP) MS & +20 (+20% New MS) Power. \n (Duration: 5s, CD: 9s) \n Double Slide Tackle: 15 (+50% Power) Damage (up to 2x). \n (Duration: 0s, CD: 3s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
+                let message = "Base Stats: \n 240HP. \n 10 Power. \n 20 Resistance. \n 0.1 HP Regen. \n 360 MS. \n \n Move Stats: \n Tag: +25 (+ 100% of  HP) MS & +20 (+20% New MS) Power. \n (Duration: 5s, CD: 9s) \n Double Slide Tackle: 15 (+50% Power) Damage (up to 2x). \n (Duration: 0s, CD: 3s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
                 let title = "About Cog: \n The Cat/(Dog) Duo"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -116,7 +116,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 400HP. \n 20 Power. \n 15 Resistance. \n 0.1 HP Regen. \n 375 MS. \n \n Move Stats: \n Summon: summons a Zombie couple (Holds up to 4 charges; -1 Charge per Zombie). \n (Duration: 0s, CD: 6s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
+                let message = "Base Stats: \n 400HP. \n 20 Power. \n 40 Resistance. \n 0.1 HP Regen. \n 375 MS. \n \n Move Stats: \n Summon: summons a Zombie couple (Holds up to 4 charges; -1 Charge per Zombie). \n (Duration: 0s, CD: 6s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
                 let title = "About Jack-O: \n The Zombie Spawner"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -143,7 +143,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 225HP. \n 50 Power. \n 20 Resistance. \n 0.1 HP Regen. \n 400 MS. \n \n Move Stats: \n Kunai Throw: 5 (+ 10% of  Power) Damage. Holds 1 (+ Power/10) Charges. \n (Duration: 0s, CD: 0.8s) \n Kitana Slash: -25 (+ 100% of  Power) Damage. Holds 1 (+ Power/25) Charges. \n (Duration: 0s, CD: 1.5s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
+                let message = "Base Stats: \n 225HP. \n 50 Power. \n 35 Resistance. \n 0.1 HP Regen. \n 400 MS. \n \n Move Stats: \n Kunai Throw: 5 (+ 10% of  Power) Damage. Holds 1 (+ Power/10) Charges. \n (Duration: 0s, CD: 0.8s) \n Kitana Slash: -25 (+ 100% of  Power) Damage. Holds 1 (+ Power/25) Charges. \n (Duration: 0s, CD: 1.5s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
                 let title = "About Plum: \n The Purple Ninja"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -152,7 +152,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 120HP. \n 60 Power. \n 20 Resistance. \n 0.1 HP Regen. \n 525 MS. \n \n Move Stats: \n Kunai Throw: 5 (+ 10% of  Power) Damage. Holds 1 (+ Power/10) Charges. \n (Duration: 0s, CD: 0.8s) \n Kitana Slash: -25 (+ 100% of  Power) Damage. Holds 1 (+ Power/25) Charges. \n (Duration: 0s, CD: 1.5s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
+                let message = "Base Stats: \n 120HP. \n 60 Power. \n 35 Resistance. \n 0.1 HP Regen. \n 525 MS. \n \n Move Stats: \n Kunai Throw: 5 (+ 10% of  Power) Damage. Holds 1 (+ Power/10) Charges. \n (Duration: 0s, CD: 0.8s) \n Kitana Slash: -25 (+ 100% of  Power) Damage. Holds 1 (+ Power/25) Charges. \n (Duration: 0s, CD: 1.5s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
                 let title = "About Rosetta: \n The Pink Ninja"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -161,7 +161,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 300HP. \n 30 Power. \n 30 Resistance. \n 0.1 HP Regen. \n 390 MS. \n \n Move Stats: \n Knife Swipe: 5 (+50% of Power) Damage. Holds 1 (+ Power/10) Charges. \n (Duration: 0s, CD: 1s) \n Gun Shot: 5 (+ 15% of Power) Damage. Holds 3 (+ Power/10) Charges. \n (Duration: 0s, CD: 0.85s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
+                let message = "Base Stats: \n 300HP. \n 30 Power. \n 35 Resistance. \n 0.1 HP Regen. \n 395 MS. \n \n Move Stats: \n Knife Swipe: 5 (+50% of Power) Damage. Holds 1 (+ Power/10) Charges. \n (Duration: 0s, CD: 1s) \n Gun Shot: 5 (+ 15% of Power) Damage. Holds 3 (+ Power/10) Charges. \n (Duration: 0s, CD: 0.85s) \n Slide Tackle: 15 (+50% Power) Damage. \n (Duration: 0s, CD: 1.75s)"
                 let title = "About Sarah: \n The Adventurer"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -170,7 +170,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Base Stats: \n 750HP. \n 10 Power. \n 35 Resistance. \n 0.1 HP Regen. \n 375 MS. \n \n Move Stats: \n Sword Slash: 5 (+ 5% of  Power) Damage. Holds 1 (+ Power/25) Charges. \n (Duration: 0s, CD: 0.9s) \n Lions Pride: +10 (+50% of Missing HP) Power. \n (Duration: 7s, CD: 12.5s) \n Lions Rush: +10 (+50% of  HP) MS. \n (Duration: 5s, CD: 8s)"
+                let message = "Base Stats: \n 750HP. \n 10 Power. \n 50 Resistance. \n 0.1 HP Regen. \n 375 MS. \n \n Move Stats: \n Sword Slash: 5 (+ 5% of  Power) Damage. Holds 1 (+ Power/25) Charges. \n (Duration: 0s, CD: 0.9s) \n Lions Pride: +10 (+50% of Missing HP) Power. \n (Duration: 7s, CD: 12.5s) \n Lions Rush: +10 (+50% of  HP) MS. \n (Duration: 5s, CD: 8s)"
                 let title = "About Silva: \n The Golden Maned Knight"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -179,7 +179,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "Item Crates hold items that give special abilities while held, items that give permanent stat boosts, or items with on hold effects (NOT YET ADDED) \n \n Stats: \n 10 HP"
+                let message = "Item Crates hold items that give special abilities while held, items that give permanent stat boosts, or items with on hold effects (NOT YET ADDED) \n \n Stats: \n 5 HP"
                 let title = "About Item Crates"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -188,7 +188,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "The Air Crate holds the power 'Air Blast' which pushes nearby enemies away. \n \n Stats: \n 10 HP"
+                let message = "The Air Crate holds the power 'Air Blast' which pushes nearby enemies away. \n \n Stats: \n 5 HP"
                 let title = "About Power Crate: \n Air Crate"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -197,7 +197,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "The Sugar Crate holds the power 'Sugar Rush' which is a self cast buff. It increases your MS by 50% and decreases your cooldowns by 30%. \n \n Stats: \n 10 HP \n Duration: 4s"
+                let message = "The Sugar Crate holds the power 'Sugar Rush' which is a self cast buff. It increases your MS by 50% and decreases your cooldowns by 30%. \n \n Stats: \n 5 HP \n Duration: 4s"
                 let title = "About Power Crate: \n Sugar Crate"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -206,7 +206,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "The Fairy Crate holds the power 'Fairys Heart' which heals the user by 10% of their Max HP. \n \n Stats: \n 10 HP"
+                let message = "The Fairy Crate holds the power 'Fairys Heart' which heals the user by 10% of their Max HP. \n \n Stats: \n 5 HP"
                 let title = "About Power Crate: \n Fairy Crate"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -215,7 +215,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "The Fire Crate holds the power 'Fires Passion' which is a self cast buff. It makes those hit by your melee attacks catch fire burning them for 3s (Total burn damage being equal to the damage of your attack). \n \n Stats: \n 10 HP \n Duration: 5s"
+                let message = "The Fire Crate holds the power 'Fires Passion' which is a self cast buff. It makes those hit by your melee attacks catch fire burning them for 3s (Total burn damage being equal to the damage of your attack). \n \n Stats: \n 5 HP \n Duration: 5s"
                 let title = "About Power Crate: \n Fire Crate"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -224,7 +224,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "The Stone Crate holds the power 'Golems Curse' which petrifies nearby enemies for 3s. \n \n Stats: \n 10 HP"
+                let message = "The Stone Crate holds the power 'Golems Curse' which petrifies nearby enemies for 3s. \n \n Stats: \n 5 HP"
                 let title = "About Power Crate: \n Stone Crate"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)
@@ -233,7 +233,7 @@ class HelpScene:SKScene {
                     self.run(clickSound)
                 }
                 
-                let message = "The Ice Crate holds the power 'Icy Grasp' which is a self cast buff. It makes those hit by your melee attacks catch 'Frost Bite' reducing their MS by 5% for 1.5s. \n \n Stats: \n 10 HP \n Duration: 5s"
+                let message = "The Ice Crate holds the power 'Icy Grasp' which is a self cast buff. It makes those hit by your melee attacks catch 'Frost Bite' reducing their MS by 5% for 1.5s. \n \n Stats: \n 5 HP \n Duration: 5s"
                 let title = "About Power Crate: \n Ice Crate"
                 let userInfo = ["title":title,"message":message]
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: "AlertMessage"), object: nil,userInfo: userInfo)

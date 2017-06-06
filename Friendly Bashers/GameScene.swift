@@ -16,6 +16,12 @@ var WorldCategory:UInt32 = 0x1 << 4
 var SummonedCategory:UInt32 = 0x1 << 5
 var ItemCategory:UInt32 = 0x1 << 6
 
+var backgroundLayer:CGFloat = -50
+var mapLayer:CGFloat = 0
+var charLayer:CGFloat = 50
+var uiLayer:CGFloat = 100
+
+var _devMode = false
 
 class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerCharacter = ""
@@ -25,6 +31,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var playerCharacter2 = ""
     var playerCharacter3 = ""
     var playerCharacter4 = ""
+    
+    var p1SummonCount = 0
+    var p2SummonCount = 0
+    var p3SummonCount = 0
+    var p4SummonCount = 0
     
     var gamePaused = false
     var multiplayerType = 0
@@ -136,6 +147,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.physicsWorld.contactDelegate = self
         let backgroundAudio = SKAudioNode(fileNamed: "Suspence_Cheesepuff.mp3")
         self.background = self.childNode(withName: "//Background") as? SKSpriteNode
+        self.background?.zPosition = backgroundLayer
         self.CAMERA_NODE = self.childNode(withName: "//CAMERA_NODE") as? SKCameraNode
         
         let masterySound = SKAudioNode(fileNamed: "UseMastery_fins.wav")
@@ -196,7 +208,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.p1ChosenView?.size.width = playerTexture.size().width * 3/4
         self.p1ChosenView?.size.height = playerTexture.size().height * 3/4
         
-        if multiplayerType > 0 {
+        if multiplayerType > 0 || _devMode {
             var playerTexture2 = characterAtlas2.textureNamed(playerCharacter2 + "_Idle_1")
             
             if self.playerCharacter2 == "Cog" {
@@ -252,7 +264,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.p2ChosenView?.size.height = playerTexture2.size().height * 3/4
         }
         
-        if multiplayerType > 0 && otherPlayersCount == 2 {
+        if (multiplayerType > 0 && otherPlayersCount == 2) || _devMode {
             var playerTexture3 = characterAtlas3.textureNamed(playerCharacter3 + "_Idle_1")
             
             if self.playerCharacter3 == "Cog" {
@@ -308,7 +320,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.p3ChosenView?.size.height = playerTexture3.size().height * 3/4
         }
         
-        if multiplayerType > 0 && otherPlayersCount == 3 {
+        if (multiplayerType > 0 && otherPlayersCount == 3) || _devMode {
             var playerTexture4 = characterAtlas4.textureNamed(playerCharacter4 + "_Idle_1")
             
             if self.playerCharacter4 == "Cog" {
@@ -366,70 +378,91 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         jumpButton = SKSpriteNode(imageNamed: "Button_Up")
         jumpButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        jumpButton?.zPosition = uiLayer
         skillButton_1 = SKSpriteNode(imageNamed: "Button_Teal")
         skillButton_1?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        skillButton_1?.zPosition = uiLayer
         skillButton_2 = SKSpriteNode(imageNamed: "Button_Beige")
         skillButton_2?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        skillButton_2?.zPosition = uiLayer
         runeButton = SKSpriteNode(imageNamed: "Button_Lime")
+        runeButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        runeButton?.zPosition = uiLayer
         runeOverlay = SKSpriteNode(imageNamed: "")
         runeOverlay?.scale(to: CGSize(width: 50, height: 50))
-        runeButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        runeOverlay?.zPosition = uiLayer
+        
         
         leftButton = SKSpriteNode(imageNamed: "Button_Left")
         leftButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        leftButton?.zPosition = uiLayer
         rightButton = SKSpriteNode(imageNamed: "Button_Right")
         rightButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        rightButton?.zPosition = uiLayer
         
         pauseButton = SKSpriteNode(imageNamed: "Button_Pause")
         pauseButton?.scale(to: CGSize(width: buttonSize, height: buttonSize))
+        pauseButton?.zPosition = uiLayer + 2
         
         pauseUI = SKSpriteNode(color: UIColor.black, size: CGSize(width: self.size.width, height: self.size.height))
+        pauseUI?.zPosition = uiLayer + 1
         pauseUI?.alpha = 0.6
         
         sfxButton = SKSpriteNode(imageNamed: "Button_Sfx_Off")
         sfxButton?.scale(to: CGSize(width: 135, height: 135))
         sfxButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 200)
+        sfxButton?.zPosition = uiLayer + 2
         
         musicButton = SKSpriteNode(imageNamed: "Button_Music_Off")
         musicButton?.scale(to: CGSize(width: 135, height: 135))
         musicButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 330)
+        musicButton?.zPosition = uiLayer + 2
         
         homeButton = SKSpriteNode(imageNamed: "Button_Home")
         homeButton?.scale(to: CGSize(width: 135, height: 135))
         homeButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 455)
+        homeButton?.zPosition = uiLayer + 2
         
         exitButton = SKSpriteNode(imageNamed: "Button_Exit")
         exitButton?.scale(to: CGSize(width: 135, height: 135))
         exitButton?.position = CGPoint(x: self.size.width/2 - 75,y: self.size.height/2 - 585)
+        exitButton?.zPosition = uiLayer + 2
         
         timePassedLabel = SKLabelNode(text: "--/--")
         timePassedLabel?.fontColor = SKColor.black
         timePassedLabel?.fontSize = 60
         timePassedLabel?.position = CGPoint(x: 0, y: -self.size.height/2 + 70)
+        timePassedLabel?.zPosition = uiLayer
         
         heart2 = SKSpriteNode(texture: UIAtlas.textureNamed("Heart"))
         heart2?.position = timePassedLabel!.position
         heart2?.position.y -= 50
+        heart2?.zPosition = uiLayer
         
         heart1 = SKSpriteNode(texture: UIAtlas.textureNamed("Heart"))
         heart1?.position = heart2!.position
         heart1?.position.x -= 50
+        heart1?.zPosition = uiLayer
         
         heart3 = SKSpriteNode(texture: UIAtlas.textureNamed("Heart"))
         heart3?.position = heart2!.position
         heart3?.position.x += 50
+        heart3?.zPosition = uiLayer
         
         skillChargeDisplay_1 = SKLabelNode(text: "0")
         skillChargeDisplay_1?.fontColor = SKColor.black
         skillChargeDisplay_1?.fontSize = 40
+        skillChargeDisplay_1?.zPosition = 1
         
         skillChargeDisplay_2 = SKLabelNode(text: "0")
         skillChargeDisplay_2?.fontColor = SKColor.black
         skillChargeDisplay_2?.fontSize = 40
+        skillChargeDisplay_2?.zPosition = 1
         
         skillChargeDisplay_3 = SKLabelNode(text: "0")
         skillChargeDisplay_3?.fontColor = SKColor.black
         skillChargeDisplay_3?.fontSize = 40
+        skillChargeDisplay_3?.zPosition = 1
         
         //Right Side of Screen
         jumpButton?.position = CGPoint(x: self.size.width/2 - 75,y: -self.size.height/2 + 75) //Bottom Right
@@ -453,7 +486,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         player1Name = SKLabelNode(text: "")
         player1Name?.text = playerName
-        player1Name?.fontColor = UIColor.black
+        player1Name?.fontColor = UIColor.green
         player1Name?.position = CGPoint(x: -self.size.width/2 + 120,y: self.size.height/2 - 150)
         
         player1Health = SKSpriteNode(imageNamed: "HealthBar")
@@ -469,7 +502,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         player2Name = SKLabelNode(text: "")
         player2Name?.text = "P2"
-        player2Name?.fontColor = UIColor.black
+        player2Name?.fontColor = UIColor.green
         player2Name?.position = CGPoint(x: -self.size.width/2 + 290,y: self.size.height/2 - 150)
         
         player2Health = SKSpriteNode(imageNamed: "HealthBar")
@@ -485,7 +518,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         player3Name = SKLabelNode(text: "")
         player3Name?.text = "P3"
-        player3Name?.fontColor = UIColor.black
+        player3Name?.fontColor = UIColor.green
         player3Name?.position = CGPoint(x: -self.size.width/2 + 460,y: self.size.height/2 - 150)
         
         player3Health = SKSpriteNode(imageNamed: "HealthBar")
@@ -501,7 +534,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         player4Name = SKLabelNode(text: "")
         player4Name?.text = "P4"
-        player4Name?.fontColor = UIColor.black
+        player4Name?.fontColor = UIColor.green
         player4Name?.position = CGPoint(x: -self.size.width/2 + 630,y: self.size.height/2 - 150)
         
         player4Health = SKSpriteNode(imageNamed: "HealthBar")
@@ -532,6 +565,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
+        tileMapNode?.zPosition = mapLayer
         self.tileMapNode?.physicsBody = SKPhysicsBody(bodies: tilePhysicsBodyArray)
         self.tileMapNode?.physicsBody?.affectedByGravity = false
         self.tileMapNode?.physicsBody?.allowsRotation = false
@@ -577,6 +611,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.skillButton_1?.addChild(skillChargeDisplay_1!)
         self.skillButton_2?.addChild(skillChargeDisplay_2!)
         self.skillButton_2?.addChild(skillChargeDisplay_3!)
+        p1ChosenView?.zPosition = 1
+        p2ChosenView?.zPosition = 1
         
         if multiplayerType > 0 {
             player2Name?.text = otherPlayers[0]
@@ -591,6 +627,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.CAMERA_NODE?.addChild(player3Bubble!)
             self.CAMERA_NODE?.addChild(player3Name!)
             self.player3Bubble?.addChild(p3ChosenView!)
+            p3ChosenView?.zPosition = 1
         }
         
         if multiplayerType == 0 || otherPlayersCount == 3 {
@@ -602,6 +639,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.CAMERA_NODE?.addChild(player4Bubble!)
             self.CAMERA_NODE?.addChild(player4Name!)
             self.player4Bubble?.addChild(p4ChosenView!)
+            p4ChosenView?.zPosition = 1
         }
         
         self.pauseButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Pause")))
@@ -682,26 +720,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
         
-        if contact.bodyA.node is AI {
-            let ai = contact.bodyA.node as! AI
-            if contact.bodyB.node is Character {
-                let character = contact.bodyB.node as! Character
-                if character.player != ai.player {
-                    character.takeDamage(ai.contactDamage, direction: ai.xScale)
-                    ai.contactDamage = 0
-                }
-            }
-        } else if contact.bodyB.node is AI {
-            let ai = contact.bodyB.node as! AI
-            if contact.bodyA.node is Character {
-                let character = contact.bodyA.node as! Character
-                if character.player != ai.player {
-                    character.takeDamage(ai.contactDamage, direction: ai.xScale)
-                    ai.contactDamage = 0
-                }
-            }
-        }
-        
         if (contact.bodyA.node is Projectile && contact.bodyB.node is Projectile) || (contact.bodyA.node is Projectile && !(contact.bodyB.node is Character)) || (contact.bodyB.node is Projectile && !(contact.bodyA.node is Character)) {
             if contact.bodyA.node is Projectile && contact.bodyB.node is Projectile {
                 let projectile1 = contact.bodyA.node as! Projectile
@@ -719,6 +737,56 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let projectile = contact.bodyB.node as! Projectile
                 projectile.removeAllActions()
                 projectile.removeFromParent()
+            }
+        }
+        
+        if contact.bodyA.node is AttackBox {
+            let attackBox = contact.bodyA.node as! AttackBox
+            if contact.bodyB.node is Character {
+                let character = contact.bodyB.node as! Character
+                let boxOwner = attackBox.parent as! Character
+                if character.player != attackBox.owner && attackBox.active {
+                    character.takeDamage(attackBox.damage, direction: attackBox.parent!.xScale)
+                    boxOwner.applyLifeSteal(attackBox.damage)
+                    boxOwner.applyMovespeedSteal(character)
+                    boxOwner.applyPowerSteal(character)
+                    boxOwner.applyDebuff(character, damage: attackBox.damage)
+                    attackBox.damage = 0
+                }
+            }
+        } else if contact.bodyB.node is AttackBox {
+            let attackBox = contact.bodyB.node as! AttackBox
+            if contact.bodyA.node is Character {
+                let character = contact.bodyA.node as! Character
+                let boxOwner = attackBox.parent as! Character
+                if character.player != attackBox.owner && attackBox.active {
+                    character.takeDamage(attackBox.damage, direction: attackBox.parent!.xScale)
+                    boxOwner.applyLifeSteal(attackBox.damage)
+                    boxOwner.applyMovespeedSteal(character)
+                    boxOwner.applyPowerSteal(character)
+                    boxOwner.applyDebuff(character, damage: attackBox.damage)
+                    attackBox.damage = 0
+                }
+            }
+        }
+        
+        if contact.bodyA.node is AttackBox {
+            let attackBox = contact.bodyA.node as! AttackBox
+            if contact.bodyB.node is Item {
+                let item = contact.bodyB.node as! Item
+                let boxOwner = attackBox.parent as! Character
+                if attackBox.active {
+                    item.applyDamage(boxOwner, damage: attackBox.damage)
+                }
+            }
+        } else if contact.bodyB.node is AttackBox {
+            let attackBox = contact.bodyB.node as! AttackBox
+            if contact.bodyA.node is Item {
+                let item = contact.bodyA.node as! Item
+                let boxOwner = attackBox.parent as! Character
+                if attackBox.active {
+                    item.applyDamage(boxOwner, damage: attackBox.damage)
+                }
             }
         }
     }
@@ -916,9 +984,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         }
         
         if self.playerNode!.currentJumps >= self.playerNode!.maxJumps || self.playerNode!.isResting {
-            self.jumpButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Up_Grey")))
+            self.jumpButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Up_Grey")))
         } else {
-            self.jumpButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Up")))
+            self.jumpButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Up")))
         }
         
         self.skillChargeDisplay_1?.text = String(self.playerNode!.skillCurrentCharges_1)
@@ -926,43 +994,43 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         self.skillChargeDisplay_3?.text = String(self.playerNode!.skillCurrentCharges_3)
         
         if blessingList[chosenBlessing][0] == 10 {
-            if currentTime - self.playerNode!.lastBlessingTime >= 20 {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Lime")))
+            if currentTime - self.playerNode!.lastBlessingTime >= 3 {
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Lime")))
             } else {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         } else if blessingList[chosenBlessing][1] == 10 {
-            if currentTime - self.playerNode!.lastBlessingTime >= 40 {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Lime")))
+            if currentTime - self.playerNode!.lastBlessingTime >= 12 {
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Lime")))
             } else {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         } else if blessingList[chosenBlessing][2] == 10 {
-            if currentTime - self.playerNode!.lastBlessingTime >= 45 {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Lime")))
+            if currentTime - self.playerNode!.lastBlessingTime >= 18 {
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Lime")))
             } else {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         } else if blessingList[chosenBlessing][3] == 10 {
-            if currentTime - self.playerNode!.lastBlessingTime >= 45 {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Lime")))
+            if currentTime - self.playerNode!.lastBlessingTime >= 18 {
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Lime")))
             } else {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         } else if blessingList[chosenBlessing][4] == 10 {
-            if currentTime - self.playerNode!.lastBlessingTime >= 5 {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Lime")))
+            if currentTime - self.playerNode!.lastBlessingTime >= 3 {
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Lime")))
             } else {
-                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         } else {
-            self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+            self.runeButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
         }
         
         if playerNode!.isSkillReady_1(currentTime) && !self.playerNode!.isResting {
-            self.skillButton_1?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Teal")))
+            self.skillButton_1?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Teal")))
         } else {
-            self.skillButton_1?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+            self.skillButton_1?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
         }
         
         if playerNode?.playerMovement == "" {
@@ -970,44 +1038,44 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.skillChargeDisplay_3?.isHidden = true
             
             if playerNode!.isSkillReady_2(currentTime) && !self.playerNode!.isResting {
-                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Beige")))
+                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Beige")))
             } else {
-                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         } else {
             self.skillChargeDisplay_2?.isHidden = true
             self.skillChargeDisplay_3?.isHidden = false
             
             if playerNode!.isSkillReady_3(currentTime) && !self.playerNode!.isResting {
-                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Beige")))
+                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Beige")))
             } else {
-                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.skillButton_2?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
             }
         }
         
         if self.playerNode!.isStunned || self.playerNode!.isResting {
-            self.leftButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Left_Grey")))
-            self.rightButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Right_Grey")))
+            self.leftButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Left_Grey")))
+            self.rightButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Right_Grey")))
         } else {
-            self.leftButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Left")))
-            self.rightButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Right")))
+            self.leftButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Left")))
+            self.rightButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Right")))
         }
         
         if musicEnabled {
-            musicButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Music_On")))
+            musicButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Music_On")))
         } else {
-            musicButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Music_Off")))
+            musicButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Music_Off")))
         }
         
         if sfxEnabled {
-            sfxButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Sfx_On")))
+            sfxButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Sfx_On")))
         } else {
-            sfxButton?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Sfx_Off")))
+            sfxButton?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Sfx_Off")))
         }
         
         if multiplayerType == 0 || otherPlayersCount == 3 {
             if self.playerNode.isDead {
-                self.player1Bubble?.run(SKAction.setTexture(UIAtlas.textureNamed( "Button_Grey")))
+                self.player1Bubble?.run(SKAction.setTexture(UIAtlas.textureNamed("Button_Grey")))
                 if self.playerNode.characterName == "Cog" {
                     let texture = characterAtlas.textureNamed(playerNode.characterForm + "_Faint_10")
                     self.p1ChosenView?.run(SKAction.setTexture(texture))
